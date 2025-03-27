@@ -1,0 +1,62 @@
+# Put the services in the same network
+version: '3.8'
+
+services:
+  ventas-api:
+    image: ghcr.io/your-username/your-repo/ventas-service:latest
+    container_name: ventas-api
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=youruser
+      - DATABASE_PASSWORD=yourpassword
+      - DATABASE_NAME=yourdatabase
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  web-bff:
+    image: ghcr.io/your-username/your-repo/web-bff:latest
+    container_name: web-bff
+    ports:
+      - "5001:5000"
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=youruser
+      - DATABASE_PASSWORD=yourpassword
+      - DATABASE_NAME=yourdatabase
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=youruser
+      - POSTGRES_PASSWORD=yourpassword
+      - POSTGRES_DB=yourdatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+volumes:
+  postgres_data:

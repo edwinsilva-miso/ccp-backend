@@ -1,0 +1,162 @@
+# Namespace para el proyecto
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sales-platform
+---
+# ConfigMap para configuraciones compartidas
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: sales-platform
+data:
+  DATABASE_HOST: "postgresql-service"
+  REDIS_HOST: "redis-service"
+  ENVIRONMENT: "production"
+---
+# Deployment para Microservicio de Ventas
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sales-service
+  namespace: sales-platform
+  labels:
+    app: sales-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sales-service
+  template:
+    metadata:
+      labels:
+        app: sales-service
+    spec:
+      containers:
+      - name: sales-service
+        image: sales-service:v1.0.0
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: sales-secrets
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+---
+# Service para Microservicio de Ventas
+apiVersion: v1
+kind: Service
+metadata:
+  name: sales-service
+  namespace: sales-platform
+spec:
+  selector:
+    app: sales-service
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+---
+# Deployment para BFF Web
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-bff
+  namespace: sales-platform
+  labels:
+    app: web-bff
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-bff
+  template:
+    metadata:
+      labels:
+        app: web-bff
+    spec:
+      containers:
+      - name: web-bff
+        image: web-bff:v1.0.0
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: bff-secrets
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+# Service para BFF Web
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-bff
+  namespace: sales-platform
+spec:
+  selector:
+    app: web-bff
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+---
+# Ingress para exponer servicios
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sales-platform-ingress
+  namespace: sales-platform
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: sales-api.miempresa.com
+    http:
+      paths:
+      - path: /api/sales
+        pathType: Prefix
+        backend:
+          service:
+            name: sales-service
+            port:
+              number: 80
+      - path: /bff/web
+        pathType: Prefix
+        backend:
+          service:
+            name: web-bff
+            port:
+              number: 80

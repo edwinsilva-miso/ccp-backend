@@ -25,7 +25,7 @@ COPY . .
 ENV FLASK_APP=src/main.py
 
 # Expose port
-EXPOSE 5000
+EXPOSE 5100
 
 # Run the application
 CMD ["pipenv", "run", "flask", "run", "--host=0.0.0.0"]

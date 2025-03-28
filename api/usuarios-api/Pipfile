@@ -4,6 +4,8 @@ verify_ssl = true
 name = "usuarios-api"
 
 [packages]
+flask = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 

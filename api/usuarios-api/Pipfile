@@ -6,6 +6,14 @@ name = "usuarios-api"
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
+psycopg2-binary = "*"
+wheel = "*"
+marshmallow = "*"
+python-abc = "*"
+python-dotenv = "*"
+pyjwt = "*"
+pytz = "*"
+bcrypt = "*"
 
 [dev-packages]
 

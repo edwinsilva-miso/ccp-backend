@@ -14,6 +14,11 @@ python-dotenv = "*"
 pyjwt = "*"
 pytz = "*"
 bcrypt = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+pytest-env = "*"
+sendgrid = "*"
 
 [dev-packages]
 

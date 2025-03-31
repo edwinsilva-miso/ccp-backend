@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --no-cache-dir pipenv
 
 # Copy dependency files first for better caching
-COPY Pipfile Pipfile.lock ./
+COPY Pipfile ./
 
 # Install dependencies
 RUN pipenv install --deploy --ignore-pipfile
@@ -25,7 +25,7 @@ COPY . .
 ENV FLASK_APP=src/main.py
 
 # Expose port
-EXPOSE 5100
+EXPOSE 5000
 
 # Run the application
 CMD ["pipenv", "run", "flask", "run", "--host=0.0.0.0"]

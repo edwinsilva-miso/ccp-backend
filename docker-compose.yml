@@ -19,6 +19,11 @@ services:
     container_name: mobile-bff
     ports:
       - "5001:5000"
+    environment:
+      USERS_API_URL: http://users-api:5000
+    networks:
+      - mobile_bff_net
+      - app_net
 
   # Users API
   users-api:
@@ -83,6 +88,8 @@ networks:
   app_net:
     driver: bridge
   web_bff_net:
+    driver: bridge
+  mobile_bff_net:
     driver: bridge
   users_api_net:
     driver: bridge

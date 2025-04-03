@@ -8,12 +8,22 @@ services:
     container_name: web-bff
     ports:
       - "5000:5000"
+    environment:
+      USERS_API_URL: http://users-api:5000
+    networks:
+      - web_bff_net
+      - app_net
 
   mobile-bff:
     build: bff/mobile-bff
     container_name: mobile-bff
     ports:
       - "5001:5000"
+    environment:
+      USERS_API_URL: http://users-api:5000
+    networks:
+      - mobile_bff_net
+      - app_net
 
   # Users API
   users-api:
@@ -22,11 +32,11 @@ services:
     ports:
       - "5100:5000"
     environment:
-      DATABASE_HOST: users_db
-      DATABASE_PORT: 5432
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: postgres
-      DATABASE_NAME: users
+      DB_HOST: users_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: users
     depends_on:
       users_db:
         condition: service_healthy
@@ -76,6 +86,10 @@ volumes:
 
 networks:
   app_net:
+    driver: bridge
+  web_bff_net:
+    driver: bridge
+  mobile_bff_net:
     driver: bridge
   users_api_net:
     driver: bridge

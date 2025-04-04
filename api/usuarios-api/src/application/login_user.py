@@ -10,7 +10,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-class AuthenticateUser:
+class LoginUser:
 
     def __init__(self, user_repository):
         self.user_repository = user_repository

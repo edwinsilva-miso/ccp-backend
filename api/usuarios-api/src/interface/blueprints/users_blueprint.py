@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request
 
 from ...application.errors.errors import ValidationApiError
 from ...application.create_user import CreateUser
-from ...application.authenticate_user import AuthenticateUser
+from ...application.login_user import LoginUser
 from ...domain.entities.user_dto import UserDTO
 from ...infrastructure.adapters.user_adapter import UserAdapter
 
@@ -48,6 +48,6 @@ def login():
         raise ValidationApiError
 
 
-    use_case = AuthenticateUser(user_adapter)
+    use_case = LoginUser(user_adapter)
     response = use_case.execute(data['email'], data['password'])
     return jsonify(response), 200

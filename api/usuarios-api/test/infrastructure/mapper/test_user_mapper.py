@@ -13,8 +13,10 @@ class TestUserMapper:
             phone="3001234567",
             email="test@example.com",
             password="hashedpass",
+            token=None,
             salt="salt123",
-            role="USER"
+            role="USER",
+            expire_at=None
         )
 
     @pytest.fixture

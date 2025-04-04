@@ -40,7 +40,7 @@ def create_user():
     user_id = use_case.execute(user)
     return jsonify({'id': user_id}), 201
 
-@user_blueprint.route('/login', methods=['POST'])
+@user_blueprint.route('/auth', methods=['POST'])
 def login():
     data = request.get_json()
     if not data or not all(key in data for key in ('email', 'password')):

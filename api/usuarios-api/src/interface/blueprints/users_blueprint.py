@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 from ...application.errors.errors import ValidationApiError
 from ...application.create_user import CreateUser
 from ...application.login_user import LoginUser
+from ...application.user_token import UserToken
 from ...domain.entities.user_dto import UserDTO
 from ...infrastructure.adapters.user_adapter import UserAdapter
 
@@ -50,4 +51,11 @@ def login():
 
     use_case = LoginUser(user_adapter)
     response = use_case.execute(data['email'], data['password'])
+    return jsonify(response), 200
+
+@user_blueprint.route('/me', methods=['GET'])
+def get_user_info():
+    headers = request.headers
+    use_case = UserToken(user_adapter)
+    response = use_case.execute(headers)
     return jsonify(response), 200

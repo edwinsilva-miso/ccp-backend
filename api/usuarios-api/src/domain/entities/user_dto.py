@@ -52,7 +52,3 @@ class UserDTO:
         token, expire_at = utils.generate_token(self)
         self.token = token
         self.expired_at = expire_at
-        # return {
-        #     'token': token,
-        #     'expire': expire_at
-        # }

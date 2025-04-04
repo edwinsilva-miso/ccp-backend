@@ -45,7 +45,7 @@ class SecurityUtils:
         payload = {
             'iat': now,
             'exp': exp_date,
-            'username': authenticated_user.email,
+            'email': authenticated_user.email,
             'fullName': authenticated_user.name,
             'role': authenticated_user.role.name
         }

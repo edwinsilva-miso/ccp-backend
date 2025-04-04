@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, Mock
 from src.main import create_app
-from src.application.errors.errors import UserAlreadyExistsError, UserNotExistsError
+from src.application.errors.errors import UserAlreadyExistsError, UserNotExistsError, ForbiddenError
 from src.domain.entities.user_dto import UserDTO
 
 class TestUsersBlueprint:
@@ -177,3 +177,53 @@ class TestUsersBlueprint:
             assert response.status_code == 404
             assert "msg" in data
             assert "usuario no existe" in data["msg"].lower()
+
+    @patch('src.interface.blueprints.users_blueprint.UserToken')
+    def test_get_user_info_success(self, mock_user_token, client):
+        # Arrange
+        test_user = {
+            "id": "test-id",
+            "name": "Test User",
+            "email": "test@example.com",
+            "phone": "1234567890",
+            "role": "user"
+        }
+        mock_instance = Mock()
+        mock_user_token.return_value = mock_instance
+        mock_instance.execute.return_value = test_user
+        headers = {'Authorization': 'Bearer valid-token'}
+
+        # Act
+        response = client.get('/api/v1/users/me', headers=headers)
+
+        # Assert
+        assert response.status_code == 200
+        mock_instance.execute.assert_called_once()
+
+    @patch('src.interface.blueprints.users_blueprint.UserToken')
+    def test_get_user_info_forbidden(self, mock_user_token, client):
+        # Arrange
+        mock_instance = Mock()
+        mock_user_token.return_value = mock_instance
+        mock_instance.execute.side_effect = ForbiddenError()
+        headers = {'Authorization': 'Bearer invalid-token'}
+
+        # Act
+        response = client.get('/api/v1/users/me', headers=headers)
+
+        # Assert
+        assert response.status_code == 403
+
+    @patch('src.interface.blueprints.users_blueprint.UserToken')
+    def test_get_user_info_user_not_exists(self, mock_user_token, client):
+        # Arrange
+        mock_instance = Mock()
+        mock_user_token.return_value = mock_instance
+        mock_instance.execute.side_effect = UserNotExistsError()
+        headers = {'Authorization': 'Bearer valid-token'}
+
+        # Act
+        response = client.get('/api/v1/users/me', headers=headers)
+
+        # Assert
+        assert response.status_code == 404

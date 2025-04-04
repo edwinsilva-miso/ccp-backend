@@ -14,6 +14,13 @@ class UserAdapter(UserDTORepository):
         """
         return UserDAO.save(UserMapper.to_domain(user))
 
+    def update(self, user: UserDTO) -> None:
+        """
+        Update a user in the repository.
+        :param user: UserDTO to update.
+        """
+        return UserDAO.update(UserMapper.to_domain(user))
+
     def find_by_email(self, email: str) -> UserDTO | None:
         """
         Find a user by email.

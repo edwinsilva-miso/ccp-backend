@@ -45,8 +45,9 @@ class SecurityUtils:
         payload = {
             'iat': now,
             'exp': exp_date,
-            'username': authenticated_user.username,
-            'fullName': authenticated_user.full_name,
+            'username': authenticated_user.email,
+            'fullName': authenticated_user.name,
+            'role': authenticated_user.role.name
         }
 
         return jwt.encode(payload, self.secret, algorithm=constants.JWT_ALGORITHM), exp_date.isoformat()

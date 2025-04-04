@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 
 from ...application.errors.errors import ValidationApiError
 from ...application.create_user import CreateUser
+from ...application.authenticate_user import AuthenticateUser
 from ...domain.entities.user_dto import UserDTO
 from ...infrastructure.adapters.user_adapter import UserAdapter
 
@@ -30,9 +31,23 @@ def create_user():
         phone=data['phone'],
         email=data['email'],
         password=data['password'],
+        token=None,
         salt=None,
-        role=data['role']
+        role=data['role'],
+        expire_at=None
     )
     use_case = CreateUser(user_adapter)
     user_id = use_case.execute(user)
     return jsonify({'id': user_id}), 201
+
+@user_blueprint.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    if not data or not all(key in data for key in ('email', 'password')):
+        logging.error("Missing required fields in request data.")
+        raise ValidationApiError
+
+
+    use_case = AuthenticateUser(user_adapter)
+    response = use_case.execute(data['email'], data['password'])
+    return jsonify(response), 200

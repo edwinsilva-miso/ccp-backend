@@ -8,6 +8,11 @@ class UserDAO:
 
     @classmethod
     def save(cls, user: UserModel) -> str:
+        """
+        Save a user to the database.
+        :param user: UserModel to save.
+        :return: ID of the saved user.
+        """
         session = Session()
         session.add(user)
         session.commit()
@@ -26,4 +31,15 @@ class UserDAO:
         user = session.query(UserModel).filter(UserModel.email == email).first()
         session.close()
         return user
+
+    @classmethod
+    def update(cls, user: UserModel) -> None:
+        """
+        Update a user.
+        :param user: UserModel to update.
+        """
+        session = Session()
+        session.merge(user)
+        session.commit()
+        session.close()
 

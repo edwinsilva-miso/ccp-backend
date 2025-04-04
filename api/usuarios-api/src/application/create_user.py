@@ -4,7 +4,6 @@ import re
 from .errors.errors import InvalidFormatError, UserAlreadyExistsError
 from ..domain.entities.user_dto import UserDTO
 from ..domain.utils import constants
-from ..domain.utils.security_utils import SecurityUtils
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
@@ -41,10 +40,9 @@ class CreateUser:
             logging.error(f"User {user.email} already exists.")
             raise UserAlreadyExistsError
 
-        utils = SecurityUtils()
-        salt, hashed_password = utils.hash_password(user.password)
+        password_dict = user.generate_password()
 
-        user.password = hashed_password
-        user.salt = salt
+        user.password = password_dict["hashed_password"]
+        user.salt = password_dict["salt"]
 
         return self.user_repository.add(user)

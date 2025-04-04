@@ -39,7 +39,6 @@ class LoginUser:
         authenticated_user.generate_token()
 
         logging.debug("Refresh user information...")
-        logging.info(authenticated_user)
         self.user_repository.update(authenticated_user)
 
         return {

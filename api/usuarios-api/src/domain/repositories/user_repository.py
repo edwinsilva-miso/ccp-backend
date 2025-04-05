@@ -12,6 +12,7 @@ class UserDTORepository(ABC):
         """
         pass
 
+    @abstractmethod
     def update(self, user: UserDTO) -> None:
         """
         Update a user in the repository.

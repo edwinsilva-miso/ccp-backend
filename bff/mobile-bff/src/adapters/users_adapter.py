@@ -26,3 +26,27 @@ class UsersAdapter:
         response = requests.post(f"{USERS_API_URL}/api/v1/users", json=user_data)
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code
+
+    def authorize(self, email, password):
+        """
+        Authorize a user and get their token.
+        :param email: User's email.
+        :param password: User's password.
+        :return: The user's token and expiration date.
+        """
+        logger.debug(f"Authorizing user with email: {email}")
+        response = requests.post(f"{USERS_API_URL}/api/v1/users/auth", json={"email": email, "password": password})
+        logger.debug(f"Response received from API: {response.json()}")
+        return response.json(), response.status_code
+
+    def get_user_info(self, token):
+        """
+        Get user information.
+        :param token: User's token.
+        :return: User information.
+        """
+        logger.debug(f"Getting user info with token: {token}")
+        headers = {'Authorization':  token}
+        response = requests.get(f"{USERS_API_URL}/api/v1/users/me", headers=headers)
+        logger.debug(f"Response received from API: {response.json()}")
+        return response.json(), response.status_code

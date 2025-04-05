@@ -25,8 +25,10 @@ class TestCreateUser:
             phone="3153334455",
             email="mail@example.com",
             password="hashedpass",
+            token=None,
             salt=None,
-            role="CLIENTE"
+            role="CLIENTE",
+            expire_at=None
         )
         user_adapter_mock.find_by_email.return_value = None
         user_adapter_mock.add.return_value = "new-user-id"
@@ -47,8 +49,10 @@ class TestCreateUser:
             phone="3153334455",
             email="existing@example.com",
             password="pass123",
+            token=None,
             salt=None,
-            role="CLIENTE"
+            role="CLIENTE",
+            expire_at=None
         )
         user_adapter_mock.find_by_email.return_value = UserDTO(
             id="existing-id",
@@ -56,8 +60,10 @@ class TestCreateUser:
             phone="3153334455",
             email="existing@example.com",
             password="hashedpass",
+            token=None,
             salt="salt",
-            role="CLIENTE"
+            role="CLIENTE",
+            expire_at=None
         )
 
         # Act & Assert
@@ -75,8 +81,10 @@ class TestCreateUser:
             phone="3153334455",
             email="existingexample.com",
             password="pass123",
+            token=None,
             salt=None,
-            role="CLIENTE"
+            role="CLIENTE",
+            expire_at=None
         )
 
 
@@ -95,8 +103,10 @@ class TestCreateUser:
             phone="3153334455",
             email="mail1@other.com",
             password="$%&",
+            token=None,
             salt=None,
-            role="CLIENTE"
+            role="CLIENTE",
+            expire_at=None
         )
 
 

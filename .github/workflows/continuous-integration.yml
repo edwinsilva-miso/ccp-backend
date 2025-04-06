@@ -1,0 +1,50 @@
+name: CI on merge to main branch
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build-test-apis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Run build and test script
+        run: cd deployment && bash ci_test_apis.sh
+
+  build-test-bffs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Run build and test script
+        run: cd deployment && bash ci_test_bffs.sh
+
+#  push-to-artifact-registry:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      - name: Run build and test script
+#        run: cd deployment && bash build_images.sh --push-all
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION }}
+  REPOSITORY: ${{ secrets.GCP_REPOSITORY }}
+  IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME }}
+  CREDENTIALS: ${{ secrets.GCP_JSON_KEY }}

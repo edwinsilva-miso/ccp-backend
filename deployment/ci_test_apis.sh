@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source apis.env.sh
+source automation.env.sh
 
 chmod +x build_images.sh
 

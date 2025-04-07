@@ -1,31 +1,110 @@
 #!/bin/bash
 
-source apis.env.sh
+source automation.env.sh
+
+if [[ "$1" == "--push-all" ]]
+then
+  export DOCKER_PATH="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/"
+fi
+
+if [[ -n "$1" && "$1" != "--push-all" ]]
+then
+  source ./secrets/secrets.env.sh
+fi
+
 
 cd ../api || exit 1
-
 ROOT_DIR="$(pwd)"
 
 export APIS
 
-echo "[INFO]: building docker images"
 
-for folder in "${!APIS[@]}"; do
-  cd "$ROOT_DIR" || exit 1
 
-  if [ -f "./$folder/Dockerfile" ]; then
-    cd "./$folder/" || exit 1
+TIMESTAMP="$(date +%Y%m%d%H%M%S)"
 
-    echo "[INFO]: $(pwd) :: building image for ${APIS[$folder]}..."
-    docker build -t "${APIS[$folder]}:latest" -f "Dockerfile" .
+if [[ "$1" == "--apis" || "$1" == "--push-all" ]]
+then
+  echo "========================================================================"
+  echo "[INFO]: Building docker images for APIs"
+  echo "========================================================================"
 
-    if [[ "$1" == "push" ]]
+  for folder in "${!APIS[@]}"; do
+    cd "$ROOT_DIR" || exit 1
+
+    if [[ -f "./$folder/Dockerfile" ]]
     then
-      docker push "${APIS[$folder]}:latest"
-    fi
-  else
-    echo "[INFO]: skipping ${APIS[$folder]} @ ./api/$folder  (no Dockerfile found)."
+      UUID="$(find "./$folder/" -type f -exec sha256sum {} + | sort | sha256sum | cut -c1-6)"
+      cd "./$folder/" || exit 1
+      VERSION="$(xargs < "version.txt")"
+
+      echo "========================================================================"
+      echo "[INFO]: $(pwd) :: building image for ${APIS[$folder]}..."
+      echo "========================================================================"
+      docker build -t "$DOCKER_PATH${APIS[$folder]}:latest" -f "Dockerfile" .
+
+      if [[ -n "$DOCKER_PATH" ]]
+      then
+        docker tag "$DOCKER_PATH${APIS[$folder]}:latest" "$DOCKER_PATH${APIS[$folder]}:$VERSION-$UUID-$TIMESTAMP"
+      fi
+
+      if [[ "$1" == "push" || "$1" == "--push-all" ]]
+      then
+        docker push "$DOCKER_PATH${APIS[$folder]}:latest" || exit 1
+        docker push "$DOCKER_PATH${APIS[$folder]}:$VERSION-$UUID-$TIMESTAMP" || exit 1
+      fi
+    else
+      echo "========================================================================"
+      echo "[INFO]: skipping ${APIS[$folder]} @ ./api/$folder  (no Dockerfile found)."
+      echo "========================================================================"
+  fi
+  done
 fi
-done
+
+
+
+
+if [[ "$1" == "--bffs" || "$1" == "--push-all" ]]
+then
+  cd "$ROOT_DIR" || exit 1
+  cd ../bff || exit 1
+  ROOT_DIR="$(pwd)"
+
+  echo "========================================================================"
+  echo "[INFO]: Building images for BFF"
+  echo "========================================================================"
+
+  for folder in "${!BACKENDS_FOR_FRONTEDS[@]}"; do
+    cd "$ROOT_DIR" || exit 1
+
+    if [[ -f "./$folder/Dockerfile" ]]
+    then
+      UUID="$(find "./$folder/" -type f -exec sha256sum {} + | sort | sha256sum | cut -c1-6)"
+      cd "./$folder/" || exit 1
+
+      VERSION="$(xargs < "version.txt")"
+
+      echo "========================================================================"
+      echo "[INFO]: $(pwd) :: building image for ${BACKENDS_FOR_FRONTEDS[$folder]}..."
+      echo "========================================================================"
+      docker build -t "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" -f "Dockerfile" .
+
+      if [[ -n "$DOCKER_PATH" ]]
+      then
+        docker tag "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:$VERSION-$UUID-$TIMESTAMP"
+        docker push "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:$VERSION-$UUID-$TIMESTAMP" || exit 1
+      fi
+
+      if [[ "$1" == "push" || "$1" == "--push-all" ]]
+      then
+        docker push "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" || exit 1
+      fi
+    else
+      echo "========================================================================"
+      echo "[INFO]: skipping ${BACKENDS_FOR_FRONTEDS[$folder]} @ ./bff/$folder  (no Dockerfile found)."
+      echo "========================================================================"
+  fi
+  done
+fi
+
 
 echo "[INFO]: ✅ Docker images built successfully."

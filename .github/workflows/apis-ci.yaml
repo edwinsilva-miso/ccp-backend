@@ -1,4 +1,4 @@
-name: APIs CI v2
+name: misw4502 - apis ci
 
 on:
   push:
@@ -15,11 +15,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Run build and test script
-        run: cd deployment && bash ci_test_all.sh
+      - name: Run build and Test Script
+        run: cd deployment && bash ci_test_apis.sh

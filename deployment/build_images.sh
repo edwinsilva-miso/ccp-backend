@@ -50,6 +50,7 @@ then
       if [[ "$1" == "push" || "$1" == "--push-all" ]]
       then
         docker push "$DOCKER_PATH${APIS[$folder]}:latest" || exit 1
+        docker push "$DOCKER_PATH${APIS[$folder]}:$VERSION-$UUID-$TIMESTAMP" || exit 1
       fi
     else
       echo "========================================================================"
@@ -90,6 +91,7 @@ then
       if [[ -n "$DOCKER_PATH" ]]
       then
         docker tag "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:$VERSION-$UUID-$TIMESTAMP"
+        docker push "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:$VERSION-$UUID-$TIMESTAMP" || exit 1
       fi
 
       if [[ "$1" == "push" || "$1" == "--push-all" ]]

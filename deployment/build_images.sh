@@ -7,7 +7,7 @@ then
   export DOCKER_PATH="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/"
 fi
 
-if [[ -n "$1" ]]
+if [[ -n "$1" && "$1" != "--push-all" ]]
 then
   source ./secrets/secrets.env.sh
 fi

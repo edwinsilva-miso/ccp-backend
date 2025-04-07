@@ -1,4 +1,4 @@
-name: CI on merge to main branch
+name: CI on main branch
 
 on:
   push:

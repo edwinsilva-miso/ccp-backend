@@ -12,10 +12,10 @@ ROOT_DIR="$(pwd)"
 
 export APIS
 
-echo "[INFO]: Building docker images for APIs"
-
 if [[ -n "$1" ]] && [[ "$1" == "--apis" ]] || [[ "$1" == "--push-all" ]]
 then
+  echo "[INFO]: Building docker images for APIs"
+
   for folder in "${!APIS[@]}"; do
     cd "$ROOT_DIR" || exit 1
 

@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - 'main'
+      - feature/despliege-en-gcp
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION }}
+  REPOSITORY: ${{ secrets.GCP_REPOSITORY }}
+  IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME }}
+  CREDENTIALS: ${{ secrets.GCP_JSON_KEY }}
 
 jobs:
   build-test-apis:
@@ -41,10 +49,3 @@ jobs:
 #
 #      - name: Run build and test script
 #        run: cd deployment && bash build_images.sh --push-all
-
-env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: ${{ secrets.GCP_REGION }}
-  REPOSITORY: ${{ secrets.GCP_REPOSITORY }}
-  IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME }}
-  CREDENTIALS: ${{ secrets.GCP_JSON_KEY }}

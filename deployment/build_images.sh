@@ -24,11 +24,11 @@ then
       cd "./$folder/" || exit 1
 
       echo "[INFO]: $(pwd) :: building image for ${APIS[$folder]}..."
-      docker build -t "$IMAGES_REPOSITORY${APIS[$folder]}:latest" -f "Dockerfile" .
+      docker build -t "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${APIS[$folder]}:latest" -f "Dockerfile" .
 
       if [[ "$1" == "push" ]] || [[ "$1" == "--push-all" ]]
       then
-        docker push "$IMAGES_REPOSITORY${APIS[$folder]}:latest"
+        docker push "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${APIS[$folder]}:latest" || exit 1
       fi
     else
       echo "[INFO]: skipping ${APIS[$folder]} @ ./api/$folder  (no Dockerfile found)."
@@ -52,11 +52,11 @@ then
       cd "./$folder/" || exit 1
 
       echo "[INFO]: $(pwd) :: building image for ${BACKENDS_FOR_FRONTEDS[$folder]}..."
-      docker build -t "$IMAGES_REPOSITORY${BACKENDS_FOR_FRONTEDS[$folder]}:latest" -f "Dockerfile" .
+      docker build -t "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${BACKENDS_FOR_FRONTEDS[$folder]}:latest" -f "Dockerfile" .
 
       if [[ "$1" == "push" ]] || [[ "$1" == "--push-all" ]]
       then
-        docker push "$IMAGES_REPOSITORY${BACKENDS_FOR_FRONTEDS[$folder]}:latest"
+        docker push "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${BACKENDS_FOR_FRONTEDS[$folder]}:latest" || exit 1
       fi
     else
       echo "[INFO]: skipping ${BACKENDS_FOR_FRONTEDS[$folder]} @ ./bff/$folder  (no Dockerfile found)."

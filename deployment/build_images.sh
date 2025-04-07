@@ -2,7 +2,7 @@
 
 source automation.env.sh
 
-if [[ -n "$1" ]]
+if [[ -n "$1" && "$1" == "--push-all" ]]
 then
   source ./secrets/secrets.env.sh
 fi
@@ -12,7 +12,7 @@ ROOT_DIR="$(pwd)"
 
 export APIS
 
-if [[ -n "$1" ]] && [[ "$1" == "--apis" ]] || [[ "$1" == "--push-all" ]]
+if [[ -n "$1" && "$1" == "--apis" ]] || [[ "$1" == "--push-all" ]]
 then
   echo "[INFO]: Building docker images for APIs"
 
@@ -36,7 +36,7 @@ then
   done
 fi
 
-if [[ -n "$1" ]] && [[ "$1" == "--bffs" ]] || [[ "$1" == "--push-all" ]]
+if [[ -n "$1" && "$1" == "--bffs" ]] || [[ "$1" == "--push-all" ]]
 then
   cd "$ROOT_DIR" || exit 1
   cd ../bff || exit 1

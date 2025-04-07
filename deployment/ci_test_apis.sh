@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export PROJECT_ID
+export REGION
+export REPOSITORY
+
 source automation.env.sh
 
 chmod +x build_images.sh

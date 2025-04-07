@@ -1,6 +1,8 @@
 #!/bin/bash
 
-printenv
+export PROJECT_ID
+export REGION
+export REPOSITORY
 
 source automation.env.sh
 

@@ -80,7 +80,12 @@ then
       echo "========================================================================"
       echo "[INFO]: $(pwd) :: building image for ${BACKENDS_FOR_FRONTEDS[$folder]}..."
       echo "========================================================================"
-      docker build -t "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" "$DOCKER_PATH${APIS[$folder]}:$VERSION-$UUID-$TIMESTAMP" -f "Dockerfile" .
+      docker build -t "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" -f "Dockerfile" .
+
+      if [[ -n "$DOCKER_PATH" ]]
+      then
+        docker tag "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" "$DOCKER_PATH${APIS[$folder]}:$VERSION-$UUID-$TIMESTAMP"
+      fi
 
       if [[ "$1" == "push" || "$1" == "--push-all" ]]
       then

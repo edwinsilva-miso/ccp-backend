@@ -2,7 +2,12 @@
 
 source automation.env.sh
 
-if [[ -n "$1" && "$1" == "--push-all" ]]
+if [[ "$1" == "--push-all" ]]
+then
+  export DOCKER_PATH="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/"
+fi
+
+if [[ -n "$1" ]]
 then
   source ./secrets/secrets.env.sh
 fi
@@ -12,7 +17,7 @@ ROOT_DIR="$(pwd)"
 
 export APIS
 
-if [[ -n "$1" && "$1" == "--apis" ]] || [[ "$1" == "--push-all" ]]
+if [[ "$1" == "--apis" || "$1" == "--push-all" ]]
 then
   echo "[INFO]: Building docker images for APIs"
 
@@ -26,7 +31,7 @@ then
       echo "[INFO]: $(pwd) :: building image for ${APIS[$folder]}..."
       docker build -t "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${APIS[$folder]}:latest" -f "Dockerfile" .
 
-      if [[ "$1" == "push" ]] || [[ "$1" == "--push-all" ]]
+      if [[ "$1" == "push" || "$1" == "--push-all" ]]
       then
         docker push "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${APIS[$folder]}:latest" || exit 1
       fi
@@ -36,7 +41,7 @@ then
   done
 fi
 
-if [[ -n "$1" && "$1" == "--bffs" ]] || [[ "$1" == "--push-all" ]]
+if [[ "$1" == "--bffs" || "$1" == "--push-all" ]]
 then
   cd "$ROOT_DIR" || exit 1
   cd ../bff || exit 1
@@ -52,9 +57,9 @@ then
       cd "./$folder/" || exit 1
 
       echo "[INFO]: $(pwd) :: building image for ${BACKENDS_FOR_FRONTEDS[$folder]}..."
-      docker build -t "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${BACKENDS_FOR_FRONTEDS[$folder]}:latest" -f "Dockerfile" .
+      docker build -t "${BACKENDS_FOR_FRONTEDS[$folder]}:latest" -f "Dockerfile" .
 
-      if [[ "$1" == "push" ]] || [[ "$1" == "--push-all" ]]
+      if [[ "$1" == "push" || "$1" == "--push-all" ]]
       then
         docker push "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/${BACKENDS_FOR_FRONTEDS[$folder]}:latest" || exit 1
       fi

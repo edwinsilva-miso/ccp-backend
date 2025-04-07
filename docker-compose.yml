@@ -2,61 +2,94 @@
 version: '3.8'
 
 services:
-  ventas-api:
-    image: ghcr.io/your-username/your-repo/ventas-service:latest
-    container_name: ventas-api
+  # BFF
+  web-bff:
+    build: bff/web-bff
+    container_name: web-bff
     ports:
       - "5000:5000"
     environment:
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USER=youruser
-      - DATABASE_PASSWORD=yourpassword
-      - DATABASE_NAME=yourdatabase
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-    depends_on:
-      - postgres
-      - rabbitmq
+      USERS_API_URL: http://users-api:5000
+    networks:
+      - web_bff_net
+      - app_net
 
-  web-bff:
-    image: ghcr.io/your-username/your-repo/web-bff:latest
-    container_name: web-bff
+  mobile-bff:
+    build: bff/mobile-bff
+    container_name: mobile-bff
     ports:
       - "5001:5000"
     environment:
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USER=youruser
-      - DATABASE_PASSWORD=yourpassword
-      - DATABASE_NAME=yourdatabase
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-    depends_on:
-      - postgres
-      - rabbitmq
+      USERS_API_URL: http://users-api:5000
+    networks:
+      - mobile_bff_net
+      - app_net
 
-  postgres:
-    image: postgres:13
-    container_name: postgres
+  # Users API
+  users-api:
+    build: api/usuarios-api/
+    container_name: users-api
+    ports:
+      - "5100:5000"
     environment:
-      - POSTGRES_USER=youruser
-      - POSTGRES_PASSWORD=yourpassword
-      - POSTGRES_DB=yourdatabase
+      DB_HOST: users_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: users
+    depends_on:
+      users_db:
+        condition: service_healthy
+    networks:
+      - users_api_net
+      - app_net
+  users_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: users
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - users_db_volume:/var/lib/postgresql/data
+    networks:
+      - users_api_net
 
+  # [DELETE] Put here below the services you want to add with the database (if applies)
+
+  # Additional Infrastructure
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5672:5672"   # AMQP protocol port
+      - "15672:15672" # Management interface port
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
-  postgres_data:
+  users_db_volume:
+  rabbitmq_data:
+
+networks:
+  app_net:
+    driver: bridge
+  web_bff_net:
+    driver: bridge
+  mobile_bff_net:
+    driver: bridge
+  users_api_net:
+    driver: bridge

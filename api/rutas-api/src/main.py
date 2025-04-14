@@ -1,39 +1,68 @@
-import logging
-
-from dotenv import load_dotenv
+import os
 from flask import Flask, jsonify
+#from flask_cors import CORS
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
 
-loaded = load_dotenv('.env.development')
+from .api.v1.routes import routes_blueprint
+from .api.v1.optimizations import optimizations_blueprint
+from .infrastructure.config import Config
+from .infrastructure.external.openroute_service_client import OpenRouteServiceClient
+from .infrastructure.repositories.sqlalchemy_route_repository import Base, SQLAlchemyRouteRepository
+from .domain.services.optimization_service import OptimizationService
+from .api.error_handlers import register_error_handlers
 
-from .interface.blueprints.management_blueprint import management_blueprint
-from .application.errors.errors import ApiError
 
-logging.basicConfig(level=logging.DEBUG)
-
-
-def create_app():
-    """
-    Create and configure the Flask application.
-    """
-    logging.debug('routes microservice started')
+def create_app(config_class=Config):
     app = Flask(__name__)
+    app.config.from_object(config_class)
 
-    app.register_blueprint(management_blueprint)
+    # Register CORS | discuss with team
+#    CORS(app)
 
-    @app.errorhandler(ApiError)
-    def handle_error(error):
-        """
-        Handle errors and return a JSON response.
-        """
-        logging.error(f"Error: {error.code}, {error.description}")
-        response = {
-            "msg": error.description
-        }
-        return jsonify(response), error.code
+    # Setup database
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    session_factory = sessionmaker(bind=engine)
+    session = scoped_session(session_factory)
+
+    # Create tables if they don't exist
+    Base.metadata.create_all(engine)
+
+    # Initialize repositories
+    route_repository = SQLAlchemyRouteRepository(session=session)
+
+    # Initialize services
+    openroute_client = OpenRouteServiceClient(
+        api_key=app.config['OPENROUTE_API_KEY'],
+        base_url=app.config['OPENROUTE_BASE_URL']
+    )
+    optimization_service = OptimizationService(openroute_client=openroute_client)
+
+    # Add services to app context
+    app.route_repository = route_repository
+    app.openroute_client = openroute_client
+    app.optimization_service = optimization_service
+
+    # Register blueprints
+    app.register_blueprint(routes_blueprint, url_prefix='/api/v1')
+    app.register_blueprint(optimizations_blueprint, url_prefix='/api/v1')
+
+    # Register error handlers
+    register_error_handlers(app)
+
+    # Root endpoint
+    @app.route('/')
+    def root():
+        return jsonify({"message": "Welcome to Rutas API"})
+
+    # Health check endpoint
+    @app.route('/health')
+    def health():
+        return jsonify({"status": "healthy"})
 
     return app
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)

@@ -13,21 +13,21 @@ class InvalidFormatError(ApiError):
     description = "Formato de campo inválido."
 
 
-class UserAlreadyExistsError(ApiError):
+class ProviderAlreadyExistsError(ApiError):
     code = 412
     description = "El registro ya existe."
 
 
-class UserNotExistsError(ApiError):
+class ProviderNotExistsError(ApiError):
     code = 404
-    description = "El usuario no existe."
+    description = "El proveedor no existe."
 
 
-class InvalidTokenError(ApiError):
-    code = 401
-    description = "Unauthorized."
-
-
-class ForbiddenError(ApiError):
-    code = 403
-    description = "Forbidden."
+# class InvalidTokenError(ApiError):
+#     code = 401
+#     description = "Unauthorized."
+#
+#
+# class ForbiddenError(ApiError):
+#     code = 403
+#     description = "Forbidden."

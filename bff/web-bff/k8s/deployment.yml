@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: web-bff
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/web-bff:latest
+        image: web-bff:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000

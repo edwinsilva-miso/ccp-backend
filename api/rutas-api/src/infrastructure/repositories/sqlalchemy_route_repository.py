@@ -7,8 +7,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.dialects.postgresql import UUID as PgUUID
 
-from src.domain.models.route import Route, Waypoint
-from src.domain.repositories.route_repository import RouteRepository
+from ...domain.entities.route import Route
+from ...domain.entities.waypoint import Waypoint
+from ...domain.repositories.route_repository import RouteRepository
 
 Base = declarative_base()
 

@@ -1,8 +1,11 @@
 import os
 from flask import Flask, jsonify
-#from flask_cors import CORS
+from dotenv import load_dotenv
+# from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+
+loaded = load_dotenv('.env.development')
 
 from .api.v1.routes import routes_blueprint
 from .api.v1.optimizations import optimizations_blueprint
@@ -12,13 +15,15 @@ from .infrastructure.repositories.sqlalchemy_route_repository import Base, SQLAl
 from .domain.services.optimization_service import OptimizationService
 from .api.error_handlers import register_error_handlers
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
     # Register CORS | discuss with team
-#    CORS(app)
+    #    CORS(app)
 
     # Setup database
     engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
@@ -65,4 +70,4 @@ def create_app(config_class=Config):
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)

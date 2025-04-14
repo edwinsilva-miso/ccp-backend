@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional, Union
 from uuid import UUID
 
-from src.domain.models.route import Route
+from ..entities.route import Route
 
 
 class RouteRepository(ABC):

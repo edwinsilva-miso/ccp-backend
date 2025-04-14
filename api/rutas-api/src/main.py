@@ -15,8 +15,6 @@ from .infrastructure.repositories.sqlalchemy_route_repository import Base, SQLAl
 from .domain.services.optimization_service import OptimizationService
 from .api.error_handlers import register_error_handlers
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 def create_app(config_class=Config):
     app = Flask(__name__)

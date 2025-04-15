@@ -15,11 +15,11 @@ class StatusEnum(enum.Enum):
     INACTIVO = 'INACTIVO'
 
 
-class ProviderModel(Base):
+class ManufacturerModel(Base):
     """
-    Provider model for SQLAlchemy.
+    manufacturer model for SQLAlchemy.
     """
-    __tablename__ = 'providers'
+    __tablename__ = 'manufacturers'
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nit = Column(String, nullable=False, unique=True)

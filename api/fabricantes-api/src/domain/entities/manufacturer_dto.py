@@ -1,6 +1,6 @@
 import datetime
 
-class ProviderDTO:
+class ManufacturerDTO:
     def __init__(self, id: int, nit: str, name: str, address: str, phone: str, email: str, legal_representative: str,
                  country: str, status: str, created: datetime, updated: datetime):
         self.id = id

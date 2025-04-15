@@ -63,13 +63,13 @@ services:
 
   # [DELETE] Put here below the services you want to add with the database (if applies)
 
-  # Proveedores API:
-  providers_db:
+  # Fabricantes API:
+  manufacturers_db:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: providers
+      POSTGRES_DB: manufacturers
     ports:
       - "5433:5432"
     healthcheck:
@@ -78,9 +78,9 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - providers_db_volume:/var/lib/postgresql/data
+      - manufacturers_db_volume:/var/lib/postgresql/data
     networks:
-      - providers_api_net
+      - manufacturers_api_net
 
   # Additional Infrastructure
   rabbitmq:
@@ -101,7 +101,7 @@ services:
 
 volumes:
   users_db_volume:
-  providers_db_volume:
+  manufacturers_db_volume:
   rabbitmq_data:
 
 networks:
@@ -113,5 +113,5 @@ networks:
     driver: bridge
   users_api_net:
     driver: bridge
-  providers_api_net:
+  manufacturers_api_net:
     driver: bridge

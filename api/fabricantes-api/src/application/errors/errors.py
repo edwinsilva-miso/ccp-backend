@@ -13,14 +13,14 @@ class InvalidFormatError(ApiError):
     description = "Formato de campo inválido."
 
 
-class ProviderAlreadyExistsError(ApiError):
+class ManufacturerAlreadyExistsError(ApiError):
     code = 412
-    description = "El registro ya existe."
+    description = "El fabricante ya existe."
 
 
-class ProviderNotExistsError(ApiError):
+class ManufacturerNotExistsError(ApiError):
     code = 404
-    description = "El proveedor no existe."
+    description = "El fabricante no existe."
 
 
 # class InvalidTokenError(ApiError):

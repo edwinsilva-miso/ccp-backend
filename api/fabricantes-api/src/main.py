@@ -6,7 +6,7 @@ from flask import Flask, jsonify
 loaded = load_dotenv('.env.development')
 
 from .interface.blueprints.management_blueprint import management_blueprint
-from .interface.blueprints.provider_blueprint import providers_blueprint
+from .interface.blueprints.manufacturers_blueprint import manufacturers_blueprint
 from .application.errors.errors import ApiError
 from .infrastructure.database.declarative_base import Base, engine
 
@@ -17,12 +17,12 @@ def create_app():
     """
     Create and configure the Flask application.
     """
-    logging.debug('providers microservice started')
+    logging.debug('manufacturers microservice started')
     app = Flask(__name__)
 
     # Register blueprints
     app.register_blueprint(management_blueprint)
-    app.register_blueprint(providers_blueprint)
+    app.register_blueprint(manufacturers_blueprint)
 
     # Create schema
     logging.debug(">> Create schema")

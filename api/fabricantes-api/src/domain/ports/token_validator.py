@@ -12,13 +12,3 @@ class TokenValidatorPort(ABC):
         :raises: AuthenticationError if token is invalid
         """
         pass
-
-    # @abstractmethod
-    # def get_user_id(self, token: str) -> str:
-    #     """Extract the user ID from the provided token."""
-    #     pass
-    #
-    # @abstractmethod
-    # def get_user_role(self, token: str) -> str:
-    #     """Extract the user role from the provided token."""
-    #     pass

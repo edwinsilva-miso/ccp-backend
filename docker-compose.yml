@@ -10,6 +10,7 @@ services:
       - "5000:5000"
     environment:
       USERS_API_URL: http://users-api:5000
+      MANUFACTURERS_API_URL: http://manufacturers-api:5000
     networks:
       - web_bff_net
       - app_net

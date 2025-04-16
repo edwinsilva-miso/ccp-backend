@@ -1,6 +1,7 @@
 import logging
 from flask import Blueprint, jsonify, request
 
+from ..decorators.token_decorator import token_required
 from ...application.errors.errors import ValidationApiError
 from ...application.create_manufacturer import CreateManufacturer
 from ...application.update_manufacturer import UpdateManufacturer
@@ -23,6 +24,7 @@ manufacturers_blueprint = Blueprint('manufacturer', __name__, url_prefix='/api/v
 manufacturers_adapter = ManufacturerAdapter()
 
 @manufacturers_blueprint.route('/', methods=['POST'])
+@token_required
 def create_manufacturer():
     data = request.get_json()
     if not data or not all(key in data for key in ('name', 'phone', 'email', 'nit', 'legal_representative', 'country')):
@@ -47,6 +49,7 @@ def create_manufacturer():
     return jsonify({'id': manufacturer_id}), 201
 
 @manufacturers_blueprint.route('/', methods=['GET'])
+@token_required
 def get_all_manufacturer():
     use_case = GetAllManufacturers(manufacturers_adapter)
     manufacturers = use_case.execute()
@@ -54,6 +57,7 @@ def get_all_manufacturer():
 
 
 @manufacturers_blueprint.route('/<string:manufacturer_id>', methods=['GET'])
+@token_required
 def get_manufacturer_by_id(manufacturer_id):
     use_case = GetManufacturerById(manufacturers_adapter)
     manufacturer = use_case.execute(manufacturer_id)
@@ -61,6 +65,7 @@ def get_manufacturer_by_id(manufacturer_id):
 
 
 @manufacturers_blueprint.route('/search', methods=['GET'])
+@token_required
 def get_manufacturer_by_nit():
     nit = request.args.get('nit')
     if not nit:
@@ -72,6 +77,7 @@ def get_manufacturer_by_nit():
     return jsonify(manufacturer.__dict__), 200
 
 @manufacturers_blueprint.route('/<string:manufacturer_id>', methods=['PUT'])
+@token_required
 def update_manufacturer(manufacturer_id):
     data = request.get_json()
     if not data or not all(key in data for key in ('name', 'address', 'phone', 'email', 'legal_representative', 'country', 'status')):
@@ -96,6 +102,7 @@ def update_manufacturer(manufacturer_id):
     return jsonify(updated.__dict__), 200
 
 @manufacturers_blueprint.route('/<string:manufacturer_id>', methods=['DELETE'])
+@token_required
 def delete_manufacturer(manufacturer_id):
     use_case = DeleteManufacturer(manufacturers_adapter)
     use_case.execute(manufacturer_id)

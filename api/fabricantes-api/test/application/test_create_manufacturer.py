@@ -1,11 +1,10 @@
-import pytest
-from unittest.mock import Mock, patch
-from datetime import datetime
 import uuid
+from unittest.mock import Mock
 
-from src.domain.entities.manufacturer_dto import ManufacturerDTO
+import pytest
 from src.application.create_manufacturer import CreateManufacturer
 from src.application.errors.errors import InvalidFormatError, ManufacturerAlreadyExistsError
+from src.domain.entities.manufacturer_dto import ManufacturerDTO
 from src.infrastructure.adapters.manufacturer_adapter import ManufacturerAdapter
 
 

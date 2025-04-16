@@ -1,5 +1,7 @@
 import logging
 
+from .errors.errors import ManufacturerNotExistsError
+
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Log format
@@ -25,5 +27,12 @@ class DeleteManufacturer:
         :param id: The ID of the manufacturer to delete.
         """
         logging.debug(f"Deleting manufacturer with ID {id}...")
+
+        # Check if the manufacturer exists before attempting to delete
+        existing = self.manufacturer_repository.get_by_id(id)
+        if not existing:
+            logging.error(f"Manufacturer with ID {id} does not exist.")
+            raise ManufacturerNotExistsError
+
         self.manufacturer_repository.delete(id)
         logging.debug(f"Manufacturer with ID {id} deleted successfully.")

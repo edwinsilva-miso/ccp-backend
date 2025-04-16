@@ -21,13 +21,3 @@ class ManufacturerAlreadyExistsError(ApiError):
 class ManufacturerNotExistsError(ApiError):
     code = 404
     description = "El fabricante no existe."
-
-
-# class InvalidTokenError(ApiError):
-#     code = 401
-#     description = "Unauthorized."
-#
-#
-# class ForbiddenError(ApiError):
-#     code = 403
-#     description = "Forbidden."

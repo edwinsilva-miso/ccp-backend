@@ -10,6 +10,7 @@ services:
       - "5000:5000"
     environment:
       USERS_API_URL: http://users-api:5000
+      MANUFACTURERS_API_URL: http://manufacturers-api:5000
     networks:
       - web_bff_net
       - app_net
@@ -63,6 +64,44 @@ services:
 
   # [DELETE] Put here below the services you want to add with the database (if applies)
 
+  # Fabricantes API:
+  manufacturers-api:
+    build: api/fabricantes-api/
+    container_name: manufacturers-api
+    ports:
+      - "5102:5000"
+    environment:
+      DB_HOST: manufacturers_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: manufacturers
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      manufacturers_db:
+        condition: service_healthy
+    networks:
+      - manufacturers_api_net
+      - app_net
+
+  manufacturers_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: manufacturers
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - manufacturers_db_volume:/var/lib/postgresql/data
+    networks:
+      - manufacturers_api_net
+
   # Additional Infrastructure
   rabbitmq:
     image: rabbitmq:3-management
@@ -82,6 +121,7 @@ services:
 
 volumes:
   users_db_volume:
+  manufacturers_db_volume:
   rabbitmq_data:
 
 networks:
@@ -92,4 +132,6 @@ networks:
   mobile_bff_net:
     driver: bridge
   users_api_net:
+    driver: bridge
+  manufacturers_api_net:
     driver: bridge

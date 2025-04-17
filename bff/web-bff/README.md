@@ -132,4 +132,4 @@ web-bff/
 
 - `FLASK_APP`: Application entry point (default: src/main.py)
 - `USERS_API_URL`: Users API service URL (default: http://users-api:5000)
-- 
+- `MANUFACTURERS_API_URL`: Manufacturers API service URL (default: http://manufacturers-api:5000)

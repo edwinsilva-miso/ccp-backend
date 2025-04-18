@@ -10,7 +10,7 @@ class TokenValidatorAdapter(TokenValidatorPort):
 
     def __init__(self, auth_service_url: str):
         """
-        Initializes the adapter with the URL of the authentication service.
+        Initializes the adapters with the URL of the authentication service.
         :param auth_service_url: URL of the authentication service.
         """
         self.auth_service_url = auth_service_url

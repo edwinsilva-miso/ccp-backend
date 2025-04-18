@@ -102,6 +102,25 @@ services:
     networks:
       - manufacturers_api_net
 
+  # Productos API
+  products_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: products
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - products_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
   # Additional Infrastructure
   rabbitmq:
     image: rabbitmq:3-management
@@ -122,6 +141,7 @@ services:
 volumes:
   users_db_volume:
   manufacturers_db_volume:
+  products_db_volume:
   rabbitmq_data:
 
 networks:
@@ -134,4 +154,6 @@ networks:
   users_api_net:
     driver: bridge
   manufacturers_api_net:
+    driver: bridge
+  products_api_net:
     driver: bridge

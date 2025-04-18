@@ -28,7 +28,7 @@ class TestUsersBlueprint:
             "id": "new-user-id"
         }
 
-        # Mock the adapter at class level
+        # Mock the adapters at class level
         with patch('src.blueprints.users_blueprint.UsersAdapter') as MockAdapter:
             # Configure the mock instance
             mock_instance = MockAdapter.return_value

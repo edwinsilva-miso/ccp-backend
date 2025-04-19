@@ -5,6 +5,7 @@ name = "web-bff"
 
 [packages]
 flask = "*"
+flask-cors = "*"
 requests = "*"
 pytest = "*"
 pytest-cov = "*"

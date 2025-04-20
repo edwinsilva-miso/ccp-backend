@@ -103,6 +103,26 @@ services:
       - manufacturers_api_net
 
   # Productos API
+  products-api:
+    build: api/productos-api/
+    container_name: products-api
+    ports:
+      - "5103:5000"
+    environment:
+      DB_HOST: products_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: products
+      USERS_API_URL: http://users-api:5000/api/v1/users
+      MANUFACTURERS_API_URL: http://manufacturers-api:5000/api/v1/manufacturers
+    depends_on:
+      products_db:
+        condition: service_healthy
+    networks:
+      - products_api_net
+      - app_net
+
   products_db:
     image: postgres:15
     environment:

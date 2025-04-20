@@ -115,7 +115,6 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: products
       USERS_API_URL: http://users-api:5000/api/v1/users
-      MANUFACTURERS_API_URL: http://manufacturers-api:5000/api/v1/manufacturers
     depends_on:
       products_db:
         condition: service_healthy

@@ -60,27 +60,12 @@ class TestGetProductByManufacturer:
         assert result[1].id == "product-2"
         assert all(product.manufacturer_id == self.manufacturer_id for product in result)
 
-    # def test_get_products_manufacturer_no_products(self):
-    #     """Test when manufacturer exists but has no products"""
-    #     # Configure mock to return empty list (manufacturer has no products)
-    #     self.mock_repository.get_by_manufacturer.return_value = []
-    #
-    #     # Execute the use case
-    #     result = self.get_product_by_manufacturer_use_case.execute(self.manufacturer_id)
-    #
-    #     # Verify repository was called
-    #     self.mock_repository.get_by_manufacturer.assert_called_once_with(self.manufacturer_id)
-    #
-    #     # Verify result is an empty list
-    #     assert isinstance(result, list)
-    #     assert len(result) == 0
-
     def test_get_products_manufacturer_no_products(self):
         """Test retrieving products for a manufacturer that doesn't exist"""
-        # Configure mock to raise ManufacturerNotExistsError
+        # Configure mock to return an empty list
         self.mock_repository.get_by_manufacturer.return_value = None
 
-        # Verify ManufacturerNotExistsError is raised
+        # Verify ProductNotExistsError is raised
         with pytest.raises(ProductNotExistsError):
             self.get_product_by_manufacturer_use_case.execute(self.manufacturer_id)
 

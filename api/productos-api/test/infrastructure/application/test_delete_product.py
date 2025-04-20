@@ -1,6 +1,6 @@
-import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
+import pytest
 from src.application.delete_product import DeleteProduct
 from src.application.errors.errors import ProductNotExistsError
 
@@ -37,4 +37,3 @@ class TestDeleteProduct:
         # Verify repository was called to check for existing product but not to delete
         self.mock_repository.get_by_id.assert_called_once_with(self.product_id)
         self.mock_repository.delete.assert_not_called()
-

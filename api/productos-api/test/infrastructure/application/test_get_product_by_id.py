@@ -1,11 +1,10 @@
 from datetime import datetime
+from unittest.mock import Mock
 
 import pytest
-from unittest.mock import Mock, patch
-
+from src.application.errors.errors import ProductNotExistsError
 from src.application.get_product_by_id import GetProductById
 from src.domain.entities.product_dto import ProductDTO
-from src.application.errors.errors import ProductNotExistsError
 
 
 class TestGetProductById:

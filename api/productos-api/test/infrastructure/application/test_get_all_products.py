@@ -1,5 +1,4 @@
-import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 from src.application.get_all_products import GetAllProducts
 from src.domain.entities.product_dto import ProductDTO
@@ -72,4 +71,3 @@ class TestGetAllProducts:
         # Verify result is an empty list
         assert isinstance(result, list)
         assert len(result) == 0
-

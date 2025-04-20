@@ -1,9 +1,9 @@
-import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
+import pytest
 from src.application.create_product import CreateProduct
-from src.domain.entities.product_dto import ProductDTO
 from src.application.errors.errors import InvalidFormatError, ProductAlreadyExistsError
+from src.domain.entities.product_dto import ProductDTO
 
 
 class TestCreateProduct:
@@ -110,7 +110,7 @@ class TestCreateProduct:
             storage_conditions="Test Storage Conditions",
             price=10.00,
             currency="USD",
-            delivery_time= -5,
+            delivery_time=-5,
             images=["image1.jpg", "image2.jpg"],
             created_at=None,
             updated_at=None
@@ -161,5 +161,3 @@ class TestCreateProduct:
         # Verify repository was called to check for existing product but not to add product
         self.mock_repository.get_by_name.assert_called_once_with(self.valid_product.name)
         self.mock_repository.add.assert_not_called()
-
-

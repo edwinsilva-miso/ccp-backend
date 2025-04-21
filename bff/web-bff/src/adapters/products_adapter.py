@@ -91,7 +91,6 @@ class ProductsAdapter:
         logger.debug(f"Deleting product with ID {product_id}")
         headers = {'Authorization': f'Bearer {jwt}'}
         response = requests.delete(f"{PRODUCTS_API_URL}/api/v1/products/{product_id}", headers=headers)
-        logger.debug(f"Response received from API: {response.json()}")
         if response.status_code == 204:
             return {}, response.status_code
         return response.json(), response.status_code

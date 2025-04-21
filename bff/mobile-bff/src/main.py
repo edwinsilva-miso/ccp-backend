@@ -7,6 +7,7 @@ loaded = load_dotenv('.env.development')
 
 from .blueprints.management_blueprint import management_blueprint
 from .blueprints.users_blueprint import users_blueprint
+from .blueprints.products_blueprint import products_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -21,6 +22,7 @@ def create_app():
     # Register blueprints
     app.register_blueprint(management_blueprint)
     app.register_blueprint(users_blueprint)
+    app.register_blueprint(products_blueprint)
 
     return app
 

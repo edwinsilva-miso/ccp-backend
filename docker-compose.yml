@@ -11,6 +11,7 @@ services:
     environment:
       USERS_API_URL: http://users-api:5000
       MANUFACTURERS_API_URL: http://manufacturers-api:5000
+      PRODUCTS_API_URL: http://products-api:5000
     networks:
       - web_bff_net
       - app_net
@@ -22,6 +23,7 @@ services:
       - "5001:5000"
     environment:
       USERS_API_URL: http://users-api:5000
+      PRODUCTS_API_URL: http://products-api:5000
     networks:
       - mobile_bff_net
       - app_net

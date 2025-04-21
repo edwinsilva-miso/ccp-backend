@@ -106,4 +106,4 @@ def get_products_by_manufacturer(manufacturer_id, jwt):
     logging.debug(f"Received request to get products by manufacturer ID: {manufacturer_id}")
     logging.debug("Retrieving products by manufacturer ID from BFF Web.")
     adapter = ProductsAdapter()
-    return adapter.get_products_by_manufacturers(jwt, manufacturer_id)
+    return adapter.get_products_by_manufacturer(jwt, manufacturer_id)

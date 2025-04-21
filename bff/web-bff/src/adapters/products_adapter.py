@@ -40,7 +40,7 @@ class ProductsAdapter:
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code
 
-    def get_products_by_manufacturers(self, jwt, manufacturer_id):
+    def get_products_by_manufacturer(self, jwt, manufacturer_id):
         """
         Get all products by manufacturer.
         :param jwt: JWT token for authorization.

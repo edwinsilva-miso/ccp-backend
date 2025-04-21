@@ -48,6 +48,14 @@ def mock_token():
     return "valid.jwt.token"
 
 
+def test_get_all_products_unauthorized(client):
+    # Act
+    response = client.get('/bff/v1/web/manufacturers/')
+
+    # Assert
+    assert response.status_code == 401
+    assert json.loads(response.data) == {'msg': 'Unauthorized'}
+
 def test_get_all_manufacturers_success(client, mock_token):
     # Arrange
     expected_response = [

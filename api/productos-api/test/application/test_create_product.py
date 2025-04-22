@@ -19,6 +19,7 @@ class TestCreateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=100.0,
@@ -54,6 +55,7 @@ class TestCreateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=-150.0,  # Invalid price
@@ -80,6 +82,7 @@ class TestCreateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price="invalid",  # Non-numeric price
@@ -106,11 +109,12 @@ class TestCreateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=10.00,
             currency="USD",
-            delivery_time=-5,
+            delivery_time=-5, # Invalid delivery time
             images=["image1.jpg", "image2.jpg"],
             created_at=None,
             updated_at=None
@@ -132,11 +136,66 @@ class TestCreateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price="Test Price",  # Non-integer price
             currency="USD",
             delivery_time=-5,
+            images=["image1.jpg", "image2.jpg"],
+            created_at=None,
+            updated_at=None
+        )
+
+        # Verify InvalidFormatError is raised
+        with pytest.raises(InvalidFormatError):
+            self.create_product_use_case.execute(invalid_product)
+
+        # Verify repository was not called to add product
+        self.mock_repository.add.assert_not_called()
+
+    def test_invalid_stock(self):
+        """Test product creation with invalid delivery time"""
+        # Create product with invalid delivery time
+        invalid_product = ProductDTO(
+            id=None,
+            name="Test Product",
+            brand="Test Brand",
+            manufacturer_id="test-manufacturer-id",
+            description="Test Description",
+            stock=-10, # Invalid stock
+            details="{'test': 'details'}",
+            storage_conditions="Test Storage Conditions",
+            price=10.00,
+            currency="USD",
+            delivery_time=5,
+            images=["image1.jpg", "image2.jpg"],
+            created_at=None,
+            updated_at=None
+        )
+
+        # Verify InvalidFormatError is raised
+        with pytest.raises(InvalidFormatError):
+            self.create_product_use_case.execute(invalid_product)
+
+        # Verify repository was not called to add product
+        self.mock_repository.add.assert_not_called()
+
+    def test_non_integer_stock(self):
+        """Test product creation with non-integer delivery time"""
+        # Create product with non-integer delivery time
+        invalid_product = ProductDTO(
+            id=None,
+            name="Test Product",
+            brand="Test Brand",
+            manufacturer_id="test-manufacturer-id",
+            description="Test Description",
+            stock="invalid", # Non-integer stock
+            details="{'test': 'details'}",
+            storage_conditions="Test Storage Conditions",
+            price="Test Price",  # Non-integer price
+            currency="USD",
+            delivery_time=5,
             images=["image1.jpg", "image2.jpg"],
             created_at=None,
             updated_at=None

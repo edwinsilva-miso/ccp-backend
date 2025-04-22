@@ -21,6 +21,7 @@ class TestGetProductById:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=100.0,
@@ -46,6 +47,7 @@ class TestGetProductById:
         assert result == self.sample_product
         assert result.id == self.product_id
         assert result.name == "Test Product"
+        assert result.stock == 10
         assert result.price == 100.0
 
     def test_get_nonexistent_product(self):

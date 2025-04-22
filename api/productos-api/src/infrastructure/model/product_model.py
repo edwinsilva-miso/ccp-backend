@@ -18,6 +18,7 @@ class ProductModel(Base):
     name = Column(String, nullable=False)
     brand = Column(String, nullable=False)
     description = Column(String, nullable=False)
+    stock = Column(sqlalchemy.Integer, nullable=False)
     details = Column(String, nullable=False)
     storage_conditions = Column(JSON, nullable=False)
     price = Column(sqlalchemy.Float, nullable=False)

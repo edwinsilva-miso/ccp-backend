@@ -86,6 +86,7 @@ class ProductDAO:
                 existing_product.brand = product.brand
                 existing_product.manufacturer_id = product.manufacturer_id
                 existing_product.description = product.description
+                existing_product.stock = product.stock
                 existing_product.details = product.details
                 existing_product.storage_conditions = product.storage_conditions
                 existing_product.price = product.price
@@ -102,6 +103,7 @@ class ProductDAO:
                     name=existing_product.name,
                     brand=existing_product.brand,
                     description=existing_product.description,
+                    stock=existing_product.stock,
                     details=existing_product.details,
                     storage_conditions=existing_product.storage_conditions,
                     price=existing_product.price,

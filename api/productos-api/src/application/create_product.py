@@ -44,6 +44,11 @@ class CreateProduct:
             logging.error("Invalid delivery time format. Delivery time must be a positive number.")
             raise InvalidFormatError
 
+        # Check if stock is a number and positive
+        if not isinstance(product.stock, int) or product.stock <= 0:
+            logging.error("Invalid delivery time format. Stock must be a positive number.")
+            raise InvalidFormatError
+
         # Check if product already exists
         logging.debug("Checking if product already exists...")
         existing_product = self.repository.get_by_name(product.name)

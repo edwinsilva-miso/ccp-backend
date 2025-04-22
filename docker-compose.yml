@@ -11,6 +11,7 @@ services:
     environment:
       USERS_API_URL: http://users-api:5000
       MANUFACTURERS_API_URL: http://manufacturers-api:5000
+      PRODUCTS_API_URL: http://products-api:5000
     networks:
       - web_bff_net
       - app_net
@@ -22,6 +23,7 @@ services:
       - "5001:5000"
     environment:
       USERS_API_URL: http://users-api:5000
+      PRODUCTS_API_URL: http://products-api:5000
     networks:
       - mobile_bff_net
       - app_net
@@ -102,6 +104,44 @@ services:
     networks:
       - manufacturers_api_net
 
+  # Productos API
+  products-api:
+    build: api/productos-api/
+    container_name: products-api
+    ports:
+      - "5103:5000"
+    environment:
+      DB_HOST: products_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: products
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      products_db:
+        condition: service_healthy
+    networks:
+      - products_api_net
+      - app_net
+
+  products_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: products
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - products_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
   # Additional Infrastructure
   rabbitmq:
     image: rabbitmq:3-management
@@ -122,6 +162,7 @@ services:
 volumes:
   users_db_volume:
   manufacturers_db_volume:
+  products_db_volume:
   rabbitmq_data:
 
 networks:
@@ -134,4 +175,6 @@ networks:
   users_api_net:
     driver: bridge
   manufacturers_api_net:
+    driver: bridge
+  products_api_net:
     driver: bridge

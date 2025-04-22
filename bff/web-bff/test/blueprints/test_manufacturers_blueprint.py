@@ -48,6 +48,14 @@ def mock_token():
     return "valid.jwt.token"
 
 
+def test_get_all_products_unauthorized(client):
+    # Act
+    response = client.get('/bff/v1/web/manufacturers/')
+
+    # Assert
+    assert response.status_code == 401
+    assert json.loads(response.data) == {'msg': 'Unauthorized'}
+
 def test_get_all_manufacturers_success(client, mock_token):
     # Arrange
     expected_response = [
@@ -271,3 +279,38 @@ def test_delete_manufacturer_success(client, mock_token):
         assert response.status_code == 204
         mock_adapter_instance.delete_manufacturer.assert_called_once_with(mock_token, manufacturer_id)
 
+
+def test_get_products_by_manufacturer(client, mock_manufacturer_data, mock_token):
+    # Arrange
+    manufacturer_id = "123"
+    headers = {'Authorization': f'Bearer {mock_token}'}
+
+    # Act
+    with patch('src.blueprints.manufacturers_blueprint.ProductsAdapter') as MockAdapter:
+        mock_adapter_instance = MockAdapter.return_value
+        mock_adapter_instance.get_products_by_manufacturer.return_value = (mock_manufacturer_data, 200)
+
+        response = client.get(f'/bff/v1/web/manufacturers/{manufacturer_id}/products', headers=headers)
+
+        # Assert
+        assert response.status_code == 200
+        assert json.loads(response.data) == mock_manufacturer_data
+        mock_adapter_instance.get_products_by_manufacturer.assert_called_once_with(mock_token, manufacturer_id)
+
+
+def test_get_products_by_manufacturer_error(client, mock_token):
+    manufacturer_id = "nonexistent-id"
+    error_response = {"msg": "Manufacturer not found"}
+    headers = {'Authorization': f'Bearer {mock_token}'}
+
+    # Act
+    with patch('src.blueprints.manufacturers_blueprint.ProductsAdapter') as MockAdapter:
+        mock_adapter_instance = MockAdapter.return_value
+        mock_adapter_instance.get_products_by_manufacturer.return_value = (error_response, 404)
+
+        response = client.get(f'/bff/v1/web/manufacturers/{manufacturer_id}/products', headers=headers)
+
+        # Assert
+        assert response.status_code == 404
+        assert json.loads(response.data) == error_response
+        mock_adapter_instance.get_products_by_manufacturer.assert_called_once_with(mock_token, manufacturer_id)

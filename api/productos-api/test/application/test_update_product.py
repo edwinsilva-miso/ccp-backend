@@ -23,6 +23,7 @@ class TestUpdateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=100.0,
@@ -75,6 +76,7 @@ class TestUpdateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=-150.0,  # Invalid negative price
@@ -105,6 +107,7 @@ class TestUpdateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price="invalid", # Non-numeric price
@@ -135,6 +138,7 @@ class TestUpdateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=100.0,
@@ -165,11 +169,74 @@ class TestUpdateProduct:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details="{'test': 'details'}",
             storage_conditions="Test Storage Conditions",
             price=100.0,
             currency="USD",
             delivery_time="invalid", # Non-integer delivery time
+            images=["image1.jpg", "image2.jpg"],
+            created_at=datetime.now().isoformat(),
+            updated_at=datetime.now().isoformat()
+        )
+
+        # Verify InvalidFormatError is raised
+        with pytest.raises(InvalidFormatError):
+            self.update_product_use_case.execute(self.product_id, invalid_product)
+
+        # Verify repository was not called to update product
+        self.mock_repository.update.assert_not_called()
+
+    def test_invalid_stock(self):
+        """Test product update with invalid delivery time"""
+        # Configure mock to return an existing product
+        existing_product = Mock()
+        self.mock_repository.get_by_id.return_value = existing_product
+
+        # Create product with invalid delivery time
+        invalid_product = ProductDTO(
+            id=self.product_id,
+            name="Test Product",
+            brand="Test Brand",
+            manufacturer_id="test-manufacturer-id",
+            description="Test Description",
+            stock=-10, # Invalid stock
+            details="{'test': 'details'}",
+            storage_conditions="Test Storage Conditions",
+            price=100.0,
+            currency="USD",
+            delivery_time=5,
+            images=["image1.jpg", "image2.jpg"],
+            created_at=datetime.now().isoformat(),
+            updated_at=datetime.now().isoformat()
+        )
+
+        # Verify InvalidFormatError is raised
+        with pytest.raises(InvalidFormatError):
+            self.update_product_use_case.execute(self.product_id, invalid_product)
+
+        # Verify repository was not called to update product
+        self.mock_repository.update.assert_not_called()
+
+    def test_non_integer_stock(self):
+        """Test product update with non-integer delivery time"""
+        # Configure mock to return an existing product
+        existing_product = Mock()
+        self.mock_repository.get_by_id.return_value = existing_product
+
+        # Create product with non-integer delivery time
+        invalid_product = ProductDTO(
+            id=self.product_id,
+            name="Test Product",
+            brand="Test Brand",
+            manufacturer_id="test-manufacturer-id",
+            description="Test Description",
+            stock="invalid", # Non-integer stock
+            details="{'test': 'details'}",
+            storage_conditions="Test Storage Conditions",
+            price=100.0,
+            currency="USD",
+            delivery_time=5,
             images=["image1.jpg", "image2.jpg"],
             created_at=datetime.now().isoformat(),
             updated_at=datetime.now().isoformat()

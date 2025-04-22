@@ -39,6 +39,11 @@ class UpdateProduct:
             logging.error("Invalid delivery time format. Delivery time must be a positive number.")
             raise InvalidFormatError
 
+        # Check if stock is a number and positive
+        if not isinstance(product.stock, int) or product.stock <= 0:
+            logging.error("Invalid delivery time format. Stock must be a positive number.")
+            raise InvalidFormatError
+
         logging.debug(f"Checking if product {product_id} exists...")
         existing_product = self.repository.get_by_id(product_id)
         if not existing_product:

@@ -54,7 +54,7 @@ def create_product(jwt):
     logging.debug("Received request to create a new product.")
     data = request.get_json()
     if not data or not all(key in data for key in (
-            'name', 'brand', 'description', 'manufacturerId', 'details', 'storageConditions', 'price', 'currency',
+            'name', 'brand', 'description', 'manufacturerId', 'stock', 'details', 'storageConditions', 'price', 'currency',
             'deliveryTime',
             'images')):
         logging.error("Missing required fields in request data.")
@@ -70,7 +70,7 @@ def update_product(product_id, jwt):
     logging.debug("Received request to update a new product.")
     data = request.get_json()
     if not data or not all(key in data for key in (
-            'name', 'brand', 'description', 'manufacturerId', 'details', 'storageConditions', 'price', 'currency',
+            'name', 'brand', 'description', 'manufacturerId', 'stock', 'details', 'storageConditions', 'price', 'currency',
             'deliveryTime',
             'images')):
         logging.error("Missing required fields in request data.")

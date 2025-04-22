@@ -46,6 +46,7 @@ class TestProductsBlueprint:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Test Description",
+            stock=10,
             details={"weight": "500g", "color": "red"},
             storage_conditions="Room temperature",
             price=100.0,
@@ -63,6 +64,7 @@ class TestProductsBlueprint:
                 brand="Test Brand",
                 manufacturer_id="test-manufacturer-id",
                 description="Test Description 2",
+                stock=10,
                 details={"weight": "300g", "color": "blue"},
                 storage_conditions="Refrigerated",
                 price=150.0,
@@ -147,6 +149,7 @@ class TestProductsBlueprint:
         data = json.loads(response.data)
         assert data['id'] == str(self.product_id)
         assert data['name'] == "Test Product"
+        assert data['stock'] == 10
         assert data['price'] == 100.0
 
         # Verify mock was called with string UUID (as the endpoint would receive it)
@@ -203,6 +206,7 @@ class TestProductsBlueprint:
             "brand": "Test Brand",
             "manufacturerId": "test-manufacturer-id",
             "description": "Test Description",
+            "stock": 10,
             "details": {"weight": "500g", "color": "red"},
             "storageConditions": "Room temperature",
             "price": 100.0,
@@ -244,6 +248,7 @@ class TestProductsBlueprint:
             "brand": "Test Brand",
             "manufacturerId": "test-manufacturer-id",
             "description": "Test Description",
+            "stock": 10,
             "details": {"weight": "500g", "color": "red"},
             "storageConditions": "Room temperature",
             "price": -100.0,  # Invalid negative price
@@ -282,6 +287,7 @@ class TestProductsBlueprint:
             brand="Test Brand",
             manufacturer_id="test-manufacturer-id",
             description="Updated Description",
+            stock=10,
             details={"weight": "600g", "color": "green"},
             storage_conditions="Room temperature",
             price=120.0,
@@ -298,6 +304,7 @@ class TestProductsBlueprint:
             "brand": "Test Brand",
             "manufacturerId": "test-manufacturer-id",
             "description": "Updated Description",
+            "stock": 10,
             "details": {"weight": "600g", "color": "green"},
             "storageConditions": "Room temperature",
             "price": 120.0,  # Invalid negative price
@@ -318,6 +325,7 @@ class TestProductsBlueprint:
         assert data['id'] == str(self.product_id)
         assert data['name'] == "Updated Product"
         assert data['description'] == "Updated Description"
+        assert data['stock'] == 10
         assert data['price'] == 120.0
 
         # Verify that the use case was called with correct parameters
@@ -344,6 +352,7 @@ class TestProductsBlueprint:
             "brand": "Test Brand",
             "manufacturerId": "test-manufacturer-id",
             "description": "Updated Description",
+            "stock": 10,
             "details": {"weight": "600g", "color": "green"},
             "storageConditions": "Room temperature",
             "price": 120.0,  # Invalid negative price

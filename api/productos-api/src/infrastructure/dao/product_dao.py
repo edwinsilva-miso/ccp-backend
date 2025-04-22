@@ -86,11 +86,13 @@ class ProductDAO:
                 existing_product.brand = product.brand
                 existing_product.manufacturer_id = product.manufacturer_id
                 existing_product.description = product.description
+                existing_product.stock = product.stock
                 existing_product.details = product.details
                 existing_product.storage_conditions = product.storage_conditions
                 existing_product.price = product.price
                 existing_product.currency = product.currency
                 existing_product.delivery_time = product.delivery_time
+                existing_product.images = product.images
                 existing_product.updatedAt = datetime.now(timezone.utc)
 
                 # Commit the changes
@@ -102,12 +104,14 @@ class ProductDAO:
                     name=existing_product.name,
                     brand=existing_product.brand,
                     description=existing_product.description,
+                    stock=existing_product.stock,
                     details=existing_product.details,
                     storage_conditions=existing_product.storage_conditions,
                     price=existing_product.price,
                     currency=existing_product.currency,
                     delivery_time=existing_product.delivery_time,
                     manufacturer_id=existing_product.manufacturer_id,
+                    images=existing_product.images,
                     createdAt=existing_product.createdAt,
                     updatedAt=existing_product.updatedAt
                 )

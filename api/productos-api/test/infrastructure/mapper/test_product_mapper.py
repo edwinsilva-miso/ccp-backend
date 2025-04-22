@@ -30,6 +30,7 @@ class TestProductMapper:
             brand="Test Brand",
             currency="USD",
             description="Test description",
+            stock=100,
             details={"weight": "500g", "dimensions": "10x20x30cm"},
             storage_conditions="Store in a cool place",
             price=29.99,
@@ -49,6 +50,7 @@ class TestProductMapper:
             brand="Test Brand",
             currency="USD",
             description="Test description",
+            stock=100,
             details=json.dumps({"weight": "500g", "dimensions": "10x20x30cm"}),
             storage_conditions="Store in a cool place",
             price=29.99,
@@ -68,6 +70,7 @@ class TestProductMapper:
         assert product_model.name == product_dto.name
         assert product_model.brand == product_dto.brand
         assert product_model.description == product_dto.description
+        assert product_model.stock == product_dto.stock
         assert product_model.details == json.dumps(product_dto.details)  # String representation
         assert product_model.storage_conditions == product_dto.storage_conditions
         assert product_model.price == product_dto.price
@@ -91,6 +94,7 @@ class TestProductMapper:
         assert product_dto.name == product_model.name
         assert product_dto.brand == product_model.brand
         assert product_dto.description == product_model.description
+        assert product_dto.stock == product_model.stock
         assert product_dto.details == json.loads(product_model.details)  # Dict representation
         assert product_dto.storage_conditions == product_model.storage_conditions
         assert product_dto.price == product_model.price

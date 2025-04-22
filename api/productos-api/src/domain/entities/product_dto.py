@@ -9,6 +9,7 @@ class ProductDTO:
                  brand: str,
                  manufacturer_id: str,
                  description: str,
+                 stock: int,
                  details: Dict[str, str],
                  storage_conditions: str,
                  price: float,
@@ -25,6 +26,7 @@ class ProductDTO:
             name (str): The product name
             manufacturer_id (str): The ID of the manufacturer.
             description (str): A short description of the product.
+            stock (int): The product stock.
             details (Dict[str, str]): A dictionary ofproduct details,
                                        where the key is the characteristic name and the value is its value.
             storage_conditions (str): The product storage conditions.
@@ -39,6 +41,7 @@ class ProductDTO:
         self.brand = brand
         self.manufacturer_id = manufacturer_id
         self.description = description
+        self.stock = stock
         self.details = details
         self.storage_conditions = storage_conditions
         self.price = price
@@ -49,7 +52,7 @@ class ProductDTO:
         self.updated_at = updated_at
 
     def __repr__(self):
-        return f"Product(name='{self.name}', price={self.price}, details={self.details})"
+        return f"Product(name='{self.name}', price={self.price}, details={self.details}), stock={self.stock}, "
 
     def to_dict(self):
         """
@@ -61,6 +64,7 @@ class ProductDTO:
             "brand": self.brand,
             "manufacturerId": self.manufacturer_id,
             "description": self.description,
+            "stock": self.stock,
             "details": self.details,
             "storageConditions": self.storage_conditions,
             "price": self.price,

@@ -45,6 +45,7 @@ class TestProductsManufacturerBlueprint:
                 brand="Test Brand",
                 manufacturer_id=self.manufacturer_id,
                 description="Test Description 1",
+                stock=10,
                 details={"weight": "500g", "color": "red"},
                 storage_conditions="Room temperature",
                 price=100.0,
@@ -58,6 +59,7 @@ class TestProductsManufacturerBlueprint:
                 brand="Test Brand",
                 manufacturer_id=self.manufacturer_id,
                 description="Test Description 2",
+                stock=20,
                 details={"weight": "300g", "color": "blue"},
                 storage_conditions="Refrigerated",
                 price=150.0,
@@ -91,6 +93,8 @@ class TestProductsManufacturerBlueprint:
         assert data[0]['id'] == "product-1"
         assert data[1]['id'] == "product-2"
         assert data[0]['manufacturer_id'] == self.manufacturer_id
+        assert data[0]['stock'] == 10
+        assert data[1]['stock'] == 20
 
         # Verify that the use case was called with correct parameters
         mock_use_case_instance.execute.assert_called_once_with(self.manufacturer_id)

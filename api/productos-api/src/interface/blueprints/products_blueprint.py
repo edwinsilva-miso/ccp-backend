@@ -23,7 +23,7 @@ products_adapter = ProductAdapter()
 def create_product():
     data = request.get_json()
     if not data or not all(key in data for key in (
-            'name', 'brand', 'description', 'manufacturerId', 'details', 'storageConditions', 'price', 'currency', 'deliveryTime',
+            'name', 'brand', 'description', 'manufacturerId', 'details', 'stock', 'storageConditions', 'price', 'currency', 'deliveryTime',
             'images')):
         logging.error("Missing required fields in request data.")
         raise ValidationApiError
@@ -34,6 +34,7 @@ def create_product():
         brand=data['brand'],
         manufacturer_id=data['manufacturerId'],
         description=data['description'],
+        stock=data['stock'],
         details=data['details'],
         storage_conditions=data['storageConditions'],
         price=data['price'],
@@ -69,7 +70,7 @@ def get_product_by_id(product_id):
 def update_product(product_id):
     data = request.get_json()
     if not data or not all(key in data for key in (
-            'name', 'brand', 'description', 'manufacturerId', 'details', 'storageConditions', 'price', 'currency', 'deliveryTime',
+            'name', 'brand', 'description', 'manufacturerId', 'stock', 'details', 'storageConditions', 'price', 'currency', 'deliveryTime',
             'images')):
         logging.error("Missing required fields in request data.")
         raise ValidationApiError
@@ -80,6 +81,7 @@ def update_product(product_id):
         brand=data['brand'],
         manufacturer_id=data['manufacturerId'],
         description=data['description'],
+        stock=data['stock'],
         details=data['details'],
         storage_conditions=data['storageConditions'],
         price=data['price'],

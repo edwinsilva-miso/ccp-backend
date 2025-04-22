@@ -92,6 +92,7 @@ class ProductDAO:
                 existing_product.price = product.price
                 existing_product.currency = product.currency
                 existing_product.delivery_time = product.delivery_time
+                existing_product.images = product.images
                 existing_product.updatedAt = datetime.now(timezone.utc)
 
                 # Commit the changes
@@ -110,6 +111,7 @@ class ProductDAO:
                     currency=existing_product.currency,
                     delivery_time=existing_product.delivery_time,
                     manufacturer_id=existing_product.manufacturer_id,
+                    images=existing_product.images,
                     createdAt=existing_product.createdAt,
                     updatedAt=existing_product.updatedAt
                 )

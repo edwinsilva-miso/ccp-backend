@@ -41,6 +41,7 @@ def mock_manufacturer_data():
         "brand": "Test Brand",
         "manufacturerId": "manufacturer_test",
         "description": "Test Description",
+        "stock": 100,
         "details": {"color": "gray", "size": "9.5"},
         "storageConditions": "Clean site",
         "price": 199.99,

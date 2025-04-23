@@ -16,6 +16,7 @@ class TestProductsAdapter(unittest.TestCase):
             "name": "Test Product",
             "brand": "Test Brand",
             "description": "Test Description",
+            "stock": 10,
             "manufacturerId": "123e4567-e89b-12d3-a456-426614174001",
             "details": "Test Details",
             "storageConditions": "Test Storage Conditions",

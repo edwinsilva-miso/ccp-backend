@@ -41,6 +41,7 @@ def mock_manufacturer_data():
         "brand": "Test Brand",
         "manufacturerId": "manufacturer_test",
         "description": "Test Description",
+        "stock": 100,
         "details": {"color": "gray", "size": "9.5"},
         "storageConditions": "Clean site",
         "price": 199.99,
@@ -94,6 +95,7 @@ def test_get_product_by_id_success(client, mock_token):
         "name": "Test Product",
         "brand": "Test Brand",
         "manufacturerId": "manufacturer_test",
+        "stock": 10,
         "description": "Test Description",
         "price": 199.99
     }

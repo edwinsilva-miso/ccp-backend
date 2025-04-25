@@ -3,6 +3,10 @@ class ApiError(Exception):
     description = "Hubo un error inesperado. Intente más tarde."
 
 
+class InternalServerError(ApiError):
+    code = 500
+    description = "Error interno del servidor. Intente más tarde"
+
 class ValidationApiError(ApiError):
     def __init__(self, message=None):
         super().__init__(message)

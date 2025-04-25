@@ -6,7 +6,9 @@ from flask import Flask, jsonify
 loaded = load_dotenv('.env.development')
 
 from .interface.blueprints.management_blueprint import management_blueprint
+from .interface.blueprints.order_blueprint import orders_blueprint
 from .application.errors.errors import ApiError
+from .infrastructure.database.declarative_base import Base, engine
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -19,6 +21,11 @@ def create_app():
     app = Flask(__name__)
 
     app.register_blueprint(management_blueprint)
+    app.register_blueprint(orders_blueprint)
+
+    # Create schema
+    logging.debug(">> Create schema")
+    Base.metadata.create_all(engine)
 
     @app.errorhandler(ApiError)
     def handle_error(error):

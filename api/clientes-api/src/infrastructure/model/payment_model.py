@@ -26,12 +26,10 @@ class PaymentModel(Base):
     order_id = Column(String, ForeignKey('orders.id'), unique=True, nullable=False)
     amount = Column(Float, nullable=False)
     card_number = Column(String, nullable=True)
-    cvv = Column(String, nullable=True)
-    expiry_date = Column(String, nullable=True)
     currency = Column(String, nullable=False)
     payment_method = Column(sqlalchemy.Enum(PaymentMethodEnum), default=PaymentMethodEnum.TARJETA_CREDITO)
     transaction_id = Column(String, nullable=True)
-    status = Column(sqlalchemy.Enum(PaymentStatusEnum), default=PaymentStatusEnum.APROBADO)
+    status = Column(sqlalchemy.Enum(PaymentStatusEnum), default=PaymentStatusEnum.APPROVED)
     transaction_date = Column(DateTime, nullable=False)
 
 

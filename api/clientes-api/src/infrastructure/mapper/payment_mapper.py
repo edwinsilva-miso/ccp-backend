@@ -19,8 +19,8 @@ class PaymentMapper:
             order_id=payment_model.order_id,
             amount=payment_model.amount,
             card_number=payment_model.card_number,
-            cvv=payment_model.cvv,
-            expiry_date=payment_model.expiry_date,
+            cvv="***",
+            expiry_date="*****",
             currency=payment_model.currency
         )
         dto.payment_method = payment_model.payment_method if isinstance(payment_model.payment_method,
@@ -46,8 +46,6 @@ class PaymentMapper:
             order_id=payment_dto.order_id,
             amount=payment_dto.amount,
             card_number=payment_dto.card_number,
-            cvv=payment_dto.cvv,
-            expiry_date=payment_dto.expiry_date,
             currency=payment_dto.currency,
             payment_method=payment_dto.payment_method,
             transaction_id=payment_dto.transaction_id,

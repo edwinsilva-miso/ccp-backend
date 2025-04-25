@@ -116,7 +116,7 @@ class CreatePurchase:
             id=result['id'],
             order_id=order_id,
             amount=payment_info['amount'],
-            card_number=payment_info['cardNumber'],
+            card_number=result['cardNumber'],
             cvv=payment_info['cvv'],
             expiry_date=payment_info['expiryDate'],
             currency=payment_info['currency']

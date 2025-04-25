@@ -21,7 +21,7 @@ class PaymentDTO:
         self.cvv = cvv
         self.expiry_date = expiry_date
         self.currency = currency
-        self.payment_method = 'CREDIT_CARD'  # Assuming the payment method is always credit card for this DTO
+        self.payment_method = 'TARJETA_CREDITO'  # Assuming the payment method is always credit card for this DTO
         self.transaction_id = None
         self.status = None
         self.transaction_date = None

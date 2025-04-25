@@ -8,9 +8,9 @@ from sqlalchemy.orm import relationship
 from ..database.declarative_base import Base
 
 class PaymentStatusEnum(enum.Enum):
-    CANCELADO = 'CANCELADO'
-    APROBADO = 'APROBADO'
-    RECHAZADO = 'RECHAZADO'
+    CANCELLED = 'CANCELADO'
+    APPROVED = 'APROBADO'
+    REJECTED = 'RECHAZADO'
 
 class PaymentMethodEnum(enum.Enum):
     TARJETA_CREDITO = 'TARJETA DE CREDITO'

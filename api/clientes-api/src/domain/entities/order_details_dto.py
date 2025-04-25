@@ -1,6 +1,6 @@
 class OrderDetailsDTO:
 
-    def __init__(self, id: str, order_id: int, product_id: int, quantity: int, unit_price: float, total_price: float,
+    def __init__(self, id: str, order_id: str, product_id: int, quantity: int, unit_price: float, total_price: float,
                  currency: str):
         """
         Initialize an OrderDetailDTO object with the given parameters.

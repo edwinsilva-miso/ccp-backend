@@ -13,6 +13,7 @@ class OrderStatusEnum(enum.Enum):
     EN_PROCESO = 'EN PROCESO'
     COMPLETADO = 'COMPLETADO'
     CANCELADO = 'CANCELADO'
+    FALLIDO = 'FALLIDO'
 
 
 class OrderModel(Base):

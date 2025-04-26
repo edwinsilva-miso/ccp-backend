@@ -2,6 +2,7 @@ import logging
 
 from flask import Blueprint, jsonify, request
 
+from ..decorator.token_decorator import token_required
 from ...application.create_purchase import CreatePurchase
 from ...application.errors.errors import ValidationApiError
 from ...infrastructure.adapters.orders_adapter import OrdersAdapter
@@ -21,6 +22,7 @@ orders_blueprint = Blueprint('orders', __name__, url_prefix='/api/v1/orders')
 
 
 @orders_blueprint.route('/', methods=['POST'])
+@token_required(['CLIENTE'])
 def create_order():
     """
     Endpoint to create a new order.

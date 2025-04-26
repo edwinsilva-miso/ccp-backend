@@ -2,6 +2,7 @@ import logging
 
 from ...application.process_update_products_stock_message import ProcessUpdateProductsStockMessage
 from ...infrastructure.messaging.rabbitmq_messaging_port_adapter import RabbitMQMessagingPortAdapter
+from ...infrastructure.adapters.product_adapter import ProductAdapter
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
@@ -16,8 +17,9 @@ class UpdateProductsStockConsumer:
     """
 
     def __init__(self):
+        products_adapter = ProductAdapter()
         self.messaging_port = RabbitMQMessagingPortAdapter()
-        self.processor = ProcessUpdateProductsStockMessage()
+        self.processor = ProcessUpdateProductsStockMessage(products_adapter)
 
     def process_message(self, message: dict) -> None:
         """

@@ -24,6 +24,7 @@ services:
     environment:
       USERS_API_URL: http://users-api:5000
       PRODUCTS_API_URL: http://products-api:5000
+      CLIENTS_API_URL: http://clients-api:5000
     networks:
       - mobile_bff_net
       - app_net
@@ -142,6 +143,45 @@ services:
     networks:
       - app_net
 
+  # Clientes API
+  clients-api:
+    build: api/clientes-api/
+    container_name: clients-api
+    ports:
+      - "5104:5000"
+    environment:
+      DB_HOST: clients_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: clients
+      USERS_API_URL: http://users-api:5000/api/v1/users
+      PAYMENT_GATEWAY_URL: http://host.docker.internal:8000/api/v1/
+    depends_on:
+      clients_db:
+        condition: service_healthy
+    networks:
+      - clients_api_net
+      - app_net
+
+  clients_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: clients
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - clients_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
   # Additional Infrastructure
   rabbitmq:
     image: rabbitmq:3-management
@@ -163,6 +203,7 @@ volumes:
   users_db_volume:
   manufacturers_db_volume:
   products_db_volume:
+  clients_db_volume:
   rabbitmq_data:
 
 networks:
@@ -177,4 +218,6 @@ networks:
   manufacturers_api_net:
     driver: bridge
   products_api_net:
+    driver: bridge
+  clients_api_net:
     driver: bridge

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 from ..entities.order_dto import OrderDTO
+
 
 class OrdersRepository(ABC):
 
@@ -22,4 +24,3 @@ class OrdersRepository(ABC):
     def update(self, order: OrderDTO) -> OrderDTO | None:
         """Update an existing order"""
         pass
-

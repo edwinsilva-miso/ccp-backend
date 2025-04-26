@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-class PaymentPort(ABC):
 
+class PaymentPort(ABC):
     """Port defining the interface for payment processing"""
 
     @abstractmethod

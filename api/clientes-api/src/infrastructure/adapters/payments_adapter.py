@@ -63,16 +63,13 @@ class PaymentsAdapter:
         """
         logging.debug("Processing payment...")
         headers = self.get_headers()
-        payload = {
-            "amount": payment_dto['amount'],
-            "cardNumber": payment_dto['card_number'],
-            "cvv": payment_dto['cvv'],
-            "expiryDate": payment_dto['expiration_date'],
-            "currency": payment_dto['currency']
-        }
+
         try:
-            response = requests.post(f"{PAYMENT_GATEWAY_URL}/payments", json=payload, headers=headers)
-            if response.status_code == 200:
+            response = requests.post(f"{PAYMENT_GATEWAY_URL}/payments", json=payment_dto, headers=headers)
+            if response.status_code == 201:
+                return response.json()
+            elif response.status_code == 402:
+                print(f"Payment processing failed: {response.text}")
                 return response.json()
             else:
                 # Retry authentication if token is expired

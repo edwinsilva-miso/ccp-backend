@@ -1,5 +1,4 @@
 import enum
-from datetime import datetime
 
 import sqlalchemy
 from sqlalchemy import Column, String, Float, DateTime, ForeignKey
@@ -7,10 +6,12 @@ from sqlalchemy.orm import relationship
 
 from ..database.declarative_base import Base
 
+
 class PaymentStatusEnum(enum.Enum):
     CANCELLED = 'CANCELADO'
     APPROVED = 'APROBADO'
     REJECTED = 'RECHAZADO'
+
 
 class PaymentMethodEnum(enum.Enum):
     TARJETA_CREDITO = 'TARJETA DE CREDITO'
@@ -32,6 +33,6 @@ class PaymentModel(Base):
     status = Column(sqlalchemy.Enum(PaymentStatusEnum), default=PaymentStatusEnum.APPROVED)
     transaction_date = Column(DateTime, nullable=False)
 
-
     # Relationships
-    order = relationship("OrderModel", back_populates="payments")
+    # One-to-one relationship with Order
+    order = relationship("OrderModel", back_populates="payment")

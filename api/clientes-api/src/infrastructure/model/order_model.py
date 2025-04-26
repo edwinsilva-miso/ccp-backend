@@ -30,10 +30,10 @@ class OrderModel(Base):
     total = Column(Float, nullable=False)
     currency = Column(String, nullable=False)
     status = Column(sqlalchemy.Enum(OrderStatusEnum), default=OrderStatusEnum.PENDIENTE)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(String, nullable=False)
+    created_at = Column(DateTime, nullable=True, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=True)
 
     # Relationships
-    client_info = relationship("ClientInfoModel", uselist=False, back_populates="orders", cascade="all, delete-orphan")
-    order_details = relationship("OrderDetailsModel", back_populates="order", cascade="all, delete-orphan")
-    payment = relationship("PaymentModel", uselist=False, back_populates="orders", cascade="all, delete-orphan")
+    client_info = relationship("ClientInfoModel", uselist=False, back_populates="order", cascade="all, delete-orphan")
+    order_details = relationship("OrderDetailsModel", back_populates="orders", cascade="all, delete-orphan")
+    payment = relationship("PaymentModel", uselist=False, back_populates="order", cascade="all, delete-orphan")

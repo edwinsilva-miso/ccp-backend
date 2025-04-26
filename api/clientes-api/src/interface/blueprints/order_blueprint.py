@@ -3,7 +3,7 @@ import logging
 from flask import Blueprint, jsonify, request
 
 from ...application.create_purchase import CreatePurchase
-from ...application.errors.errors import ValidationApiError, InternalServerError
+from ...application.errors.errors import ValidationApiError
 from ...infrastructure.adapters.orders_adapter import OrdersAdapter
 from ...infrastructure.adapters.payments_adapter import PaymentsAdapter
 
@@ -31,9 +31,5 @@ def create_order():
         raise ValidationApiError
 
     use_case = CreatePurchase(orders_adapter, payments_adapter)
-    try:
-        response = use_case.execute(data)
-        return jsonify(response), 201
-    except Exception as e:
-        logger.error(f"Error creating order: {str(e)}")
-        raise InternalServerError
+    response = use_case.execute(data)
+    return jsonify(response), 201

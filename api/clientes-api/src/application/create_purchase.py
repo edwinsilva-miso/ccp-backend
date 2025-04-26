@@ -29,21 +29,21 @@ class CreatePurchase:
         # Validate the purchase data
         validate(order_data)
 
-        order = order_data['order']
-        payment = order['payment']
-        client_info = order['clientInfo']
-        order_details = order['orderDetails']
+        # order = order_data['order']
+        payment = order_data['payment']
+        client_info = order_data['clientInfo']
+        order_details = order_data['orderDetails']
         order_id = str(uuid.uuid4())
 
         # Create the order DTO
         order_dto = OrderDTO(
             id=order_id,
-            client_id=order['clientId'],
-            quantity=order['quantity'],
-            subtotal=order['subtotal'],
-            tax=order['tax'],
-            total=order['total'],
-            currency=order['currency'],
+            client_id=order_data['clientId'],
+            quantity=order_data['quantity'],
+            subtotal=order_data['subtotal'],
+            tax=order_data['tax'],
+            total=order_data['total'],
+            currency=order_data['currency'],
             status='PENDIENTE',
             created_at=None,
             updated_at=None
@@ -51,9 +51,9 @@ class CreatePurchase:
 
         # Process the payment
         payment_dto = self._execute_payment(payment, order_id)
-        if payment_dto:
-            order_dto.status = 'COMPLETADO' if payment_dto.status == 'APPROVED' else 'FALLIDO'
-            order_dto.payment = payment_dto
+
+        order_dto.status = 'COMPLETADO' if payment_dto.status == 'APPROVED' else 'FALLIDO'
+        order_dto.payment = payment_dto
 
         # Create the client info DTO
         client_info_dto = ClientInfoDTO(
@@ -67,7 +67,7 @@ class CreatePurchase:
         # Create the order details DTO
         list_order_details = [
             OrderDetailsDTO(
-                id=None,
+                id=str(uuid.uuid4()),
                 order_id=order_id,
                 product_id=item['productId'],
                 quantity=item['quantity'],
@@ -82,12 +82,14 @@ class CreatePurchase:
         order_dto.client_info = client_info_dto
 
         # Create the purchase
-        purchase = self.order_repository.create(order_data)
+        logging.debug(f"Purchase data: {order_dto.to_dict()}")
+        purchase = self.order_repository.add(order_dto)
         logging.debug(f"Purchase created with ID: {purchase.id} and status: {purchase.status}")
 
         # Create the DTO to send to pedidos-api
         order_message = purchase.to_dict()
-        return purchase
+        logging.debug(f"Order message to send: {order_message}")
+        return order_message
 
     def _execute_payment(self, payment_info, order_id):
         """

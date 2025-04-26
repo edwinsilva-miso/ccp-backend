@@ -7,12 +7,12 @@ class InternalServerError(ApiError):
     code = 500
     description = "Error interno del servidor. Intente más tarde"
 
+
 class ValidationApiError(ApiError):
     def __init__(self, message=None):
         super().__init__(message)
         self.code = 400
         self.description = message or "Error de validación de datos."
-
 
 
 class InvalidFormatError(ApiError):

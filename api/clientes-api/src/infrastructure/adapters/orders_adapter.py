@@ -3,6 +3,7 @@ from ..mapper.order_mapper import OrderMapper
 from ...domain.entities.order_dto import OrderDTO
 from ...domain.repositories.orders_repository import OrdersRepository
 
+
 class OrdersAdapter(OrdersRepository):
     """
     Adapter class to interact with the OrderDAO and convert between OrderDTO and OrderModel.
@@ -16,7 +17,9 @@ class OrdersAdapter(OrdersRepository):
         return OrderMapper.to_dto(order) if order else None
 
     def add(self, order: OrderDTO) -> OrderDTO | None:
-        return OrderMapper.to_dto(OrderDAO.save(OrderMapper.to_model(order))) if order else None
+        order_id = OrderDAO.save(OrderMapper.to_model(order))
+        returned = OrderDAO.get_order_by_id(order_id)
+        return OrderMapper.to_dto(returned) if returned else None
 
     def update(self, order: OrderDTO) -> OrderDTO | None:
         updated = OrderDAO.update(OrderMapper.to_model(order))

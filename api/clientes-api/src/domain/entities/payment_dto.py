@@ -3,7 +3,8 @@ class PaymentDTO:
     A Data Transfer Object (DTO) for payment information.
     """
 
-    def __init__(self, id:str, order_id:str, amount: float, card_number: str, cvv: str, expiry_date: str, currency: str):
+    def __init__(self, id: str, order_id: str, amount: float, card_number: str, cvv: str, expiry_date: str,
+                 currency: str):
         """
         Initialize a PaymentDTO object with the given parameters.
         :param id: The unique identifier for the payment.
@@ -38,8 +39,8 @@ class PaymentDTO:
             'cvv': self.cvv,
             'expiration_date': self.expiry_date,
             'currency': self.currency,
-            'payment_method': self.payment_method,
-            'transaction_id': self.transaction_id,
+            'paymentMethod': self.payment_method,
+            'transactionId': self.transaction_id,
             'status': self.status,
-            'transaction_date': self.transaction_date
+            'transactionDate': self.transaction_date
         }

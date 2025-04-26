@@ -1,7 +1,8 @@
 import uuid
+
 from sqlalchemy import Column, String, Float, ForeignKey
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from ..database.declarative_base import Base
 
@@ -21,4 +22,4 @@ class OrderDetailsModel(Base):
     currency = Column(String, nullable=False)
 
     # Relationships
-    order = relationship("OrderModel", back_populates="order_details")
+    orders = relationship("OrderModel", back_populates="order_details")

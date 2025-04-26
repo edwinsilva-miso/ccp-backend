@@ -1,6 +1,7 @@
 from ..model.client_info_model import ClientInfoModel
 from ...domain.entities.client_info_dto import ClientInfoDTO
 
+
 class ClientInfoMapper:
     """
     Mapper class to convert between ClientInfoDTO and ClientInfoModel.

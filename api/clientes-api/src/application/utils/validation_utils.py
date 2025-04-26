@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 from ..errors.errors import InvalidFormatError, ValidationApiError
 
+
 def validate(order_data):
     """
     Validate the order data.
@@ -22,29 +23,29 @@ def validate(order_data):
         logger.error("Invalid order data format: Expected a dictionary")
         raise ValidationApiError
 
-    order = order_data['order']
-    payment = order['payment']
-    client_info = order['clientInfo']
-    order_details = order['orderDetails']
+    # order = order_data['order']
+    payment = order_data['payment']
+    client_info = order_data['clientInfo']
+    order_details = order_data['orderDetails']
 
     logger.info("Validating order data fields...")
     # Validate order fields
-    _validate_present(order.get('clientId'), 'clientId')
-    _validate_present(order.get('quantity'), 'quantity')
-    _validate_numeric(order.get('quantity'), 'quantity')
-    _validate_present(order.get('subtotal'), 'subtotal')
-    _validate_numeric(order.get('subtotal'), 'subtotal')
-    _validate_present(order.get('tax'), 'tax')
-    _validate_numeric(order.get('tax'), 'tax')
-    _validate_present(order.get('total'), 'total')
-    _validate_numeric(order.get('total'), 'total')
-    _validate_present(order.get('currency'), 'currency')
-    _validate_currency(order.get('currency'), 'currency')
+    _validate_present(order_data.get('clientId'), 'clientId')
+    _validate_present(order_data.get('quantity'), 'quantity')
+    _validate_numeric(order_data.get('quantity'), 'quantity')
+    _validate_present(order_data.get('subtotal'), 'subtotal')
+    _validate_numeric(order_data.get('subtotal'), 'subtotal')
+    _validate_present(order_data.get('tax'), 'tax')
+    _validate_numeric(order_data.get('tax'), 'tax')
+    _validate_present(order_data.get('total'), 'total')
+    _validate_numeric(order_data.get('total'), 'total')
+    _validate_present(order_data.get('currency'), 'currency')
+    _validate_currency(order_data.get('currency'), 'currency')
 
     # Validate payment fields
     _validate_present_object(payment, 'payment')
-    _validate_present(payment.get('total'), 'payment.total')
-    _validate_numeric(payment.get('total'), 'payment.total')
+    _validate_present(payment.get('amount'), 'payment.amount')
+    _validate_numeric(payment.get('amount'), 'payment.amount')
     _validate_present(payment.get('cardNumber'), 'payment.cardNumber')
     _validate_credit_card(payment.get('cardNumber'), 'payment.cardNumber')
     _validate_present(payment.get('currency'), 'payment.currency')
@@ -64,7 +65,6 @@ def validate(order_data):
 
     # Validate order details fields
     _validate_order_details(order_details)
-
 
     logger.debug("Order data validation completed successfully.")
 
@@ -111,6 +111,7 @@ def _validate_order_details(order_details, field_name="orderDetails"):
             logger.error(f"Invalid {detail_prefix}.totalPrice: calculation mismatch")
             raise InvalidFormatError(f"{detail_prefix}.totalPrice must equal quantity * unitPrice")
 
+
 def _validate_numeric(value, field_name):
     """
     Validate if the value is numeric.
@@ -126,6 +127,7 @@ def _validate_numeric(value, field_name):
         logger.error(f"Invalid value for {field_name}: {value} is negative")
         raise InvalidFormatError(f"{field_name} must be a positive number")
 
+
 def _validate_present_object(value, field_name):
     """
     Validate if the value is present (not None).
@@ -136,6 +138,7 @@ def _validate_present_object(value, field_name):
     if value is None:
         logger.error(f"Missing required field: {field_name}")
         raise ValidationApiError(f"{field_name} is required")
+
 
 def _validate_present(value, field_name):
     """
@@ -148,6 +151,7 @@ def _validate_present(value, field_name):
         logger.error(f"Missing required field: {field_name}")
         raise ValidationApiError(f"{field_name} is required")
 
+
 def _validate_currency(value, field_name):
     """
     Validate if the currency is a valid string.
@@ -158,6 +162,7 @@ def _validate_currency(value, field_name):
     if not isinstance(value, str) or len(value) != 3:
         logger.error(f"Invalid format for {field_name}: {value} is not a valid currency")
         raise InvalidFormatError(f"{field_name} must be a 3-letter currency code")
+
 
 def _validate_cvv(value, field_name):
     """
@@ -170,6 +175,7 @@ def _validate_cvv(value, field_name):
         logger.error(f"Invalid format for {field_name}: {value} is not a valid CVV")
         raise InvalidFormatError(f"{field_name} must be a 3 or 4 digit number")
 
+
 def _validate_expiry_date(value, field_name):
     """
     Validate if the expiry date is in the correct format (MM/YY).
@@ -181,6 +187,7 @@ def _validate_expiry_date(value, field_name):
         logger.error(f"Invalid format for {field_name}: {value} is not a valid expiry date")
         raise InvalidFormatError(f"{field_name} must be in MM/YY format")
 
+
 def _validate_credit_card(value, field_name):
     """
     Validate if the credit card number is a valid string of digits.
@@ -191,6 +198,7 @@ def _validate_credit_card(value, field_name):
     if not isinstance(value, str) or not value.isdigit() or len(value) < 13 or len(value) > 19:
         logger.error(f"Invalid format for {field_name}: {value} is not a valid credit card number")
         raise InvalidFormatError(f"{field_name} must be a valid credit card number")
+
 
 def _validate_email(value, field_name):
     """

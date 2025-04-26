@@ -3,7 +3,7 @@ import datetime
 
 class OrderDTO:
 
-    def __init__(self, id: str, client_id:str, quantity: int, subtotal: float, tax: float, total: float, currency: str,
+    def __init__(self, id: str, client_id: str, quantity: int, subtotal: float, tax: float, total: float, currency: str,
                  status: str, created_at: datetime, updated_at: datetime):
         """
         Initialize an OrderDTO object with the given parameters.
@@ -47,5 +47,8 @@ class OrderDTO:
             "currency": self.currency,
             "status": self.status,
             "createdAt": self.created_at,
-            "updatedAt": self.updated_at
+            "updatedAt": self.updated_at,
+            "clientInfo": self.client_info.to_dict() if self.client_info else None,
+            "orderDetails": [detail.to_dict() for detail in self.order_details] if self.order_details else None,
+            "payment": self.payment.to_dict() if self.payment else None
         }

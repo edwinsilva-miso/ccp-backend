@@ -143,12 +143,32 @@ services:
       - app_net
 
   # Clientes API
+  clients-api:
+    build: api/clientes-api/
+    container_name: clients-api
+    ports:
+      - "5104:5000"
+    environment:
+      DB_HOST: clients_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: clients
+      USERS_API_URL: http://users-api:5000/api/v1/users
+      PAYMENT_GATEWAY_URL: http://host.docker.internal:8000/api/v1/
+    depends_on:
+      clients_db:
+        condition: service_healthy
+    networks:
+      - clients_api_net
+      - app_net
+
   clients_db:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: products
+      POSTGRES_DB: clients
     ports:
       - "5435:5432"
     healthcheck:
@@ -197,4 +217,6 @@ networks:
   manufacturers_api_net:
     driver: bridge
   products_api_net:
+    driver: bridge
+  clients_api_net:
     driver: bridge

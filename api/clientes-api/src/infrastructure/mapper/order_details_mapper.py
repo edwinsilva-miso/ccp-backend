@@ -1,6 +1,7 @@
 from ...domain.entities.order_details_dto import OrderDetailsDTO
 from ...infrastructure.model.order_details_model import OrderDetailsModel
 
+
 class OrderDetailsMapper:
     """
     Mapper class to convert between OrderDetailsDTO and OrderDetailsModel.

@@ -1,11 +1,10 @@
 from datetime import datetime
 
-from ...domain.entities.order_dto import OrderDTO
-from ...infrastructure.model.order_model import OrderModel
-
-from .payment_mapper import PaymentMapper
 from .client_info_mapper import ClientInfoMapper
 from .order_details_mapper import OrderDetailsMapper
+from .payment_mapper import PaymentMapper
+from ...domain.entities.order_dto import OrderDTO
+from ...infrastructure.model.order_model import OrderModel
 
 
 class OrderMapper:
@@ -54,10 +53,10 @@ class OrderMapper:
         if dto is None:
             return None
 
-        created_at = datetime.fromisoformat(dto.created_at) if isinstance(dto.created_at,
-                                                                          str) else dto.created_at
-        updated_at = datetime.fromisoformat(dto.updated_at) if isinstance(dto.updated_at.updated,
-                                                                          str) else dto.updated_at
+        created_at = datetime.fromisoformat(dto.created_at) if dto.created_at and isinstance(dto.created_at,
+                                                                                             str) else dto.created_at
+        updated_at = datetime.fromisoformat(dto.updated_at) if dto.updated_at and isinstance(dto.updated_at,
+                                                                                             str) else dto.updated_at
 
         return OrderModel(
             id=dto.id,

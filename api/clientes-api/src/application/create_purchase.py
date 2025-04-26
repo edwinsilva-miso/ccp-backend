@@ -89,7 +89,8 @@ class CreatePurchase:
         # Create the DTO to send to pedidos-api
         order_message = purchase.to_dict()
         logging.debug(f"Order message to send: {order_message}")
-        return order_message
+        operation_status = 402 if purchase.status == 'FALLIDO' else 201
+        return order_message, operation_status
 
     def _execute_payment(self, payment_info, order_id):
         """

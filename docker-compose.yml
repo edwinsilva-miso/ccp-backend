@@ -24,6 +24,7 @@ services:
     environment:
       USERS_API_URL: http://users-api:5000
       PRODUCTS_API_URL: http://products-api:5000
+      CLIENTS_API_URL: http://clients-api:5000
     networks:
       - mobile_bff_net
       - app_net

@@ -31,5 +31,5 @@ def create_order():
         raise ValidationApiError
 
     use_case = CreatePurchase(orders_adapter, payments_adapter)
-    response = use_case.execute(data)
-    return jsonify(response), 201
+    response, status = use_case.execute(data)
+    return jsonify(response), status

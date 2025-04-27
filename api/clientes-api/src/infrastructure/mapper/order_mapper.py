@@ -33,7 +33,7 @@ class OrderMapper:
             tax=model.tax,
             total=model.total,
             currency=model.currency,
-            status=model.status if isinstance(model.status, str) else model.status.value,
+            status=model.status.value,
             created_at=created_at,
             updated_at=updated_at,
         )

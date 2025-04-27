@@ -1,5 +1,5 @@
 import os
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 import pytest
 from sqlalchemy import create_engine
@@ -59,20 +59,30 @@ def client(app):
 @pytest.fixture
 def sample_route_data():
     return {
-        "id": uuid4(),
+        "id": UUID("1af5f6b4-f920-4aec-9b0f-d6c3c8d813a9"),
         "name": "Sample Route",
         "description": "some description",
+        "user_id": UUID("201832fe-28c9-41f2-80e5-5482776d7c80"),
         "waypoints": [
+            {  # Add a second waypoint to match the mock
+                "id": UUID("0596dbee-36bc-44e3-a290-81eb88a50c98"),
+                "latitude": 10.0,
+                "longitude": 20.0,
+                "name": "Waypoint 1",
+                "address": "Address 1",
+                "order": 0,
+            },
             {
-                "id": uuid4(),
-                "latitude": 40.7128,
-                "longitude": -74.0060,
-                "name": None,
-                "address": None,
-                "order": 0
-            }
-        ]
+                "id": UUID("769dbee1-62cc-b11d-a221-92eb88b502f4"),
+                "latitude": 30.0,
+                "longitude": 40.0,
+                "name": "Waypoint 2",
+                "address": "Address 2",
+                "order": 1,
+            },
+        ],
     }
+
 
 """
     waypoints = [

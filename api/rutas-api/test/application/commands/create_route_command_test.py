@@ -1,20 +1,12 @@
-import pytest
-from unittest.mock import MagicMock, patch, Mock
-from uuid import UUID, uuid4
-from src.application.commands.create_route_command import CreateRouteCommand
-from src.domain.entities.route import Route
-from src.domain.entities.waypoint import Waypoint
-from src.domain.services.route_service import RouteService
-from src.infrastructure.repositories.sqlalchemy_route_repository import SQLAlchemyRouteRepository
-import pytest
+from unittest.mock import MagicMock, patch
+from uuid import UUID
 from uuid import uuid4
+
+import pytest
+
 from src.application.commands.create_route_command import CreateRouteCommand
-from src.infrastructure.repositories.sqlalchemy_route_repository import SQLAlchemyRouteRepository
 from src.domain.entities.route import Route
 from src.domain.entities.waypoint import Waypoint
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from src.infrastructure.repositories.sqlalchemy_route_repository import Base
 
 
 class TestCreateRouteCommand:
@@ -26,8 +18,46 @@ class TestCreateRouteCommand:
 
     def test_execute_creates_route_successfully(self, db_session, sample_route_data):
         # Arrange
+        from datetime import datetime
+        from unittest.mock import Mock
+        from src.infrastructure.repositories.sqlalchemy_route_repository import Route, Waypoint  # adjust based on your imports
+
+        # Create mock waypoints
+        mock_waypoints = [
+            Waypoint(
+                latitude=10.0,
+                longitude=20.0,
+                name="Waypoint 1",
+                address="Address 1",
+                order=0,
+                id=UUID("c31c553c-5447-493e-abd1-aafe3ba6e1b1"),
+                created_at=datetime.now(),
+            ),
+            Waypoint(
+                latitude=30.0,
+                longitude=40.0,
+                name="Waypoint 2",
+                address="Address 2",
+                order=1,
+                id=UUID("13188ba2-a839-4426-8d4b-14eb04f4e482"),
+                created_at=datetime.now(),
+            ),
+        ]
+
+        # Create mock Route object
+        expected_route = Route(
+            name="Sample Route",
+            waypoints=mock_waypoints,
+            user_id=UUID("201832fe-28c9-41f2-80e5-5482776d7c80"),
+            id=UUID("ca77e138-b632-41ca-8a03-88fd1c4ab6ae"),
+            description="some description",
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
+        )
+
+        # Mock the repository create method to return the Route object
         repository_mock = Mock()
-        repository_mock.create.return_value = sample_route_data
+        repository_mock.create.return_value = expected_route
         command = CreateRouteCommand(route_repository=repository_mock)
 
         # Act
@@ -36,7 +66,17 @@ class TestCreateRouteCommand:
         # Assert
         assert result is not None
         assert result["name"] == sample_route_data["name"]
-        repository_mock.create.assert_called_once_with(sample_route_data)
+        assert "waypoints" in result
+        assert len(result["waypoints"]) == len(sample_route_data["waypoints"])
+
+        # Verify the repository was called with the correct Route object
+        repository_mock.create.assert_called_once()
+        created_route = repository_mock.create.call_args[0][0]  # Extract the Route object passed
+        assert isinstance(created_route, Route)
+        assert created_route.name == expected_route.name
+        assert created_route.description == expected_route.description
+        assert created_route.user_id == expected_route.user_id
+        assert len(created_route.waypoints) == len(expected_route.waypoints)
 
     def test_execute_with_minimal_valid_data(self):
         # Arrange

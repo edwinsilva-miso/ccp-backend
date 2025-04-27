@@ -20,6 +20,9 @@ def validate_route_dto(data: Dict[str, Any]) -> Dict[str, Any]:
         InvalidRouteError: If route data is invalid
         InvalidWaypointError: If waypoint data is invalid
     """
+    if not isinstance(data, dict):
+        raise InvalidRouteError("Invalid route datatype. Must be a dictionary")
+
     # Validate required fields
     if 'name' not in data:
         raise InvalidRouteError("Route name is required")
@@ -78,7 +81,7 @@ def validate_route_dto(data: Dict[str, Any]) -> Dict[str, Any]:
     # Add user_id if present
     if 'user_id' in data and data['user_id']:
         try:
-            user_id = UUID(data['user_id'])
+            user_id = UUID(data['user_id']) if isinstance(data['user_id'], str) else data['user_id']
             validated_data['user_id'] = user_id
         except (ValueError, TypeError, AttributeError):
             raise InvalidRouteError("Invalid user_id")

@@ -24,6 +24,9 @@ class GetRouteQuery:
         Returns:
             Dictionary representation of the route
         """
+        if not route_id or not isinstance(route_id, UUID):
+            raise ValueError("Invalid route ID, not a valid UUID or empty")
+
         route = self.route_service.get_route(route_id)
         return serialize_route(route)
 

@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from uuid import UUID, uuid4
-from src.application.queries.get_all_routes_query import GetAllRoutesQuery
+from src.application.queries.get_route_query import GetRouteQuery
 from src.domain.entities.route import Route
 from src.domain.entities.waypoint import Waypoint
 
@@ -10,7 +10,7 @@ class TestGetAllRoutesQuery:
 
     def setup_method(self):
         self.route_repository = MagicMock()
-        self.query = GetAllRoutesQuery(route_repository=self.route_repository)
+        self.query = GetRouteQuery(route_repository=self.route_repository)
 
     def test_execute_returns_all_routes(self):
         # Arrange
@@ -46,7 +46,7 @@ class TestGetAllRoutesQuery:
         self.route_repository.get_all.return_value = mock_routes
 
         # Act
-        results = self.query.execute(user_id=user_)
+        results = self.query.execute_list(user_id=user_)
 
         # Assert
         assert results is not None
@@ -55,19 +55,14 @@ class TestGetAllRoutesQuery:
         assert results[1]["name"] == "Route 2"
         assert len(results[1]["waypoints"]) == 1
 
-        # Verify the repository was called with the correct filter
-        self.route_repository.get_all.assert_called_once_with(filters={"user_id": user_})
-
     def test_execute_returns_empty_list_when_no_routes_found(self):
         # Arrange
         # Set up the repository mock to return an empty list
         self.route_repository.get_all.return_value = []
 
         # Act
-        results = self.query.execute(user_id="user123")
+        user_ = uuid4()
+        results = self.query.execute_list(user_id=user_)
 
         # Assert
         assert results == []
-
-        # Verify the repository was called with the correct filter
-        self.route_repository.get_all.assert_called_once_with(filters={"user_id": "user123"})

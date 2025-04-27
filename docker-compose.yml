@@ -161,6 +161,10 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: clients
+      RABBITMQ_USER: admin
+      RABBITMQ_PASSWORD: admin
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
       USERS_API_URL: http://users-api:5000/api/v1/users
       PAYMENT_GATEWAY_URL: http://host.docker.internal:8000/api/v1/
     depends_on:

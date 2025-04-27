@@ -7,6 +7,7 @@ from ...application.create_purchase import CreatePurchase
 from ...application.errors.errors import ValidationApiError
 from ...infrastructure.adapters.orders_adapter import OrdersAdapter
 from ...infrastructure.adapters.payments_adapter import PaymentsAdapter
+from ...infrastructure.messaging.rabbitmq_messaging_port_adapter import RabbitMQMessagingPortAdapter
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 orders_adapter = OrdersAdapter()
 payments_adapter = PaymentsAdapter()
+messaging_port_adapter = RabbitMQMessagingPortAdapter()
 
 orders_blueprint = Blueprint('orders', __name__, url_prefix='/api/v1/orders')
 
@@ -32,6 +34,6 @@ def create_order():
         logger.error("No data provided in request.")
         raise ValidationApiError
 
-    use_case = CreatePurchase(orders_adapter, payments_adapter)
+    use_case = CreatePurchase(orders_adapter, payments_adapter, messaging_port_adapter)
     response, status = use_case.execute(data)
     return jsonify(response), status

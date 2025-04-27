@@ -33,6 +33,7 @@ then
   echo "[INFO]: ✅ deleting all unused existing images"
   minikube ssh -- docker rmi -f $(docker images -q)
   minikube ssh -- docker image prune -af
+  docker rmi -f $(docker images -q)
 fi
 
 
@@ -62,7 +63,7 @@ export APIS
 
 TIMESTAMP="$(date +%Y%m%d%H%M%S)"
 
-if [[ -n "$GEN_APIS" || -n "$PUSH_ALL" ]]
+if [[ -n "$GEN_APIS" || -n "$PUSH_ALL" || -n "$SPECIFIC" ]]
 then
   echo "========================================================================"
   echo "[INFO]: Building docker images for APIs"
@@ -116,7 +117,7 @@ fi
 
 
 
-if [[ -n "$GEN_BFFS" || -n "$PUSH_ALL" ]]
+if [[ -n "$GEN_BFFS" || -n "$PUSH_ALL" || -n "$SPECIFIC" ]]
 then
   cd "$ROOT_DIR" || exit 1
   cd ../bff || exit 1

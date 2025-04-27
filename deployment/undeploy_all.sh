@@ -1,6 +1,6 @@
 #!/bin/bash
 
-kubectl delete -f secrets-configuration.yml
+kubectl apply -f secrets/secrets.yml
 kubectl delete -f configurations.yml
 
 echo "[INFO]: deploying all the api components"

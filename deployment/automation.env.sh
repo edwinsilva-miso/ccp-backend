@@ -9,12 +9,12 @@ declare -A APIS=(
 #  ["reportes-api"]="reports-api"
   ["rutas-api"]="routes-api"
 #  ["transportes-api"]="transport-api"
-  ["usuarios-api"]="users-api"
+#  ["usuarios-api"]="users-api"
 #  ["ventas-api"]="sales-api"
 )
 
 
 declare -A BACKENDS_FOR_FRONTEDS=(
-  ["web-bff"]="web-bff"
-  ["mobile-bff"]="mobile-bff"
+#  ["web-bff"]="web-bff"
+#  ["mobile-bff"]="mobile-bff"
 )

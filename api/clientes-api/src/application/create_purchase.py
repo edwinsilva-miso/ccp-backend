@@ -87,13 +87,15 @@ class CreatePurchase:
         purchase = self.order_repository.add(order_dto)
         logging.debug(f"Purchase created with ID: {purchase.id} and status: {purchase.status}")
 
-        # Update products stock
+        order_message = purchase.to_dict()
+        # Send messages
         if purchase.status == 'COMPLETADO':
             self._update_products_stock(purchase.order_details)
+            self._produce_order(order_message)
 
         # Create the DTO to send to pedidos-api
-        order_message = purchase.to_dict()
-        logging.debug(f"Order message to send: {order_message}")
+
+        logging.debug(f"Order created with detail: {order_message}")
         operation_status = 402 if purchase.status == 'FALLIDO' else 201
         return order_message, operation_status
 
@@ -159,3 +161,53 @@ class CreatePurchase:
             message=message
         )
         logging.debug("Product stock update message sent.")
+
+    def _produce_order(self, order_info: dict):
+        """
+        Produce the order to the messaging system.
+        :param order_info: The order info produce.
+        """
+        logging.debug("Producing order to messaging system...")
+        payment_data = order_info.get('payment')
+        order_details_data = order_info.get('orderDetails', [])
+
+        order_items = list()
+        for detail in order_details_data:
+            item = {
+                "id": detail.get('id'),
+                "productId": detail.get('product_id'),
+                "quantity": detail.get('quantity'),
+                "unitPrice": detail.get('unit_price'),
+                "totalPrice": detail.get('total_price'),
+                "currency": detail.get('currency')
+            }
+            order_items.append(item)
+
+        order_data = {
+            "id": order_info.get('id'),
+            "orderDate": order_info.get('createdAt'),
+            "status": 'INICIADO',
+            "subtotal": order_info.get('subtotal'),
+            "taxes": order_info.get('tax'),
+            "total": order_info.get('total'),
+            "currency": order_info.get('currency'),
+            "clientId": order_info.get('clientId'),
+            "paymentId": payment_data.get('id'),
+            "transactionStatus": payment_data.get('status'),
+            "transactionDate": payment_data.get('transactionDate'),
+            "transactionId": payment_data.get('transactionId'),
+            "items": order_items
+        }
+
+        message = {
+            "order": order_data
+        }
+
+        logging.debug(f"Producing order {message}")
+
+        self.messaging_port.send_message(
+            exchange="order_initiated_exchange",
+            routing_key="order_initiated_routing_key",
+            message=message
+        )
+        logging.debug("Order produced to messaging system.")

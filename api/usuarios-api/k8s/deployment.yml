@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: users-api
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/users-api:latest
+        image: users-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000

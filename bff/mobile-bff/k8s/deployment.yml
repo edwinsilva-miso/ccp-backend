@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mobile-bff
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/mobile-bff:latest
+        image: mobile-bff:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000

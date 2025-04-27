@@ -4,3 +4,4 @@ metadata:
   name: common-configs
 data:
   USERS_API_URL: 'http://users-api-service.default.svc.cluster.local'
+  ROUTES_API_URL: 'http://routes-api-service.default.svc.cluster.local'

@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app
 from uuid import UUID
 
 from ...application.commands.create_route_command import CreateRouteCommand
+from ...application.commands.update_route_command import UpdateRouteCommand
 from ...application.queries.get_route_query import GetRouteQuery
 from ...domain.exceptions.domain_exceptions import RouteNotFoundError
 
@@ -46,14 +47,12 @@ def update_route(route_id):
     data = request.json
 
     try:
-        # Get the route
-        query = GetRouteQuery(route_repository=current_app.route_repository)
-        route = query.execute(route_id)
+        # Use the UpdateRouteCommand instead of CreateRouteCommand
+        command = UpdateRouteCommand(route_repository=current_app.route_repository)
+        result = command.execute(route_id, data)
 
-        # Update with new data
-        command = CreateRouteCommand(route_repository=current_app.route_repository)
-        updated_data = {**route, **data, "id": str(route_id)}
-        result = command.execute(updated_data)
+        if result is None:
+            return jsonify({"error": f"Route with ID {route_id} not found"}), 404
 
         return jsonify(result)
     except RouteNotFoundError:

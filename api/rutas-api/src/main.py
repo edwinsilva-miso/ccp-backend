@@ -1,4 +1,7 @@
 import os
+import logging
+import sys
+
 from flask import Flask, jsonify
 from dotenv import load_dotenv
 # from flask_cors import CORS
@@ -14,6 +17,23 @@ from .infrastructure.external.openroute_service_client import OpenRouteServiceCl
 from .infrastructure.repositories.sqlalchemy_route_repository import Base, SQLAlchemyRouteRepository
 from .domain.services.optimization_service import OptimizationService
 from .api.error_handlers import register_error_handlers
+
+
+# Configure the logging handler to output to stdout (Kubernetes reads from stdout/stderr)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.DEBUG)  # Allow DEBUG messages in the output handler
+formatter = logging.Formatter(
+    fmt='[%(asctime)s] [%(levelname)s] %(name)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+handler.setFormatter(formatter)
+
+# Get the root logger and configure it
+logging.basicConfig(level=logging.DEBUG, handlers=[handler])
+
+# Optional: Configure specific logger (SQLAlchemyRouteRepository in this case)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 def create_app(config_class=Config):

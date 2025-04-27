@@ -1,3 +1,5 @@
+import logging
+
 from typing import List, Optional
 from uuid import UUID
 
@@ -5,6 +7,9 @@ from ..entities.route import Route
 from ..entities.waypoint import Waypoint
 from ..repositories.route_repository import RouteRepository
 from ..exceptions.domain_exceptions import RouteNotFoundError
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 class RouteService:
@@ -37,31 +42,36 @@ class RouteService:
         return self.route_repository.get_all(user_id)
 
     def update_route(self, route_id: UUID, updates: dict) -> Route:
-        """Update a route."""
-        route = self.get_route(route_id)
+        """
+        Update a route with the provided updates.
 
-        # Apply updates
-        if 'name' in updates:
-            route.name = updates['name']
-        if 'description' in updates:
-            route.description = updates['description']
+        Args:
+            route_id: UUID of the route to update
+            updates: Dictionary containing updated route data
 
-        # Handle waypoints updates if present
-        if 'waypoints' in updates:
-            # Create new waypoints
-            waypoints = []
-            for i, wp_data in enumerate(updates['waypoints']):
-                waypoint = Waypoint(
-                    latitude=wp_data['latitude'],
-                    longitude=wp_data['longitude'],
-                    name=wp_data.get('name'),
-                    address=wp_data.get('address'),
-                    order=i
-                )
-                waypoints.append(waypoint)
-            route.waypoints = waypoints
+        Returns:
+            Updated Route entity
 
-        return self.route_repository.update(route)
+        Raises:
+            RouteNotFoundError: If the route doesn't exist
+        """
+        # Check if route exists, this will raise RouteNotFoundError if not found
+        self.get_route(route_id)
+
+        # The repository.update method can either take a Route object or a dictionary
+        # We're passing the updates dictionary directly, which is more efficient
+        # as it avoids first constructing a Route object
+        updated_route = None
+        try:
+            updated_route = self.route_repository.update(route_id, updates)
+        except Exception as e:
+            logger.error("Error updating route: %s", e.__traceback__)
+            logger.debug("Exception stack trace:", exc_info=True)
+
+        if not updated_route:
+            raise RouteNotFoundError(f"Route with ID {route_id} not found after update")
+
+        return updated_route
 
     def delete_route(self, route_id: UUID) -> None:
         """Delete a route."""

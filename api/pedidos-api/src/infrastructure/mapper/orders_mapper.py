@@ -19,7 +19,7 @@ class OrderMapper:
             return None
 
         order_date = order_model.order_date.isoformat() if order_model.order_date else None
-        transfer_date = order_model.transfer_date.isoformat() if order_model.transfer_date else None
+        transaction_date = order_model.transaction_date.isoformat() if order_model.transaction_date else None
         created_at = order_model.created_at.isoformat() if order_model.created_at else None
         updated_at = order_model.updated_at.isoformat() if order_model.updated_at else None
 
@@ -34,7 +34,7 @@ class OrderMapper:
             client_id=order_model.client_id,
             payment_id=order_model.payment_id,
             transaction_status=order_model.transaction_status,
-            transaction_date=transfer_date,
+            transaction_date=transaction_date,
             transaction_id=order_model.transaction_id,
             order_items=OrderItemMapper.to_list_dto(order_model.order_items),
             order_history=OrderHistoryMapper.to_list_dto(order_model.order_history),
@@ -53,7 +53,7 @@ class OrderMapper:
             return None
 
         order_date = order_model.order_date.isoformat() if order_model.order_date else None
-        transfer_date = order_model.transfer_date.isoformat() if order_model.transfer_date else None
+        transaction_date = order_model.transaction_date.isoformat() if order_model.transaction_date else None
         created_at = order_model.created_at.isoformat() if order_model.created_at else None
         updated_at = order_model.updated_at.isoformat() if order_model.updated_at else None
 
@@ -68,7 +68,7 @@ class OrderMapper:
             client_id=order_model.client_id,
             payment_id=order_model.payment_id,
             transaction_status=order_model.transaction_status,
-            transaction_date=transfer_date,
+            transaction_date=transaction_date,
             transaction_id=order_model.transaction_id,
             order_items=[],
             order_history=[],

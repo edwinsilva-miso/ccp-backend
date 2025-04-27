@@ -34,8 +34,7 @@ class OrderDAO:
             order = session.query(OrderModel) \
                 .options(
                 joinedload(OrderModel.order_items),
-                joinedload(OrderModel.client_info),
-                joinedload(OrderModel.payment)
+                joinedload(OrderModel.order_history)
             ) \
                 .filter(OrderModel.client_id == client_id) \
                 .first()
@@ -53,8 +52,7 @@ class OrderDAO:
             order = session.query(OrderModel) \
                 .options(
                 joinedload(OrderModel.order_items),
-                joinedload(OrderModel.client_info),
-                joinedload(OrderModel.payment)
+                joinedload(OrderModel.order_history)
             ) \
                 .filter(OrderModel.id == order_id) \
                 .first()

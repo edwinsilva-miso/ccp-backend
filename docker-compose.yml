@@ -193,6 +193,29 @@ services:
       - app_net
 
   # Pedidos API
+  orders-api:
+    build: api/pedidos-api/
+    container_name: orders-api
+    ports:
+      - "5105:5000"
+    environment:
+      DB_HOST: orders_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: orders
+      RABBITMQ_USER: admin
+      RABBITMQ_PASSWORD: admin
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      orders_db:
+        condition: service_healthy
+    networks:
+      - orders_api_net
+      - app_net
+
   orders_db:
     image: postgres:15
     environment:
@@ -252,4 +275,6 @@ networks:
   products_api_net:
     driver: bridge
   clients_api_net:
+    driver: bridge
+  orders_api_net:
     driver: bridge

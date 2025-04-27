@@ -15,7 +15,7 @@ class OrderDetailsMapper:
         :return: An OrderDetailsDTO instance.
         """
         return OrderDetailsDTO(
-            id=model.id,
+            id=str(model.id),
             order_id=model.order_id,
             product_id=model.product_id,
             quantity=model.quantity,

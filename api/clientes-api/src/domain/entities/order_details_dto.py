@@ -12,7 +12,7 @@ class OrderDetailsDTO:
         :param total_price: The total price for the quantity of the product.
         :param currency: The currency of the price (e.g., 'USD', 'EUR').
         """
-        self.id = id,
+        self.id = id
         self.order_id = order_id
         self.product_id = product_id
         self.quantity = quantity

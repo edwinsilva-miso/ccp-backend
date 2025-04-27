@@ -23,10 +23,9 @@ class PaymentMapper:
             expiry_date="*****",
             currency=payment_model.currency
         )
-        dto.payment_method = payment_model.payment_method if isinstance(payment_model.payment_method,
-                                                                        str) else payment_model.payment_method.value,
-        dto.transaction_id = payment_model.transaction_id,
-        dto.status = payment_model.status if isinstance(payment_model.status, str) else payment_model.status.value,
+        dto.payment_method = payment_model.payment_method.value
+        dto.transaction_id = payment_model.transaction_id
+        dto.status = payment_model.status.value
         dto.transaction_date = transaction_date
 
         return dto

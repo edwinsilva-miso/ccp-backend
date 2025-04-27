@@ -2,6 +2,7 @@ import logging
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_cors import CORS
 
 loaded = load_dotenv('.env.development')
 
@@ -19,6 +20,16 @@ def create_app():
     """
     logging.debug('BFF users microservice started')
     app = Flask(__name__)
+
+    CORS(app, resources={
+        r"/bff/*": {
+            "origins": [
+                "http://localhost:4200",
+                "https://proyecto-final-644666181364.uc.r.appspot.com",
+                "https://proyecto-final-644666181364.us-central1.run.app"
+            ]
+        }
+    }, supports_credentials=True)
 
     # Register blueprints
     app.register_blueprint(management_blueprint)

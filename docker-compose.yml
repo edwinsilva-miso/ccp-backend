@@ -192,6 +192,25 @@ services:
     networks:
       - app_net
 
+  # Pedidos API
+  orders_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orders
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - orders_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
   # Additional Infrastructure
   rabbitmq:
     image: rabbitmq:3-management
@@ -216,6 +235,7 @@ volumes:
   manufacturers_db_volume:
   products_db_volume:
   clients_db_volume:
+  orders_db_volume:
   rabbitmq_data:
 
 networks:

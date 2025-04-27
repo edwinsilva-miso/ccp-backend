@@ -20,9 +20,10 @@ class CreatePurchase:
     Use case for creating a purchase.
     """
 
-    def __init__(self, order_repository, payments_port):
+    def __init__(self, order_repository, payments_port, messaging_port):
         self.order_repository = order_repository
         self.payments_port = payments_port
+        self.messaging_port = messaging_port
 
     def execute(self, order_data):
         logging.debug("Starting purchase creation process...")
@@ -86,6 +87,10 @@ class CreatePurchase:
         purchase = self.order_repository.add(order_dto)
         logging.debug(f"Purchase created with ID: {purchase.id} and status: {purchase.status}")
 
+        # Update products stock
+        if purchase.status == 'COMPLETADO':
+            self._update_products_stock(purchase.order_details)
+
         # Create the DTO to send to pedidos-api
         order_message = purchase.to_dict()
         logging.debug(f"Order message to send: {order_message}")
@@ -129,3 +134,28 @@ class CreatePurchase:
         payment_dto.transaction_date = result['timestamp']
 
         return payment_dto
+
+    def _update_products_stock(self, order_details: list[OrderDetailsDTO]):
+        """
+        Update the stock of products after a successful purchase.
+        :param order_details: List of order details containing product IDs and quantities.
+        """
+        logging.debug("Updating product stock...")
+        products_dict = list[dict]()
+        for item in order_details:
+            detail = {
+                "productId": item.product_id,
+                "quantity": int(item.quantity)
+            }
+            products_dict.append(detail)
+
+        message = {
+            "products": products_dict,
+        }
+        logging.debug(f"Stock update message: {message}")
+        self.messaging_port.send_message(
+            exchange="update_stock_exchange",
+            routing_key="update_stock_routing_key",
+            message=message
+        )
+        logging.debug("Product stock update message sent.")

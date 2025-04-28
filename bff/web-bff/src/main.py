@@ -21,6 +21,12 @@ def create_app():
     logging.debug('BFF users microservice started')
     app = Flask(__name__)
 
+    # Register blueprints
+    app.register_blueprint(management_blueprint)
+    app.register_blueprint(users_blueprint)
+    app.register_blueprint(manufacturers_blueprint)
+    app.register_blueprint(products_blueprint)
+
     CORS(app, resources={
         r"/bff/*": {
             "origins": [
@@ -30,12 +36,6 @@ def create_app():
             ]
         }
     }, supports_credentials=True)
-
-    # Register blueprints
-    app.register_blueprint(management_blueprint)
-    app.register_blueprint(users_blueprint)
-    app.register_blueprint(manufacturers_blueprint)
-    app.register_blueprint(products_blueprint)
 
     return app
 

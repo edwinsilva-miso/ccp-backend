@@ -23,4 +23,4 @@ products_adapter = ProductAdapter()
 def get_products_manufacturer(manufacturer_id):
     use_case = GetProductByManufacturer(products_adapter)
     products = use_case.execute(manufacturer_id)
-    return jsonify([product.__dict__ for product in products]), 200
+    return jsonify([product.to_dict() for product in products]), 200

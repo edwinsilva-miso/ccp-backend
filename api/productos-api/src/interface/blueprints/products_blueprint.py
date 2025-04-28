@@ -54,7 +54,7 @@ def create_product():
 def get_all_products():
     use_case = GetAllProducts(products_adapter)
     products = use_case.execute()
-    return jsonify([product.__dict__ for product in products]), 200
+    return jsonify([product.to_dict() for product in products]), 200
 
 
 @products_blueprint.route('/<string:product_id>', methods=['GET'])
@@ -62,7 +62,7 @@ def get_all_products():
 def get_product_by_id(product_id):
     use_case = GetProductById(products_adapter)
     product = use_case.execute(product_id)
-    return jsonify(product.__dict__), 200
+    return jsonify(product.to_dict()), 200
 
 
 @products_blueprint.route('/<string:product_id>', methods=['PUT'])
@@ -93,7 +93,7 @@ def update_product(product_id):
     )
     use_case = UpdateProduct(products_adapter)
     response = use_case.execute(product_id, product)
-    return jsonify(response.__dict__), 200
+    return jsonify(response.to_dict()), 200
 
 
 @products_blueprint.route('/<string:product_id>', methods=['DELETE'])

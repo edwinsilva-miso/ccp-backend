@@ -17,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class PurchaseAdapter:
+class ClientsAdapter:
     def __init__(self):
         self.products_adapter = ProductsAdapter()
 
@@ -33,7 +33,7 @@ class PurchaseAdapter:
 
         # Create the order
         response = requests.post(
-            f"{CLIENTS_API_URL}/api/v1/orders",
+            f"{CLIENTS_API_URL}/api/v1/clients/orders",
             json=order_data,
             headers=headers
         )

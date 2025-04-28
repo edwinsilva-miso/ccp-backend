@@ -6,7 +6,7 @@ from flask import Flask, jsonify
 loaded = load_dotenv('.env.development')
 
 from .interface.blueprints.management_blueprint import management_blueprint
-from .interface.blueprints.order_blueprint import orders_blueprint
+from .interface.blueprints.clients_blueprint import clients_blueprint
 from .application.errors.errors import ApiError
 from .infrastructure.database.declarative_base import Base, engine
 
@@ -21,7 +21,7 @@ def create_app():
     app = Flask(__name__)
 
     app.register_blueprint(management_blueprint)
-    app.register_blueprint(orders_blueprint)
+    app.register_blueprint(clients_blueprint)
 
     # Create schema
     logging.debug(">> Create schema")

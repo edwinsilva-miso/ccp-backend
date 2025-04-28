@@ -5,3 +5,6 @@ metadata:
 data:
   USERS_API_URL: 'http://users-api-service.default.svc.cluster.local'
   ROUTES_API_URL: 'http://routes-api-service.default.svc.cluster.local'
+
+  RABBITMQ_HOST: 'rabbitmq-service.default.svc.cluster.local'
+  RABBITMQ_PORT: '5672'

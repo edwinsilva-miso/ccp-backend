@@ -26,6 +26,16 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: USERS_API_URL
+          - name: MANUFACTURERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: MANUFACTURERS_API_URL
+          - name: PRODUCTS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: PRODUCTS_API_URL
         resources:
           requests:
             memory: "256Mi"

@@ -3,7 +3,7 @@ import logging
 
 from flask import Blueprint, jsonify, request
 
-from ..adapters.purchase_adapter import PurchaseAdapter
+from ..adapters.clients_adapter import ClientsAdapter
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -12,7 +12,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-orders_blueprint = Blueprint('orders', __name__, url_prefix='/bff/v1/mobile/orders')
+orders_blueprint = Blueprint('orders', __name__, url_prefix='/bff/v1/mobile/clients/orders')
 
 def token_required(f):
     @functools.wraps(f)
@@ -38,6 +38,6 @@ def create_order(jwt):
     """
     logging.debug("Received request to create a new order.")
     logging.debug("Creating order in BFF Web.")
-    adapter = PurchaseAdapter()
+    adapter = ClientsAdapter()
     order_data = request.get_json()
     return adapter.create_order(jwt, order_data)

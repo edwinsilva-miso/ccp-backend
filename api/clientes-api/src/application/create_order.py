@@ -15,7 +15,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class CreatePurchase:
+class CreateOrder:
     """
     Use case for creating a purchase.
     """

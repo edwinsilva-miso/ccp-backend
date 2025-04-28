@@ -8,7 +8,7 @@ loaded = load_dotenv('.env.development')
 from .blueprints.management_blueprint import management_blueprint
 from .blueprints.users_blueprint import users_blueprint
 from .blueprints.products_blueprint import products_blueprint
-from .blueprints.orders_blueprint import orders_blueprint
+from .blueprints.clients_blueprint import orders_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 

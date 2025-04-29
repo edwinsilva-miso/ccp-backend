@@ -167,6 +167,8 @@ services:
       RABBITMQ_PORT: 5672
       USERS_API_URL: http://users-api:5000/api/v1/users
       PAYMENT_GATEWAY_URL: http://host.docker.internal:8000/api/v1/
+      CLIENT_ID: client1
+      CLIENT_SECRET: password1
     depends_on:
       clients_db:
         condition: service_healthy

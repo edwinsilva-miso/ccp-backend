@@ -24,7 +24,7 @@ class ManufacturersAdapter:
         """
         logger.debug("Getting all manufacturers")
         headers = {'Authorization': f'Bearer {jwt}'}
-        response = requests.get(f"{MANUFACTURERS_API_URL}/api/v1/manufacturers", headers=headers)
+        response = requests.get(f"{MANUFACTURERS_API_URL}/api/v1/manufacturers/", headers=headers)
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code
 
@@ -64,7 +64,7 @@ class ManufacturersAdapter:
         """
         logger.debug(f"Creating manufacturer {manufacturer_data['name']}")
         headers = {'Authorization': f'Bearer {jwt}'}
-        response = requests.post(f"{MANUFACTURERS_API_URL}/api/v1/manufacturers", headers=headers, json=manufacturer_data)
+        response = requests.post(f"{MANUFACTURERS_API_URL}/api/v1/manufacturers/", headers=headers, json=manufacturer_data)
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code
 

@@ -9,7 +9,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      USERS_API_URL: http://users-api:5000
+      USERS_API_URL: http://users-api:5000/api/v1/users
       MANUFACTURERS_API_URL: http://manufacturers-api:5000
       PRODUCTS_API_URL: http://products-api:5000
     networks:
@@ -22,7 +22,7 @@ services:
     ports:
       - "5001:5000"
     environment:
-      USERS_API_URL: http://users-api:5000
+      USERS_API_URL: http://users-api:5000/api/v1/users
       PRODUCTS_API_URL: http://products-api:5000
       CLIENTS_API_URL: http://clients-api:5000
     networks:
@@ -167,6 +167,8 @@ services:
       RABBITMQ_PORT: 5672
       USERS_API_URL: http://users-api:5000/api/v1/users
       PAYMENT_GATEWAY_URL: http://host.docker.internal:8000/api/v1/
+      CLIENT_ID: client1
+      CLIENT_SECRET: password1
     depends_on:
       clients_db:
         condition: service_healthy

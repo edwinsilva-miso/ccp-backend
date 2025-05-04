@@ -13,7 +13,7 @@ class OrdersAdapter(OrdersRepository):
         return OrderMapper.to_dto_single_list(OrderDAO.find_by_client_id(client_id))
 
     def get_by_id(self, id: str) -> OrderDTO | None:
-        order = OrderDAO.get_by_id(id)
+        order = OrderDAO.get_order_by_id(id)
         return OrderMapper.to_dto(order) if order else None
 
     def add(self, order: OrderDTO) -> OrderDTO | None:

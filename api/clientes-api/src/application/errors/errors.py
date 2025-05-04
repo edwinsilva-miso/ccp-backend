@@ -24,8 +24,8 @@ class InvalidFormatError(ApiError):
 
 class OrderNotExistsError(ApiError):
     code = 404
-    description = "La orden consultada no existe."
+    description = "El pedido consultado no existe."
 
 class OrdersNotFoundError(ApiError):
     code = 404
-    description = "No se encontraron órdenes para el cliente consultado."
+    description = "No se encontraron pedidos para el cliente consultado."

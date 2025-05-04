@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from api.usuarios_api.src.application.find_user_by_role import FindUserByRole
-from api.usuarios_api.src.domain.entities.user_dto import UserDTO
+from src.application.find_user_by_role import FindUserByRole
+from src.domain.entities.user_dto import UserDTO
 
 
 class TestFindUserByRole(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestFindUserByRole(unittest.TestCase):
 
     def test_execute_returns_list_of_users_with_specified_role(self):
         # Arrange
-        role_name = "CLIENTE"
+        role_name = "ADMIN"
 
         # Crear usuarios de prueba
         mock_users = [

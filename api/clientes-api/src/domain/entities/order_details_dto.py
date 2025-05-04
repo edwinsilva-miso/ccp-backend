@@ -27,10 +27,10 @@ class OrderDetailsDTO:
         """
         return {
             "id": self.id,
-            "order_id": self.order_id,
-            "product_id": self.product_id,
+            "orderId": self.order_id,
+            "productId": self.product_id,
             "quantity": self.quantity,
-            "unit_price": self.unit_price,
-            "total_price": self.total_price,
+            "unitPrice": self.unit_price,
+            "totalPrice": self.total_price,
             "currency": self.currency
         }

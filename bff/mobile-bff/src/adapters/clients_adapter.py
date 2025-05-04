@@ -70,6 +70,31 @@ class ClientsAdapter:
         logger.debug(f"Response received from API: {response_data}")
         return response_data, response.status_code
 
+    def get_order_by_id(self, jwt, order_id):
+        """
+        Get order details by order ID.
+        :param jwt: JWT token for authorization.
+        :param order_id: The ID of the order to retrieve.
+        :return: Tuple of (order_data, status_code)
+        """
+        logger.debug("Getting order by ID")
+        headers = {'Authorization': f'Bearer {jwt}'}
+
+        # Get the order details
+        response = requests.get(
+            f"{CLIENTS_API_URL}/api/v1/clients/orders/{order_id}",
+            headers=headers
+        )
+
+        response_data = response.json()
+
+        # Enrich product information if order was successful or pending payment
+        if response.status_code == 200:
+            self._enrich_product_information(jwt, response_data, response.status_code)
+
+        logger.debug(f"Response received from API: {response_data}")
+        return response_data, response.status_code
+
     def _enrich_product_information(self, jwt, order_data, status_code):
         """
         Enrich product information with details from products API.

@@ -30,7 +30,7 @@ class PaymentsAdapter:
         }
         try:
             # Make a request to the payment gateway to validate the token
-            response = requests.post(f"{PAYMENT_GATEWAY_URL}/auth/token/", json=payload)
+            response = requests.post(f"{PAYMENT_GATEWAY_URL}/auth/token", json=payload)
             if response.status_code == 200:
                 data = response.json()
                 self.token = data['access_token']
@@ -65,7 +65,7 @@ class PaymentsAdapter:
         headers = self.get_headers()
 
         try:
-            response = requests.post(f"{PAYMENT_GATEWAY_URL}/payments/", json=payment_dto, headers=headers)
+            response = requests.post(f"{PAYMENT_GATEWAY_URL}/payments", json=payment_dto, headers=headers)
             if response.status_code == 201:
                 return response.json()
             elif response.status_code == 402:

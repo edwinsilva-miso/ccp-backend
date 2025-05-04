@@ -37,7 +37,7 @@ def create_order(jwt):
     :return: The created order data
     """
     logging.debug("Received request to create a new order.")
-    logging.debug("Creating order in BFF Web.")
+    logging.debug("Creating order in BFF Mobile.")
     adapter = ClientsAdapter()
     order_data = request.get_json()
     return adapter.create_order(jwt, order_data)
@@ -51,7 +51,21 @@ def list_orders(jwt):
     :return: The list of orders
     """
     logging.debug("Received request to list orders.")
-    logging.debug("Listing orders in BFF Web.")
+    logging.debug("Listing orders in BFF Mobile.")
     adapter = ClientsAdapter()
     client_id = request.args.get('clientId')
     return adapter.lists_orders(jwt, client_id)
+
+@orders_blueprint.route('/<order_id>', methods=['GET'])
+@token_required
+def get_order(jwt, order_id):
+    """
+    Get details of a specific order.
+    :param jwt: JWT token for authorization.
+    :param order_id: The ID of the order to retrieve.
+    :return: The order data
+    """
+    logging.debug("Received request to get order details.")
+    logging.debug("Getting order details in BFF Mobile.")
+    adapter = ClientsAdapter()
+    return adapter.get_order_by_id(jwt, order_id)

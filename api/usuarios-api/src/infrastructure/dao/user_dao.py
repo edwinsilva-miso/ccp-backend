@@ -43,3 +43,15 @@ class UserDAO:
         session.commit()
         session.close()
 
+    @classmethod
+    def find_by_role(cls, role: str) -> list[UserModel]:
+        """
+        Find users by role.
+        :param role: Role of the users to find.
+        :return: List of UserModel with the specified role.
+        """
+        session = Session()
+        users = session.query(UserModel).filter(UserModel.role == role).all()
+        session.close()
+        return users
+

@@ -44,6 +44,37 @@ class OrderMapper:
         return dto
 
     @staticmethod
+    def to_single_dto(model: OrderModel) -> OrderDTO | None:
+        """
+        Convert OrderModel to single OrderDTO.
+        :param model: The OrderModel instance to convert.
+        :return: An OrderDTO instance.
+        """
+        if model is None:
+            return None
+
+        created_at = model.created_at.isoformat() if model.created_at else None
+        updated_at = model.updated_at.isoformat() if model.updated_at else None
+
+        dto = OrderDTO(
+            id=model.id,
+            client_id=model.client_id,
+            quantity=model.quantity,
+            subtotal=model.subtotal,
+            tax=model.tax,
+            total=model.total,
+            currency=model.currency,
+            status=model.status.value,
+            created_at=created_at,
+            updated_at=updated_at,
+        )
+        dto.order_details = None
+        dto.client_info = None
+        dto.payment = None
+
+        return dto
+
+    @staticmethod
     def to_model(dto: OrderDTO) -> OrderModel | None:
         """
         Convert OrderDTO to OrderModel.
@@ -82,3 +113,12 @@ class OrderMapper:
         :return: A list of OrderDTO instances.
         """
         return [OrderMapper.to_dto(model) for model in models]
+
+    @staticmethod
+    def to_dto_single_list(models: list[OrderModel]) -> list[OrderDTO]:
+        """
+        Convert a list of OrderModel to a list of OrderDTO.
+        :param models: The list of OrderModel instances to convert.
+        :return: A list of OrderDTO instances.
+        """
+        return [OrderMapper.to_single_dto(model) for model in models]

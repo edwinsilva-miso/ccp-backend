@@ -92,7 +92,7 @@ class TestProductsManufacturerBlueprint:
         assert len(data) == 2
         assert data[0]['id'] == "product-1"
         assert data[1]['id'] == "product-2"
-        assert data[0]['manufacturer_id'] == self.manufacturer_id
+        assert data[0]['manufacturerId'] == self.manufacturer_id
         assert data[0]['stock'] == 10
         assert data[1]['stock'] == 20
 

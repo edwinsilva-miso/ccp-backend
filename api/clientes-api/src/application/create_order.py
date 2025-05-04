@@ -175,10 +175,10 @@ class CreateOrder:
         for detail in order_details_data:
             item = {
                 "id": detail.get('id'),
-                "productId": detail.get('product_id'),
+                "productId": detail.get('productId'),
                 "quantity": detail.get('quantity'),
-                "unitPrice": detail.get('unit_price'),
-                "totalPrice": detail.get('total_price'),
+                "unitPrice": detail.get('unitPrice'),
+                "totalPrice": detail.get('totalPrice'),
                 "currency": detail.get('currency')
             }
             order_items.append(item)

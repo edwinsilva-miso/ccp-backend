@@ -47,6 +47,29 @@ class ClientsAdapter:
         logger.debug(f"Response received from API: {response_data}")
         return response_data, response.status_code
 
+    def lists_orders(self, jwt, client_id):
+        """
+        List orders for a specific client.
+        :param jwt: JWT token for authorization.
+        :param client_id: The ID of the client to list orders for.
+        :return: Tuple of (orders_data, status_code)
+        """
+        logger.debug("Listing orders for client")
+        headers = {'Authorization': f'Bearer {jwt}'}
+        params = {'clientId': client_id}
+
+        # List the orders
+        response = requests.get(
+            f"{CLIENTS_API_URL}/api/v1/clients/orders",
+            headers=headers,
+            params=params
+        )
+
+        response_data = response.json()
+
+        logger.debug(f"Response received from API: {response_data}")
+        return response_data, response.status_code
+
     def _enrich_product_information(self, jwt, order_data, status_code):
         """
         Enrich product information with details from products API.
@@ -58,7 +81,7 @@ class ClientsAdapter:
         products = order_data.get('orderDetails', [])
 
         for product in products:
-            product_id = product.get('product_id')
+            product_id = product.get('productId')
             product_data, response_status = self.products_adapter.get_product_by_id(jwt, product_id)
 
             if product_data and response_status == 200:
@@ -67,8 +90,8 @@ class ClientsAdapter:
                 product['brand'] = product_data.get('brand')
 
                 # Calculate delivery date if order was successfully created
-                if status_code == 201 and 'delivery_time' in product_data:
-                    delivery_date = datetime.now() + timedelta(days=product_data['delivery_time'])
-                    product['deliveryTime'] = f"{product_data.get('delivery_time')} días"
+                if status_code in [200, 201] and 'deliveryTime' in product_data:
+                    delivery_date = datetime.now() + timedelta(days=product_data['deliveryTime'])
+                    product['deliveryTime'] = f"{product_data.get('deliveryTime')} días"
                     product['deliveryDate'] = delivery_date.strftime('%Y-%m-%d')
 

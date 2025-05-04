@@ -41,3 +41,17 @@ def create_order(jwt):
     adapter = ClientsAdapter()
     order_data = request.get_json()
     return adapter.create_order(jwt, order_data)
+
+@orders_blueprint.route('/', methods=['GET'])
+@token_required
+def list_orders(jwt):
+    """
+    List orders for a specific client.
+    :param jwt: JWT token for authorization.
+    :return: The list of orders
+    """
+    logging.debug("Received request to list orders.")
+    logging.debug("Listing orders in BFF Web.")
+    adapter = ClientsAdapter()
+    client_id = request.args.get('clientId')
+    return adapter.lists_orders(jwt, client_id)

@@ -10,7 +10,7 @@ class OrdersAdapter(OrdersRepository):
     """
 
     def get_orders_by_client(self, client_id: str) -> list[OrderDTO]:
-        return OrderMapper.to_dto_list(OrderDAO.find_by_client_id(client_id))
+        return OrderMapper.to_dto_single_list(OrderDAO.find_by_client_id(client_id))
 
     def get_by_id(self, id: str) -> OrderDTO | None:
         order = OrderDAO.get_by_id(id)

@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 
 from ..decorator.token_decorator import token_required
 from ...application.create_order import CreateOrder
+from ...application.list_orders  import ListOrders
 from ...application.errors.errors import ValidationApiError
 from ...infrastructure.adapters.orders_adapter import OrdersAdapter
 from ...infrastructure.adapters.payments_adapter import PaymentsAdapter
@@ -37,3 +38,19 @@ def create_order():
     use_case = CreateOrder(orders_adapter, payments_adapter, messaging_port_adapter)
     response, status = use_case.execute(data)
     return jsonify(response), status
+
+@clients_blueprint.route('/orders', methods=['GET'])
+@token_required(['CLIENTE'])
+def list_orders():
+    """
+    Endpoint to list all orders for a given client ID.
+    """
+    client_id = request.args.get('clientId')
+    if not client_id:
+        logger.error("Missing client ID in request.")
+        return jsonify({'msg': 'Client ID is required.'}), 400
+
+    logger.debug("Starting order listing process...")
+    use_case = ListOrders(orders_adapter)
+    orders = use_case.execute(client_id)
+    return jsonify([order.to_dict() for order in orders]), 200

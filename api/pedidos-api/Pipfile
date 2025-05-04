@@ -20,6 +20,7 @@ pytest-mock = "*"
 pytest-env = "*"
 sendgrid = "*"
 pika = "*"
+requests = "*"
 
 [dev-packages]
 

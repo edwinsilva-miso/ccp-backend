@@ -7,6 +7,7 @@ from flask import Flask, jsonify
 loaded = load_dotenv('.env.development')
 
 from .interface.blueprints.management_blueprint import management_blueprint
+from .interface.blueprints.orders_blueprint import orders_blueprint
 from .application.errors.errors import ApiError
 from .infrastructure.database.declarative_base import Base, engine
 from .interface.consumer.order_initiated_consumer import OrderInitiatedConsumer
@@ -28,6 +29,7 @@ def create_app():
     app = Flask(__name__)
 
     app.register_blueprint(management_blueprint)
+    app.register_blueprint(orders_blueprint)
 
     # Initialize the consumer
     logging.debug(">> Initialize the consumer")

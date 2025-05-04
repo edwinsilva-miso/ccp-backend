@@ -34,5 +34,5 @@ class OrderHistoryDTO:
             "orderId": self.order_id,
             "status": self.status,
             "description": self.description,
-            "date": self.date.isoformat()
+            "date": self.date
         }

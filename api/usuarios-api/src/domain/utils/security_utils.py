@@ -40,7 +40,7 @@ class SecurityUtils:
         :return:
         """
         now = datetime.datetime.now(tz=self.tz)
-        exp_date = datetime.datetime.now(tz=self.tz) + datetime.timedelta(minutes=10)
+        exp_date = datetime.datetime.now(tz=self.tz) + datetime.timedelta(minutes=30)
 
         payload = {
             'iat': now,

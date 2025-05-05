@@ -12,6 +12,7 @@ services:
       USERS_API_URL: http://users-api:5000/api/v1/users
       MANUFACTURERS_API_URL: http://manufacturers-api:5000
       PRODUCTS_API_URL: http://products-api:5000
+      ORDERS_API_URL: http://orders-api:5000
     networks:
       - web_bff_net
       - app_net

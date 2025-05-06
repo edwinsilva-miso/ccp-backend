@@ -50,3 +50,14 @@ class UsersAdapter:
         response = requests.get(f"{USERS_API_URL}/me", headers=headers)
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code
+
+    def get_users_by_role(self, role):
+        """
+        Get users by role.
+        :param role: User's role.
+        :return: List of users with the specified role.
+        """
+        logger.debug(f"Getting users by role: {role}")
+        response = requests.get(f"{USERS_API_URL}/role/{role}")
+        logger.debug(f"Response received from API: {response.json()}")
+        return response.json(), response.status_code

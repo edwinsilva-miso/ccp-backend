@@ -52,8 +52,8 @@ class OrderDTO:
         :return:
         """
         return {
-            "order_id": self.id,
-            "order_date": self.order_date.isoformat(),
+            "id": self.id,
+            "date": self.order_date,
             "status": self.status,
             "subtotal": self.subtotal,
             "taxes": self.taxes,
@@ -62,8 +62,8 @@ class OrderDTO:
             "clientId": self.client_id,
             "paymentId": self.payment_id,
             "transactionStatus": self.transaction_status,
-            "transactionDate": self.transaction_date.isoformat(),
+            "transactionDate": self.transaction_date,
             "transactionId": self.transaction_id,
-            "orderItems": [item.to_dict() for item in self.order_items],
-            "orderHistory": [history.to_dict() for history in self.order_history]
+            "orderItems": [item.to_dict() for item in self.order_items] if self.order_items else None,
+            "orderHistory": [history.to_dict() for history in self.order_history] if self.order_history else None,
         }

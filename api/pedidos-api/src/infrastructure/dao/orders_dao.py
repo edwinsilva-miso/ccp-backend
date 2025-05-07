@@ -18,7 +18,7 @@ class OrderDAO:
         :return: List of OrderModel.
         """
         session = Session()
-        orders = session.query(OrderModel).all()
+        orders = session.query(OrderModel).order_by(OrderModel.order_date.desc()).all()
         session.close()
         return orders
 

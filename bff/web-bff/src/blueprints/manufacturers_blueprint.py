@@ -107,3 +107,21 @@ def get_products_by_manufacturer(manufacturer_id, jwt):
     logging.debug("Retrieving products by manufacturer ID from BFF Web.")
     adapter = ProductsAdapter()
     return adapter.get_products_by_manufacturer(jwt, manufacturer_id)
+
+@manufacturers_blueprint.route('/bulk-upload', methods=['POST'])
+@token_required
+def bulk_upload_manufacturers(jwt):
+    """
+    Bulk upload manufacturers.
+    :param jwt: JWT token for authorization.
+    :return: The response from the API
+    """
+    logging.debug("Received request to bulk upload manufacturers.")
+    manufacturers_data = request.get_json()
+    if not manufacturers_data:
+        logging.error("Missing data in request manufacturers_data.")
+        return jsonify({'msg': 'Faltan campos requeridos.'}), 400
+
+    logging.debug("Bulk uploading manufacturers from BFF Web.")
+    adapter = ManufacturersAdapter()
+    return adapter.bulk_manufacturer(jwt, manufacturers_data)

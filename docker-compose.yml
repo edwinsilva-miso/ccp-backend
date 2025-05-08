@@ -237,6 +237,47 @@ services:
     networks:
       - app_net
 
+  # Sales API
+  sales-api:
+      build: api/ventas-api/
+      container_name: sales-api
+      ports:
+      - "5106:5000"
+      environment:
+        DB_HOST: sales_db
+        DB_PORT: 5432
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        DB_NAME: sales
+        RABBITMQ_USER: admin
+        RABBITMQ_PASSWORD: admin
+        RABBITMQ_HOST: rabbitmq
+        RABBITMQ_PORT: 5672
+        USERS_API_URL: http://users-api:5000/api/v1/users
+      depends_on:
+        sales_db:
+          condition: service_healthy
+      networks:
+      - app_net
+
+  sales_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sales
+    ports:
+    - "5437:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+    - sales_db_volume:/var/lib/postgresql/data
+    networks:
+    - app_net
+
   # Additional Infrastructure
   rabbitmq:
     image: rabbitmq:3-management
@@ -262,6 +303,7 @@ volumes:
   products_db_volume:
   clients_db_volume:
   orders_db_volume:
+  sales_db_volume:
   rabbitmq_data:
 
 networks:
@@ -280,4 +322,6 @@ networks:
   clients_api_net:
     driver: bridge
   orders_api_net:
+    driver: bridge
+  sales_api_net:
     driver: bridge

@@ -5,7 +5,9 @@ from flask import Flask, jsonify
 
 loaded = load_dotenv('.env.development')
 
+from .infrastructure.database.declarative_base import Base, engine
 from .interface.blueprints.management_blueprint import management_blueprint
+from .interface.blueprints.client_salesman_blueprint import client_salesman_blueprint
 from .application.errors.errors import ApiError
 
 logging.basicConfig(level=logging.DEBUG)
@@ -19,6 +21,11 @@ def create_app():
     app = Flask(__name__)
 
     app.register_blueprint(management_blueprint)
+    app.register_blueprint(client_salesman_blueprint)
+
+    # Create schema
+    logging.debug(">> Create schema")
+    Base.metadata.create_all(engine)
 
     @app.errorhandler(ApiError)
     def handle_error(error):
@@ -36,4 +43,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5106, debug=True)

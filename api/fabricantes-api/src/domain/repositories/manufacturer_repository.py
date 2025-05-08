@@ -21,6 +21,12 @@ class ManufacturerRepository(ABC):
         pass
 
     @abstractmethod
+    def get_by_email(self, email: str) -> ManufacturerDTO:
+        """Get manufacturer by EMAIL"""
+        pass
+
+
+    @abstractmethod
     def add(self, manufacturer: ManufacturerDTO) -> str:
         """Add a new manufacturer"""
         pass

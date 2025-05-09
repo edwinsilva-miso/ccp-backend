@@ -249,10 +249,6 @@ services:
         DB_USER: postgres
         DB_PASSWORD: postgres
         DB_NAME: sales
-        RABBITMQ_USER: admin
-        RABBITMQ_PASSWORD: admin
-        RABBITMQ_HOST: rabbitmq
-        RABBITMQ_PORT: 5672
         USERS_API_URL: http://users-api:5000/api/v1/users
       depends_on:
         sales_db:

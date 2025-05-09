@@ -2,7 +2,7 @@ import logging
 
 from flask import Blueprint, request, jsonify
 
-from ..decorator.token_decorator import token_required
+from ..decorators.token_decorator import token_required
 from ...application.associate_client import AssociateClient
 from ...application.errors.errors import ValidationApiError
 from ...application.get_clients_by_salesman import GetClientsBySalesman

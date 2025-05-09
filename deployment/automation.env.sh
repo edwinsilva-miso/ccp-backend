@@ -1,16 +1,16 @@
 declare -A APIS=(
-#  ["bodegas-api"]="warehouses-api"
+  ["bodegas-api"]="warehouses-api"
   ["clientes-api"]="customers-api"
-#  ["entregas-api"]="deliveries-api"
-#  ["inventarios-api"]="inventory-api"
+  ["entregas-api"]="deliveries-api"
+  ["inventarios-api"]="inventory-api"
   ["pedidos-api"]="orders-api"
   ["productos-api"]="products-api"
   ["fabricantes-api"]="manufacturers-api"
-#  ["reportes-api"]="reports-api"
+  ["reportes-api"]="reports-api"
   ["rutas-api"]="routes-api"
-#  ["transportes-api"]="transport-api"
+  ["transportes-api"]="transport-api"
   ["usuarios-api"]="users-api"
-#  ["ventas-api"]="sales-api"
+  ["ventas-api"]="sales-api"
 )
 
 

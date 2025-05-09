@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: users-api
+  name: manufacturers-api
   labels:
-    app: users-api
+    app: manufacturers-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: users-api
+      app: manufacturers-api
   template:
     metadata:
       labels:
-        app: users-api
+        app: manufacturers-api
     spec:
       containers:
-      - name: users-api
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/users-api:latest
+      - name: manufacturers-api
+        image: manufacturers-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
@@ -34,7 +34,7 @@ spec:
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
-              name: users-api-secrets
+              name: manufacturers-api-secrets
               key: DB_NAME
         - name: DB_USER
           valueFrom:
@@ -46,16 +46,11 @@ spec:
             secretKeyRef:
               name: common-secrets
               key: DB_PASSWORD
-        - name: CLIENT_ID
+        - name: USERS_API_URL
           valueFrom:
-            secretKeyRef:
-              name: users-api-secrets
-              key: CLIENT_ID
-        - name: CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: users-api-secrets
-              key: CLIENT_SECRET
+            configMapKeyRef:
+              name: common-configs
+              key: USERS_API_URL
         resources:
           requests:
             memory: "256Mi"
@@ -68,10 +63,10 @@ spec:
             path: /health
             port: 5000
           initialDelaySeconds: 30
-          periodSeconds: 10
+          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /health
             port: 5000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 30

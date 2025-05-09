@@ -11,6 +11,7 @@ from .blueprints.users_blueprint import users_blueprint
 from .blueprints.manufacturers_blueprint import manufacturers_blueprint
 from .blueprints.products_blueprint import products_blueprint
 from .blueprints.orders_blueprint import orders_blueprint
+from .blueprints.routes_blueprint import routes_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -28,6 +29,7 @@ def create_app():
     app.register_blueprint(manufacturers_blueprint)
     app.register_blueprint(products_blueprint)
     app.register_blueprint(orders_blueprint)
+    app.register_blueprint(routes_blueprint)
 
     CORS(app, resources={
         r"/bff/*": {

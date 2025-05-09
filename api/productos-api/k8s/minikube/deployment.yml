@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customers-api
+  name: products-api
   labels:
-    app: customers-api
+    app: products-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: customers-api
+      app: products-api
   template:
     metadata:
       labels:
-        app: customers-api
+        app: products-api
     spec:
       containers:
-      - name: customers-api
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/customers-api:latest
+      - name: products-api
+        image: products-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
@@ -34,7 +34,7 @@ spec:
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
-              name: customers-api-secrets
+              name: products-api-secrets
               key: DB_NAME
         - name: DB_USER
           valueFrom:
@@ -73,11 +73,6 @@ spec:
             configMapKeyRef:
               name: common-configs
               key: USERS_API_URL
-        - name: PAYMENT_GATEWAY_URL
-          valueFrom:
-            secretKeyRef:
-              name: common-secrets
-              key: PAYMENT_GATEWAY_URL
 
         resources:
           requests:
@@ -91,10 +86,10 @@ spec:
             path: /health
             port: 5000
           initialDelaySeconds: 30
-          periodSeconds: 10
+          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /health
             port: 5000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 30

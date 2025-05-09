@@ -16,6 +16,8 @@ class Route:
     id: UUID = field(default_factory=uuid4)
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: datetime = field(default_factory=datetime.utcnow)
+    zone: Optional[str] = None
+    due_to: datetime = field(default_factory=datetime.utcnow)
 
     def add_waypoint(self, waypoint: Waypoint) -> None:
         """Add a waypoint to the route."""

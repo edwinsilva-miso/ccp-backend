@@ -18,16 +18,8 @@ class RouteService:
     def __init__(self, route_repository: RouteRepository):
         self.route_repository = route_repository
 
-    def create_route(self, name: str, description: Optional[str] = None,
-                     waypoints: Optional[List[Waypoint]] = None,
-                     user_id: Optional[UUID] = None) -> Route:
+    def create_route(self, route: Route) -> Route:
         """Create a new route."""
-        route = Route(
-            name=name,
-            description=description,
-            waypoints=waypoints or [],
-            user_id=user_id
-        )
         return self.route_repository.create(route)
 
     def get_route(self, route_id: UUID) -> Route:

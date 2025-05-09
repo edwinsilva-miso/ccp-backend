@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: products-api
+  name: orders-api
   labels:
-    app: products-api
+    app: orders-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: products-api
+      app: orders-api
   template:
     metadata:
       labels:
-        app: products-api
+        app: orders-api
     spec:
       containers:
-      - name: products-api
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/products-api:latest
-        imagePullPolicy: IfNotPresent
+      - name: orders-api
+        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/orders-api:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
@@ -34,7 +34,7 @@ spec:
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
-              name: products-api-secrets
+              name: orders-api-secrets
               key: DB_NAME
         - name: DB_USER
           valueFrom:
@@ -68,12 +68,6 @@ spec:
               name: common-configs
               key: RABBITMQ_PORT
 
-        - name: USERS_API_URL
-          valueFrom:
-            configMapKeyRef:
-              name: common-configs
-              key: USERS_API_URL
-
         resources:
           requests:
             memory: "256Mi"
@@ -86,10 +80,10 @@ spec:
             path: /health
             port: 5000
           initialDelaySeconds: 30
-          periodSeconds: 10
+          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /health
             port: 5000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 30

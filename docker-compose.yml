@@ -22,6 +22,7 @@ services:
       USERS_API_URL: http://users-api:5000/api/v1/users
       PRODUCTS_API_URL: http://products-api:5000
       CLIENTS_API_URL: http://clients-api:5000
+      SALES_API_URL: http://sales-api:5000
     networks:
       - mobile_bff_net
       - app_net
@@ -241,6 +242,43 @@ services:
     networks:
       - app_net
 
+  # Sales API
+  sales-api:
+      build: api/ventas-api/
+      container_name: sales-api
+      ports:
+      - "5106:5000"
+      environment:
+        DB_HOST: sales_db
+        DB_PORT: 5432
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        DB_NAME: sales
+        USERS_API_URL: http://users-api:5000/api/v1/users
+      depends_on:
+        sales_db:
+          condition: service_healthy
+      networks:
+      - app_net
+
+  sales_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sales
+    ports:
+    - "5437:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+    - sales_db_volume:/var/lib/postgresql/data
+    networks:
+    - app_net
+
 # ==============================
 # Rutas API
 # ==============================
@@ -309,6 +347,7 @@ volumes:
   clients_db_volume:
   orders_db_volume:
   routes_db_volume:
+  sales_db_volume:
   rabbitmq_data:
 
 networks:
@@ -329,4 +368,6 @@ networks:
   orders_api_net:
     driver: bridge
   routes_api_net:
+    driver: bridge
+  sales_api_net:
     driver: bridge

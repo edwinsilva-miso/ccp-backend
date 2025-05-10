@@ -1,31 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: routes-api
+  name: manufacturers-api
   labels:
-    app: routes-api
+    app: manufacturers-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: routes-api
+      app: manufacturers-api
   template:
     metadata:
       labels:
-        app: routes-api
+        app: manufacturers-api
     spec:
       containers:
-      - name: routes-api
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/routes-api:latest
-        imagePullPolicy: IfNotPresent
+      - name: manufacturers-api
+        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/manufacturers-api:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
-        - name: OPENROUTE_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: routes-api-secrets
-              key: OPENROUTE_API_KEY
         - name: DB_HOST
           valueFrom:
             secretKeyRef:
@@ -39,7 +34,7 @@ spec:
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
-              name: routes-api-secrets
+              name: manufacturers-api-secrets
               key: DB_NAME
         - name: DB_USER
           valueFrom:
@@ -51,10 +46,27 @@ spec:
             secretKeyRef:
               name: common-secrets
               key: DB_PASSWORD
+        - name: USERS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: USERS_API_URL
         resources:
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
           requests:
-            cpu: "100m"
             memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 30

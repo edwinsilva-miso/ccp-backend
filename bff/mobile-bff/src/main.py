@@ -9,6 +9,7 @@ from .blueprints.management_blueprint import management_blueprint
 from .blueprints.users_blueprint import users_blueprint
 from .blueprints.products_blueprint import products_blueprint
 from .blueprints.clients_blueprint import orders_blueprint
+from .blueprints.routes_blueprint import routes_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -25,6 +26,7 @@ def create_app():
     app.register_blueprint(users_blueprint)
     app.register_blueprint(products_blueprint)
     app.register_blueprint(orders_blueprint)
+    app.register_blueprint(routes_blueprint)
 
     return app
 

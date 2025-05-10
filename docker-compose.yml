@@ -1,8 +1,4 @@
-# Put the services in the same network
-version: '3.8'
-
 services:
-  # BFF
   web-bff:
     build: bff/web-bff
     container_name: web-bff
@@ -30,7 +26,9 @@ services:
       - mobile_bff_net
       - app_net
 
-  # Users API
+# ==============================
+# Users API
+# ==============================
   users-api:
     build: api/usuarios-api/
     container_name: users-api
@@ -66,9 +64,9 @@ services:
     networks:
       - users_api_net
 
-  # [DELETE] Put here below the services you want to add with the database (if applies)
-
-  # Fabricantes API:
+# ==============================
+# Fabricantes API
+# ==============================
   manufacturers-api:
     build: api/fabricantes-api/
     container_name: manufacturers-api
@@ -106,7 +104,9 @@ services:
     networks:
       - manufacturers_api_net
 
-  # Productos API
+# ==============================
+# Productos API
+# ==============================
   products-api:
     build: api/productos-api/
     container_name: products-api
@@ -150,7 +150,9 @@ services:
     networks:
       - app_net
 
-  # Clientes API
+# ==============================
+# Clientes API
+# ==============================
   clients-api:
     build: api/clientes-api/
     container_name: clients-api
@@ -195,7 +197,9 @@ services:
     networks:
       - app_net
 
-  # Pedidos API
+# ==============================
+# Pedidos API
+# ==============================
   orders-api:
     build: api/pedidos-api/
     container_name: orders-api
@@ -237,7 +241,49 @@ services:
     networks:
       - app_net
 
-  # Additional Infrastructure
+# ==============================
+# Rutas API
+# ==============================
+  routes-api:
+    build: api/pedidos-api/
+    container_name: routes-api
+    ports:
+      - "5106:5000"
+    environment:
+      DB_HOST: routes_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: routes
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      routes_db:
+        condition: service_healthy
+    networks:
+      - routes_api_net
+      - app_net
+
+  routes_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: routes
+    ports:
+      - "5437:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - routes_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+# ==============================
+# Required Infra Components
+# ==============================
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -262,6 +308,7 @@ volumes:
   products_db_volume:
   clients_db_volume:
   orders_db_volume:
+  routes_db_volume:
   rabbitmq_data:
 
 networks:
@@ -280,4 +327,6 @@ networks:
   clients_api_net:
     driver: bridge
   orders_api_net:
+    driver: bridge
+  routes_api_net:
     driver: bridge

@@ -12,6 +12,7 @@ pytest-mock = "*"
 pytest-env = "*"
 sendgrid = "*"
 python-dotenv = "*"
+freezegun = "*"
 
 [dev-packages]
 

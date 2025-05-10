@@ -3,31 +3,29 @@ class ApiError(Exception):
     description = "Hubo un error inesperado. Intente más tarde."
 
 
+class InternalServerError(ApiError):
+    code = 500
+    description = "Error interno del servidor. Intente más tarde"
+
+
 class ValidationApiError(ApiError):
-    code = 400
-    description = "Faltan campos requeridos."
+    def __init__(self, message=None):
+        super().__init__(message)
+        self.code = 400
+        self.description = message or "Error de validación de datos."
 
 
 class InvalidFormatError(ApiError):
-    code = 400
-    description = "Formato de campo inválido."
+    def __init__(self, message=None):
+        super().__init__(message)
+        self.code = 400
+        self.description = message or "Formato de campo inválido."
 
 
-class UserAlreadyExistsError(ApiError):
-    code = 412
-    description = "El registro ya existe."
-
-
-class UserNotExistsError(ApiError):
+class OrderNotExistsError(ApiError):
     code = 404
-    description = "El usuario no existe."
+    description = "El pedido consultado no existe."
 
-
-class InvalidTokenError(ApiError):
-    code = 401
-    description = "Unauthorized."
-
-
-class ForbiddenError(ApiError):
-    code = 403
-    description = "Forbidden."
+class OrdersNotFoundError(ApiError):
+    code = 404
+    description = "No se encontraron pedidos para el cliente consultado."

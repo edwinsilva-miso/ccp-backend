@@ -1,0 +1,12 @@
+{
+  "bffs": [
+    "mobile-bff",
+    "web-bff"
+  ],
+  "apis": [
+    "usuarios-api",
+    "rutas-api"
+  ],
+  "backplane-components": [
+  ]
+}

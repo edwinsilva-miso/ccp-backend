@@ -19,6 +19,7 @@ pytest-cov = "*"
 pytest-mock = "*"
 pytest-env = "*"
 sendgrid = "*"
+requests = "*"
 
 [dev-packages]
 

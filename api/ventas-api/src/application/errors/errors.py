@@ -23,6 +23,11 @@ class UserNotExistsError(ApiError):
     description = "El usuario no existe."
 
 
+class ClientAlreadyAssociatedError(ApiError):
+    code = 412
+    description = "El cliente que intenta asociar ya existe. Por favor ingrese otro cliente."
+
+
 class InvalidTokenError(ApiError):
     code = 401
     description = "Unauthorized."

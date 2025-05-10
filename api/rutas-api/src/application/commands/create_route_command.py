@@ -1,7 +1,11 @@
+import logging
 from typing import Dict, Any, List
 from uuid import UUID
 
 from ...domain.entities.route import Route
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 from ...domain.entities.waypoint import Waypoint
 from ...domain.services.route_service import RouteService
 from ...domain.repositories.route_repository import RouteRepository
@@ -28,11 +32,15 @@ class CreateRouteCommand:
             Dictionary representation of the created route
         """
         # Validate the data
+        logger.debug("validating route data: %s", route_data)
         validated_data = validate_route_dto(route_data)
+        logger.debug("route data validation successful")
 
         # Create waypoints
+        logger.debug("creating waypoints from validated data")
         waypoints = []
         for i, wp_data in enumerate(validated_data['waypoints']):
+            logger.debug("creating waypoint %d: %s", i, wp_data)
             waypoint = Waypoint(
                 latitude=wp_data['latitude'],
                 longitude=wp_data['longitude'],
@@ -43,12 +51,18 @@ class CreateRouteCommand:
             waypoints.append(waypoint)
 
         # Create the route
+        logger.debug("creating new route with name: %s", validated_data['name'])
         route = self.route_service.create_route(
-            name=validated_data['name'],
-            description=validated_data.get('description'),
-            waypoints=waypoints,
-            user_id=validated_data.get('user_id')
+            Route(
+                name=validated_data['name'],
+                description=validated_data.get('description'),
+                zone=validated_data.get('zone'),
+                due_to=validated_data.get('due_to'),
+                waypoints=waypoints,
+                user_id=validated_data.get('user_id')
+            )
         )
 
         # Return DTO
+        logger.debug("serializing created route with id: %s", route.id)
         return serialize_route(route)

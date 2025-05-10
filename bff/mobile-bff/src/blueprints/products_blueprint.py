@@ -4,6 +4,7 @@ import logging
 from flask import Blueprint, jsonify, request
 
 from ..adapters.products_adapter import ProductsAdapter
+from ..utils.commons import token_required
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -13,21 +14,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 products_blueprint = Blueprint('products', __name__, url_prefix='/bff/v1/mobile/products')
-
-
-def token_required(f):
-    @functools.wraps(f)
-    def decorated_function(*args, **kwargs):
-        token = request.headers.get('Authorization')
-        if not token:
-            logging.error("Missing Authorization header.")
-            return jsonify({'msg': 'Unauthorized'}), 401
-
-        jwt = token.split('Bearer ')[-1] if 'Bearer ' in token else token
-        kwargs['jwt'] = jwt
-        return f(*args, **kwargs)
-
-    return decorated_function
 
 
 @products_blueprint.route('/', methods=['GET'])

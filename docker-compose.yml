@@ -242,7 +242,9 @@ services:
     networks:
       - app_net
 
-  # Sales API
+# ==============================
+# Ventas API
+# ==============================
   sales-api:
       build: api/ventas-api/
       container_name: sales-api

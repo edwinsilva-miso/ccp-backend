@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-bff
+  name: selling-api
   labels:
-    app: web-bff
+    app: selling-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web-bff
+      app: selling-api
   template:
     metadata:
       labels:
-        app: web-bff
+        app: selling-api
     spec:
       containers:
-      - name: web-bff
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/web-bff:latest
-        imagePullPolicy: Always
+      - name: selling-api
+        image: selling-api:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
         env:
@@ -26,21 +26,6 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: USERS_API_URL
-          - name: MANUFACTURERS_API_URL
-            valueFrom:
-              configMapKeyRef:
-                name: common-configs
-                key: MANUFACTURERS_API_URL
-          - name: PRODUCTS_API_URL
-            valueFrom:
-              configMapKeyRef:
-                name: common-configs
-                key: PRODUCTS_API_URL
-          - name: ROUTES_API_URL
-            valueFrom:
-              configMapKeyRef:
-                name: common-configs
-                key: ROUTES_API_URL
         resources:
           requests:
             memory: "256Mi"

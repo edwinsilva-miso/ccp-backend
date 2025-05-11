@@ -5,7 +5,8 @@
   ],
   "apis": [
     "usuarios-api",
-    "rutas-api"
+    "rutas-api",
+    "ventas-api"
   ],
   "backplane-components": [
   ]

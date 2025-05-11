@@ -13,14 +13,9 @@ class InvalidFormatError(ApiError):
     description = "Formato de campo inválido."
 
 
-class UserAlreadyExistsError(ApiError):
-    code = 412
-    description = "El registro ya existe."
-
-
-class UserNotExistsError(ApiError):
+class RecordNotExistsError(ApiError):
     code = 404
-    description = "El usuario no existe."
+    description = "El registro de visita de cliente no existe en el sistema."
 
 
 class ClientAlreadyAssociatedError(ApiError):

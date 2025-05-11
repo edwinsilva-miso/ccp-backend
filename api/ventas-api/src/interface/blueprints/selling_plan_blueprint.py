@@ -30,18 +30,18 @@ def create_selling_plan():
     Endpoint to create a new selling plan.
     """
     data = request.get_json()
-    if not data or not all(key in data for key in ['userId', 'title', 'description']):
-        logging.error("Missing required fields in request data.")
+    if not data or not all(key in data for key in ['user_id', 'title', 'description']):
+        logging.error("missing required fields in request data: %s", data)
         raise ValidationApiError
 
-    logging.debug("Starting selling plan creation process...")
+    logging.debug("starting selling plan creation process with data: %s", data)
     selling_plan = SellingPlanDTO(
         id=None,
-        user_id=data['userId'],
+        user_id=data['user_id'],
         title=data['title'],
         description=data['description'],
-        target_amount=data.get('targetAmount'),
-        target_date=data.get('targetDate'),
+        target_amount=data.get('target_amount'),
+        target_date=data.get('target_date'),
         status=data.get('status', 'active')
     )
     use_case = CreateSellingPlan(selling_plan_adapter)
@@ -56,18 +56,18 @@ def update_selling_plan(plan_id):
     Endpoint to update an existing selling plan.
     """
     data = request.get_json()
-    if not data or not all(key in data for key in ['userId', 'title', 'description']):
+    if not data or not all(key in data for key in ['user_id', 'title', 'description']):
         logging.error("Missing required fields in request data.")
         raise ValidationApiError
 
-    logging.debug("Starting selling plan update process...")
+    logging.debug("starting selling plan update process for plan_id: %s with data: %s", plan_id, data)
     selling_plan = SellingPlanDTO(
         id=plan_id,
-        user_id=data['userId'],
+        user_id=data['user_id'],
         title=data['title'],
         description=data['description'],
-        target_amount=data.get('targetAmount'),
-        target_date=data.get('targetDate'),
+        target_amount=data.get('target_amount'),
+        target_date=data.get('target_date'),
         status=data.get('status', 'active')
     )
     try:
@@ -85,10 +85,10 @@ def get_selling_plan(plan_id):
     Endpoint to get a selling plan by its ID.
     """
     if not plan_id:
-        logging.error("Missing plan ID in request.")
+        logging.error("missing plan id in request")
         raise ValidationApiError
 
-    logging.debug("Starting selling plan retrieval process...")
+    logging.debug("starting selling plan retrieval process for plan_id: %s", plan_id)
     try:
         use_case = GetSellingPlanById(selling_plan_adapter)
         selling_plan = use_case.execute(plan_id)
@@ -104,10 +104,10 @@ def get_selling_plans_by_user(user_id):
     Endpoint to get all selling plans for a given user.
     """
     if not user_id:
-        logging.error("Missing user ID in request.")
+        logging.error("missing user id in request")
         raise ValidationApiError
 
-    logging.debug("Starting selling plans retrieval process...")
+    logging.debug("starting selling plans retrieval process for user_id: %s", user_id)
     use_case = GetSellingPlansByUserId(selling_plan_adapter)
     selling_plans = use_case.execute(user_id)
     return jsonify([plan.to_dict() for plan in selling_plans]), 200
@@ -123,7 +123,7 @@ def delete_selling_plan(plan_id):
         logging.error("Missing plan ID in request.")
         raise ValidationApiError
 
-    logging.debug("Starting selling plan deletion process...")
+    logging.debug("starting selling plan deletion process for plan_id: %s", plan_id)
     try:
         use_case = DeleteSellingPlan(selling_plan_adapter)
         result = use_case.execute(plan_id)

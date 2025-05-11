@@ -21,7 +21,9 @@ class GetSellingPlanById:
         Initialize the use case with a selling plan repository.
         :param selling_plan_repository: Repository for selling plan operations.
         """
+        logger.debug("initializing get selling plan by id use case")
         self.selling_plan_repository = selling_plan_repository
+        logger.debug(f"selling plan repository instance set: {selling_plan_repository.__class__.__name__}")
 
     def execute(self, plan_id: str) -> SellingPlanDTO:
         """
@@ -30,13 +32,14 @@ class GetSellingPlanById:
         :return: SellingPlanDTO if found.
         :raises: ResourceNotFoundError if the selling plan does not exist.
         """
-        logger.debug(f"Retrieving selling plan with ID: {plan_id}")
+        logger.debug(f"attempting to retrieve selling plan with id: {plan_id}")
 
         # Get the selling plan
+        logger.debug(f"calling repository method get_by_id for plan id: {plan_id}")
         selling_plan = self.selling_plan_repository.get_by_id(plan_id)
         if not selling_plan:
-            logger.error(f"Selling plan with ID {plan_id} not found.")
+            logger.error(f"selling plan with id {plan_id} not found in repository")
             raise ResourceNotFoundError
 
-        logger.debug(f"Selling plan retrieved successfully: {selling_plan.__repr__()}")
+        logger.debug(f"successfully retrieved selling plan from repository: {selling_plan.__repr__()}")
         return selling_plan

@@ -41,6 +41,11 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: ROUTES_API_URL
+          - name: SALES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: SALES_API_URL
         resources:
           requests:
             memory: "256Mi"

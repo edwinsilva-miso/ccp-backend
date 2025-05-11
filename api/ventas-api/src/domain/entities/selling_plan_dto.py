@@ -38,11 +38,11 @@ class SellingPlanDTO:
         """
         return {
             "id": self.id,
-            "userId": self.user_id,
+            "user_id": self.user_id,
             "title": self.title,
             "description": self.description,
-            "targetAmount": self.target_amount,
-            "targetDate": self.target_date,
+            "target_amount": self.target_amount,
+            "target_date": self.target_date,
             "status": self.status,
-            "createdAt": self.created_at
+            "created_at": self.created_at
         }

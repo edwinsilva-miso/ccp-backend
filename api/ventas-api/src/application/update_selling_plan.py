@@ -1,5 +1,7 @@
 import logging
 
+from ..domain.repositories.selling_plan_repository import SellingPlanRepository
+
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -16,7 +18,7 @@ class UpdateSellingPlan:
     Use case for updating an existing selling plan.
     """
 
-    def __init__(self, selling_plan_repository):
+    def __init__(self, selling_plan_repository: SellingPlanRepository):
         """
         Initialize the use case with a selling plan repository.
         :param selling_plan_repository: Repository for selling plan operations.

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: selling-api
+  name: sales-api
   labels:
-    app: selling-api
+    app: sales-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: selling-api
+      app: sales-api
   template:
     metadata:
       labels:
-        app: selling-api
+        app: sales-api
     spec:
       containers:
-      - name: selling-api
-        image: selling-api:latest
+      - name: sales-api
+        image: sales-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
@@ -26,6 +26,31 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: USERS_API_URL
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: common-secrets
+                key: DB_HOST
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: common-secrets
+                key: DB_PORT
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: sales-api-secrets
+                key: DB_NAME
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: common-secrets
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: common-secrets
+                key: DB_PASSWORD
         resources:
           requests:
             memory: "256Mi"

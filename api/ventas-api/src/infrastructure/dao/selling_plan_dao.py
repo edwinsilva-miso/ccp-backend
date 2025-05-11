@@ -30,11 +30,11 @@ class SellingPlanDAO:
         :return: The updated SellingPlanModel.
         """
         session = Session()
-        session.merge(selling_plan)
+        merged_plan = session.merge(selling_plan)
         session.commit()
-        session.refresh(selling_plan)
+        session.refresh(merged_plan)
         session.close()
-        return selling_plan
+        return merged_plan
 
     @classmethod
     def delete(cls, plan_id: str) -> bool:

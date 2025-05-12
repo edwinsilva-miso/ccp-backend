@@ -31,3 +31,8 @@ class InvalidTokenError(ApiError):
 class ForbiddenError(ApiError):
     code = 403
     description = "Forbidden."
+
+
+class ResourceNotFoundError(ApiError):
+    code = 404
+    description = "El recurso solicitado no existe."

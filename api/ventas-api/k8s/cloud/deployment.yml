@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-bff
+  name: sales-api
   labels:
-    app: web-bff
+    app: sales-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web-bff
+      app: sales-api
   template:
     metadata:
       labels:
-        app: web-bff
+        app: sales-api
     spec:
       containers:
-      - name: web-bff
-        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/web-bff:latest
+      - name: sales-api
+        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/sales-api:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -26,21 +26,31 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: USERS_API_URL
-          - name: MANUFACTURERS_API_URL
+          - name: DB_HOST
             valueFrom:
-              configMapKeyRef:
-                name: common-configs
-                key: MANUFACTURERS_API_URL
-          - name: PRODUCTS_API_URL
+              secretKeyRef:
+                name: common-secrets
+                key: DB_HOST
+          - name: DB_PORT
             valueFrom:
-              configMapKeyRef:
-                name: common-configs
-                key: PRODUCTS_API_URL
-          - name: ROUTES_API_URL
+              secretKeyRef:
+                name: common-secrets
+                key: DB_PORT
+          - name: DB_NAME
             valueFrom:
-              configMapKeyRef:
-                name: common-configs
-                key: ROUTES_API_URL
+              secretKeyRef:
+                name: sales-api-secrets
+                key: DB_NAME
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: common-secrets
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: common-secrets
+                key: DB_PASSWORD
         resources:
           requests:
             memory: "256Mi"

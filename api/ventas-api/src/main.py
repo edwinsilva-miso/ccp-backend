@@ -9,6 +9,7 @@ from .infrastructure.database.declarative_base import Base, engine
 from .interface.blueprints.management_blueprint import management_blueprint
 from .interface.blueprints.client_salesman_blueprint import client_salesman_blueprint
 from .interface.blueprints.selling_plan_blueprint import selling_plan_blueprint
+from .interface.blueprints.client_visit_record_blueprint import client_visit_record_blueprint
 from .application.errors.errors import ApiError
 
 logging.basicConfig(level=logging.DEBUG)
@@ -24,6 +25,7 @@ def create_app():
     app.register_blueprint(management_blueprint)
     app.register_blueprint(client_salesman_blueprint)
     app.register_blueprint(selling_plan_blueprint)
+    app.register_blueprint(client_visit_record_blueprint)
 
     # Create schema
     logging.debug(">> Create schema")

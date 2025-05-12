@@ -20,6 +20,8 @@ pytest-mock = "*"
 pytest-env = "*"
 sendgrid = "*"
 requests = "*"
+pandas = "*"
+openpyxl = "*"
 
 [dev-packages]
 

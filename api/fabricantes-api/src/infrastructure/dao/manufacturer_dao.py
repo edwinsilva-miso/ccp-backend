@@ -60,6 +60,18 @@ class ManufacturerDAO:
         return manufacturer
 
     @classmethod
+    def find_by_email(cls, email: str) -> ManufacturerModel | None:
+        """
+        Find a manufacturer by EMAIL.
+        :param email: Email of the manufacturer to find.
+        :return: ManufacturerModel if found, None otherwise.
+        """
+        session = Session()
+        manufacturer = session.query(ManufacturerModel).filter(ManufacturerModel.email == email).first()
+        session.close()
+        return manufacturer
+
+    @classmethod
     def update(cls, manufacturer: ManufacturerModel) -> ManufacturerModel | None:
         """
         Update the data for an existing manufacturer

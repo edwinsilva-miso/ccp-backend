@@ -9,6 +9,7 @@ from ...application.get_all_manufacturers import GetAllManufacturers
 from ...application.get_manufacturer_by_id import GetManufacturerById
 from ...application.get_manufacturer_by_nit import GetManufacturerByNit
 from ...application.delete_manufacturer import DeleteManufacturer
+from ...application.bulk_create_manufacturers import BulkCreateManufacturers
 from ...domain.entities.manufacturer_dto import ManufacturerDTO
 from ...infrastructure.adapters.manufacturer_adapter import ManufacturerAdapter
 
@@ -108,5 +109,34 @@ def delete_manufacturer(manufacturer_id):
     use_case.execute(manufacturer_id)
     return {}, 204
 
+@manufacturers_blueprint.route('/bulk-upload', methods=['POST'])
+@token_required
+def bulk_upload_manufacturers():
+    """
+    Endpoint for bulk uploading manufacturers from Excel file.
+    Expects a base64 encoded Excel file in the request body under the key 'file'.
+    """
+    data = request.get_json()
+    if not data or 'file' not in data:
+        logging.error("Missing 'file' field in request data.")
+        raise ValidationApiError
 
+    try:
+        excel_base64 = data['file']
+        use_case = BulkCreateManufacturers(manufacturers_adapter)
+        result = use_case.execute(excel_base64)
+
+        return jsonify({
+            'message': 'Proceso de carga masiva completado',
+            'successful_count': result['successful_count'],
+            'failed_count': result['failed_count'],
+            'errors': result['errors']
+        }), 200
+
+    except Exception as e:
+        logging.error(f"Error during bulk upload: {str(e)}")
+        return jsonify({
+            'error': 'Error procesando el archivo Excel',
+            'details': str(e)
+        }), 400
 

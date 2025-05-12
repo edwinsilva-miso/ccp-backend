@@ -17,6 +17,10 @@ class ManufacturerAdapter(ManufacturerRepository):
         manufacturer = ManufacturerDAO.find_by_nit(nit)
         return ManufacturerMapper.to_dto(manufacturer) if manufacturer else None
 
+    def get_by_email(self, email: str) -> ManufacturerDTO | None:
+        manufacturer = ManufacturerDAO.find_by_email(email)
+        return ManufacturerMapper.to_dto(manufacturer) if manufacturer else None
+
     def add(self, manufacturer: ManufacturerDTO) -> str:
         return ManufacturerDAO.save(ManufacturerMapper.to_domain(manufacturer))
 

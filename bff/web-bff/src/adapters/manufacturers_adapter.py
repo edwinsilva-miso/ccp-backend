@@ -96,3 +96,16 @@ class ManufacturersAdapter:
         if response.status_code == 204:
             return {}, response.status_code
         return response.json(), response.status_code
+
+    def bulk_manufacturer(self, jwt, manufacturers_data):
+        """
+        Create a new manufacturer.
+        :param jwt: JWT token for authorization.
+        :param manufacturers_data: Dictionary containing manufacturer data.
+        :return: The created manufacturer ID.
+        """
+        logger.debug(f"Creating bulk manufacturer")
+        headers = {'Authorization': f'Bearer {jwt}'}
+        response = requests.post(f"{MANUFACTURERS_API_URL}/api/v1/manufacturers/bulk-upload", headers=headers, json=manufacturers_data)
+        logger.debug(f"Response received from API: {response.json()}")
+        return response.json(), response.status_code

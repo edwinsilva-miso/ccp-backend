@@ -36,7 +36,7 @@ class ProductsBulkAdapter:
             logger.error("File size exceeds the maximum limit of 50MB")
             return {
                 "msg": "File size exceeds the maximum limit of 50MB"
-            }, 400
+            }
 
         logger.debug("File size is within the limit")
         # Read the CSV file

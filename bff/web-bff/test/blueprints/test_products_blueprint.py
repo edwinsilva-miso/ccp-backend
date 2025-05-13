@@ -249,3 +249,107 @@ def test_delete_product_not_found(client, mock_token):
         assert response.status_code == 404
         assert json.loads(response.data) == error_response
         mock_adapter_instance.delete_product.assert_called_once_with(mock_token, product_id)
+
+
+def test_bulk_products_success(client, mock_token):
+    # Arrange
+    headers = {'Authorization': f'Bearer {mock_token}'}
+    expected_response = {"message": "Products processed successfully", "processed": 5}
+
+    # Create a test CSV file
+    from io import BytesIO
+    csv_content = b"id,name,price\n1,Product 1,19.99\n2,Product 2,29.99"
+    test_file = (BytesIO(csv_content), 'test_products.csv')
+
+    # Act
+    with patch('src.blueprints.products_blueprint.ProductsBulkAdapter') as MockAdapter:
+        mock_adapter_instance = MockAdapter.return_value
+        mock_adapter_instance.process_file.return_value = (expected_response, 200)
+
+        response = client.post(
+            '/bff/v1/web/products/bulk',
+            headers=headers,
+            data={'file': test_file},
+            content_type='multipart/form-data'
+        )
+
+        # Assert
+        assert response.status_code == 200
+        assert json.loads(response.data) == expected_response
+        mock_adapter_instance.process_file.assert_called_once()
+
+
+def test_bulk_products_no_file(client, mock_token):
+    # Arrange
+    headers = {'Authorization': f'Bearer {mock_token}'}
+
+    # Act
+    response = client.post(
+        '/bff/v1/web/products/bulk',
+        headers=headers,
+        data={},  # No file included
+        content_type='multipart/form-data'
+    )
+
+    # Assert
+    assert response.status_code == 400
+    assert json.loads(response.data) == {"message": "No file part"}
+
+
+def test_bulk_products_empty_filename(client, mock_token):
+    # Arrange
+    headers = {'Authorization': f'Bearer {mock_token}'}
+
+    # Create an empty file
+    from io import BytesIO
+    test_file = (BytesIO(b""), '')
+
+    # Act
+    response = client.post(
+        '/bff/v1/web/products/bulk',
+        headers=headers,
+        data={'file': test_file},
+        content_type='multipart/form-data'
+    )
+
+    # Assert
+    assert response.status_code == 400
+    assert json.loads(response.data) == {"message": "No selected file"}
+
+
+def test_bulk_products_invalid_extension(client, mock_token):
+    # Arrange
+    headers = {'Authorization': f'Bearer {mock_token}'}
+
+    # Create a test file with wrong extension
+    from io import BytesIO
+    test_file = (BytesIO(b"test content"), 'test.txt')
+
+    # Act
+    response = client.post(
+        '/bff/v1/web/products/bulk',
+        headers=headers,
+        data={'file': test_file},
+        content_type='multipart/form-data'
+    )
+
+    # Assert
+    assert response.status_code == 400
+    assert json.loads(response.data) == {"message": "Invalid file format"}
+
+
+def test_bulk_products_unauthorized(client):
+    # Arrange - no auth header
+    from io import BytesIO
+    test_file = (BytesIO(b"id,name,price\n1,Product 1,19.99"), 'test.csv')
+
+    # Act
+    response = client.post(
+        '/bff/v1/web/products/bulk',
+        data={'file': test_file},
+        content_type='multipart/form-data'
+    )
+
+    # Assert
+    assert response.status_code == 401
+    assert json.loads(response.data) == {'msg': 'Unauthorized'}

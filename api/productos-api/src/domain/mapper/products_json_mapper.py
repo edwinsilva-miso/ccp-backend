@@ -30,11 +30,8 @@ class ProductsJsonMapper:
                            if isinstance(product_data.get('details'), str)
                            else product_data.get('details'))
 
-                logger.debug(f"product_data.images: {product_data.get('images')}")
                 images = product_data.get('images').split(',') if isinstance(product_data.get('images'),
                                                                              str) else product_data.get('images')
-
-                logger.debug(f"images: {images}")
 
                 # Create ProductDTO with dictionary unpacking for required fields
                 # and explicit handling for processed fields

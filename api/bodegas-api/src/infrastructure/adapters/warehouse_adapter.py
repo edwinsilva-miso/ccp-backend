@@ -70,13 +70,13 @@ class WarehouseAdapter(WarehouseRepository):
         Updates an existing Warehouse.
         """
         logger.debug(
-            f"[UPDATE_WAREHOUSE] Starting update process for warehouse ID: {warehouse_dto.id} | Administrator ID: {warehouse_dto.administrator_id} | Name: {warehouse_dto.name}")
+            f"[UPDATE_WAREHOUSE] Starting update process for warehouse ID: {warehouse_dto.warehouse_id} | Administrator ID: {warehouse_dto.administrator_id} | Name: {warehouse_dto.name}")
         warehouse = WarehouseMapper.to_model(warehouse_dto)
         logger.debug(
             f"[UPDATE_WAREHOUSE] Successfully mapped DTO to model - Status: {warehouse_dto.status} | Location: {warehouse_dto.location}")
         warehouse_dao = WarehouseDAO.update(warehouse)
         logger.debug(
-            f"[UPDATE_WAREHOUSE] Database update completed successfully for warehouse ID: {warehouse_dto.id} | New Status: {warehouse_dao.status}")
+            f"[UPDATE_WAREHOUSE] Database update completed successfully for warehouse ID: {warehouse_dto.warehouse_id} | New Status: {warehouse_dao.status}")
         return WarehouseMapper.to_dto(warehouse_dao)
 
     def delete(self, warehouse_id: str) -> bool:

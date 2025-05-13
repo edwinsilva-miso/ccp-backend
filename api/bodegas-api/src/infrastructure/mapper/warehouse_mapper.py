@@ -19,7 +19,7 @@ class WarehouseMapper:
         """
         logger.debug(f"converting warehouse model to dto: {model.__dict__}")
         dto = WarehouseDTO(
-            id=str(model.id),
+            warehouse_id=str(model.id),
             location=model.location,
             description=model.description,
             name=model.name,
@@ -40,7 +40,7 @@ class WarehouseMapper:
         """
         logger.debug(f"converting warehouse dto to model: {dto.__dict__}")
         model = WarehouseModel(
-            id=dto.id,
+            id=dto.warehouse_id,
             location=dto.location,
             description=dto.description,
             name=dto.name,

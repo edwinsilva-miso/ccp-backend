@@ -3,12 +3,12 @@ class WarehouseDTO:
     Data Transfer Object for Warehouse.
     """
 
-    def __init__(self, id: str, location: str, description: str, name: str, administrator_id: str,
+    def __init__(self, warehouse_id: str | None, location: str, description: str, name: str, administrator_id: str,
                  status: str = "active", created_at: str = None, updated_at: str = None):
         """
         Initialize a new WarehouseDTO.
-        
-        :param id: Unique identifier for the warehouse
+
+        :param warehouse_id: Unique identifier for the warehouse
         :param location: Physical location of the warehouse
         :param description: Detailed description of the warehouse
         :param name: Name of the warehouse
@@ -17,7 +17,7 @@ class WarehouseDTO:
         :param created_at: Creation timestamp
         :param updated_at: Last update timestamp
         """
-        self.id = id
+        self.warehouse_id = warehouse_id
         self.location = location
         self.description = description
         self.name = name
@@ -27,7 +27,7 @@ class WarehouseDTO:
         self.updated_at = updated_at
 
     def __repr__(self):
-        return f"WarehouseDTO(id={self.id}, location={self.location}, name={self.name}, " \
+        return f"WarehouseDTO(id={self.warehouse_id}, location={self.location}, name={self.name}, " \
                f"description={self.description}, administrator_id={self.administrator_id}, " \
                f"status={self.status}, created_at={self.created_at}, updated_at={self.updated_at})"
 
@@ -37,7 +37,7 @@ class WarehouseDTO:
         :return: Dictionary representation of the DTO.
         """
         return {
-            "id": self.id,
+            "warehouse_id": self.warehouse_id,
             "location": self.location,
             "description": self.description,
             "name": self.name,

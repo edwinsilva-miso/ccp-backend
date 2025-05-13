@@ -43,5 +43,5 @@ class GetWarehouseById:
             logger.error(f"[GET_WAREHOUSE_BY_ID] Warehouse with ID {warehouse_id} not found")
             raise ResourceNotFoundError
         
-        logger.debug(f"[GET_WAREHOUSE_BY_ID] Successfully retrieved warehouse with ID: {warehouse.id}")
+        logger.debug(f"[GET_WAREHOUSE_BY_ID] Successfully retrieved warehouse with ID: {warehouse.warehouse_id}")
         return warehouse

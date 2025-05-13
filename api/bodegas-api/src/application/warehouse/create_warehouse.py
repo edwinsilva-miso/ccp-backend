@@ -36,5 +36,5 @@ class CreateWarehouse:
         # Add the warehouse using the repository
         created_warehouse = self.warehouse_repository.add(warehouse_dto)
         
-        logger.debug(f"[CREATE_WAREHOUSE] Successfully created warehouse with ID: {created_warehouse.id}")
+        logger.debug(f"[CREATE_WAREHOUSE] Successfully created warehouse with ID: {created_warehouse.warehouse_id}")
         return created_warehouse

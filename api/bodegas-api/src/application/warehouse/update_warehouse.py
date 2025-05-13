@@ -33,16 +33,16 @@ class UpdateWarehouse:
         :return: Updated warehouse DTO
         :raises ResourceNotFoundError: If the warehouse doesn't exist
         """
-        logger.debug(f"[UPDATE_WAREHOUSE] Starting update of warehouse with ID: {warehouse_dto.id}")
+        logger.debug(f"[UPDATE_WAREHOUSE] Starting update of warehouse with ID: {warehouse_dto.warehouse_id}")
         
         # Check if the warehouse exists
-        existing_warehouse = self.warehouse_repository.get_by_id(warehouse_dto.id)
+        existing_warehouse = self.warehouse_repository.get_by_id(warehouse_dto.warehouse_id)
         if not existing_warehouse:
-            logger.error(f"[UPDATE_WAREHOUSE] Warehouse with ID {warehouse_dto.id} not found")
+            logger.error(f"[UPDATE_WAREHOUSE] Warehouse with ID {warehouse_dto.warehouse_id} not found")
             raise ResourceNotFoundError
         
         # Update the warehouse using the repository
         updated_warehouse = self.warehouse_repository.update(warehouse_dto)
         
-        logger.debug(f"[UPDATE_WAREHOUSE] Successfully updated warehouse with ID: {updated_warehouse.id}")
+        logger.debug(f"[UPDATE_WAREHOUSE] Successfully updated warehouse with ID: {updated_warehouse.warehouse_id}")
         return updated_warehouse

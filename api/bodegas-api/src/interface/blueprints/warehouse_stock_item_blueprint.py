@@ -3,11 +3,11 @@ import logging
 from flask import Blueprint, request, jsonify
 
 from ..decorators.token_decorator import token_required
-from ...application.create_warehouse_stock_item import CreateWarehouseStockItem
-from ...application.update_warehouse_stock_item import UpdateWarehouseStockItem
-from ...application.get_warehouse_stock_item_by_id import GetWarehouseStockItemById
-from ...application.get_warehouse_stock_items_by_warehouse_id import GetWarehouseStockItemsByWarehouseId
-from ...application.delete_warehouse_stock_item import DeleteWarehouseStockItem
+from ...application.warehouse_stock_item.create_warehouse_stock_item import CreateWarehouseStockItem
+from ...application.warehouse_stock_item.update_warehouse_stock_item import UpdateWarehouseStockItem
+from ...application.warehouse_stock_item.get_warehouse_stock_item_by_id import GetWarehouseStockItemById
+from ...application.warehouse_stock_item.get_warehouse_stock_items_by_warehouse_id import GetWarehouseStockItemsByWarehouseId
+from ...application.warehouse_stock_item.delete_warehouse_stock_item import DeleteWarehouseStockItem
 from ...application.errors.errors import ValidationApiError, ResourceNotFoundError
 from ...domain.entities.warehouse_stock_item_dto import WarehouseStockItemDTO
 from ...infrastructure.adapters.warehouse_stock_item_adapter import WarehouseStockItemAdapter

@@ -40,7 +40,7 @@ def create_warehouse():
         location=data['location'],
         description=data['description'],
         name=data['name'],
-        administrator=data['administrator']
+        administrator_id=data['administrator']
     )
     use_case = CreateWarehouse(warehouse_adapter)
     response = use_case.execute(warehouse)
@@ -64,7 +64,7 @@ def update_warehouse(warehouse_id):
         location=data['location'],
         description=data['description'],
         name=data['name'],
-        administrator=data['administrator']
+        administrator_id=data['administrator']
     )
     try:
         use_case = UpdateWarehouse(warehouse_adapter)

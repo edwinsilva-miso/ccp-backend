@@ -5,6 +5,10 @@ services:
     ports:
       - "5000:5000"
     environment:
+      RABBITMQ_USER: admin
+      RABBITMQ_PASSWORD: admin
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
       USERS_API_URL: http://users-api:5000/api/v1/users
       MANUFACTURERS_API_URL: http://manufacturers-api:5000
       PRODUCTS_API_URL: http://products-api:5000

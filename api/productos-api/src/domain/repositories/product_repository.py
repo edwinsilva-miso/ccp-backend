@@ -30,7 +30,8 @@ class ProductDTORepository(ABC):
         """Add a new product"""
         pass
 
-    def add_all(self, products: list[ProductDTO]):
+    @abstractmethod
+    def add_all(self, products: list[ProductDTO]) -> None:
         """Add multiple products"""
         pass
 

@@ -21,6 +21,9 @@ class ProductAdapter(ProductDTORepository):
     def add(self, product: ProductDTO) -> str:
         return ProductDAO.save(ProductMapper.to_domain(product))
 
+    def add_all(self, products: list[ProductDTO]) -> None:
+        ProductDAO.save_all(ProductMapper.to_domain_list(products))
+
     def update(self, product: ProductDTO) -> ProductDTO:
         return ProductMapper.to_dto(ProductDAO.update(ProductMapper.to_domain(product)))
 

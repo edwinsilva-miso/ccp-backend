@@ -13,6 +13,7 @@ pytest-mock = "*"
 pytest-env = "*"
 sendgrid = "*"
 python-dotenv = "*"
+pika = "*"
 
 [dev-packages]
 

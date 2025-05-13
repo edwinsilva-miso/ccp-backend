@@ -125,7 +125,7 @@ class ProductDAO:
             session.close()
 
     @classmethod
-    def delete(cls, product_id: str) -> bool:
+    def delete(cls, product_id: str) -> None:
         """
         Delete a product from the database.
         :param product_id: ID of the product to delete.
@@ -133,5 +133,16 @@ class ProductDAO:
         """
         session = Session()
         session.query(ProductModel).filter(ProductModel.id == product_id).delete()
+        session.commit()
+        session.close()
+
+    @classmethod
+    def save_all(cls, products: list[ProductModel]) -> None:
+        """
+        Save multiple products to the database.
+        :param products: List of ProductModel to save.
+        """
+        session = Session()
+        session.add_all(products)
         session.commit()
         session.close()

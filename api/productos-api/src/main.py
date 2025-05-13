@@ -9,6 +9,7 @@ loaded = load_dotenv('.env.development')
 from .interface.blueprints.management_blueprint import management_blueprint
 from .interface.blueprints.products_blueprint import products_blueprint
 from .interface.consumer.update_products_stock_consumer import UpdateProductsStockConsumer
+from .interface.consumer.create_many_products_consumer import CreateManyProductsConsumer
 from .interface.blueprints.products_manufacturer_blueprint import products_manufacturer_blueprint
 from .application.errors.errors import ApiError
 from .infrastructure.database.declarative_base import Base, engine
@@ -21,6 +22,10 @@ def initialize_rabbitmq_consumers():
     # Create and start the stock update consumer
     stock_consumer = UpdateProductsStockConsumer()
     stock_consumer.start_consuming()
+
+    # Create and start the create many products consumer
+    create_many_products_consumer = CreateManyProductsConsumer()
+    create_many_products_consumer.start_consuming()
 
 
 def create_app():

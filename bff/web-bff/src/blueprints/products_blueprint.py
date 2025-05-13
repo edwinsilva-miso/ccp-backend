@@ -4,6 +4,7 @@ import logging
 from flask import Blueprint, jsonify, request
 
 from ..adapters.products_adapter import ProductsAdapter
+from ..adapters.products_bulk_adapter import ProductsBulkAdapter
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -80,10 +81,29 @@ def update_product(product_id, jwt):
     return adapter.update_product(jwt, product_id, data)
 
 
-@products_blueprint.route('//<product_id>', methods=['DELETE'])
+@products_blueprint.route('/<product_id>', methods=['DELETE'])
 @token_required
 def delete_product(product_id, jwt):
     logging.debug(f"Received request to delete product with ID: {product_id}")
     logging.debug("Deleting product by ID from BFF Web.")
     adapter = ProductsAdapter()
     return adapter.delete_product(jwt, product_id)
+
+@products_blueprint.route('/bulk', methods=['POST'])
+@token_required
+def bulk_products(jwt):
+    if 'file' not in request.files:
+        return jsonify({"message": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"message": "No selected file"}), 400
+
+    if file and file.filename.endswith('.csv'):
+        logging.debug("Received request to process bulk products.")
+        logging.debug("Processing bulk products in BFF Web.")
+        adapter = ProductsBulkAdapter()
+        return adapter.process_file(file)
+    else:
+        return jsonify({"message": "Invalid file format"}), 400
+

@@ -1,5 +1,15 @@
 import json
+import logging
+
 from ..entities.product_dto import ProductDTO
+
+logging.basicConfig(
+    level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Log format
+    datefmt='%Y-%m-%d %H:%M:%S'  # Date and time format
+)
+logger = logging.getLogger(__name__)
+
 
 class ProductsJsonMapper:
 
@@ -10,6 +20,7 @@ class ProductsJsonMapper:
         :param products_json: List of dictionaries containing product data.
         :return: List of ProductDTO objects.
         """
+        logger.debug("Begin converting JSON to DTO list...")
         products = []
         # inbound_products = products_json.get('products', [])
         for product_data in products_json:
@@ -19,9 +30,11 @@ class ProductsJsonMapper:
                            if isinstance(product_data.get('details'), str)
                            else product_data.get('details'))
 
-                images = (json.loads(product_data.get('images'))
-                          if isinstance(product_data.get('images'), str)
-                          else product_data.get('images'))
+                logger.debug(f"product_data.images: {product_data.get('images')}")
+                images = product_data.get('images').split(',') if isinstance(product_data.get('images'),
+                                                                             str) else product_data.get('images')
+
+                logger.debug(f"images: {images}")
 
                 # Create ProductDTO with dictionary unpacking for required fields
                 # and explicit handling for processed fields
@@ -44,6 +57,7 @@ class ProductsJsonMapper:
                 products.append(product)
             except Exception as e:
                 # Skip invalid products rather than failing the entire batch
+                logger.error(f"Error processing product data: {product_data}. Error: {e}")
                 print(f"Error processing product data: {e}")
                 continue
 

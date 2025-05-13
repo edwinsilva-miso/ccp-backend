@@ -1,6 +1,5 @@
 import logging
 
-from ..domain.entities.product_dto import ProductDTO
 from ..domain.mapper.products_json_mapper import ProductsJsonMapper
 
 logging.basicConfig(
@@ -9,6 +8,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'  # Date and time format
 )
 logger = logging.getLogger(__name__)
+
 
 class CreateManyProducts:
     """
@@ -36,5 +36,3 @@ class CreateManyProducts:
         logging.debug(f"Creating {len(product_list)} products...")
         self.repository.add_all(product_list)
         logging.debug("End creating multiple products...")
-
-

@@ -1,7 +1,8 @@
-import unittest
 import json
-from src.domain.mapper.products_json_mapper import ProductsJsonMapper
+import unittest
+
 from src.domain.entities.product_dto import ProductDTO
+from src.domain.mapper.products_json_mapper import ProductsJsonMapper
 
 
 class TestProductsJsonMapper(unittest.TestCase):
@@ -20,7 +21,7 @@ class TestProductsJsonMapper(unittest.TestCase):
                 'price': 100.0,
                 'currency': 'USD',
                 'delivery_time': '3-5 days',
-                'images': json.dumps(['img1.jpg', 'img2.jpg'])
+                'images': 'img1.jpg,img2.jpg'
             }
         ]
 
@@ -60,7 +61,7 @@ class TestProductsJsonMapper(unittest.TestCase):
                 'price': 100.0,
                 'currency': 'USD',
                 'delivery_time': '3-5 days',
-                'images': json.dumps(['img1.jpg', 'img2.jpg'])
+                'images': 'img1.jpg,img2.jpg'
             }
         ]
 
@@ -110,13 +111,13 @@ class TestProductsJsonMapper(unittest.TestCase):
                 'price': 100.0,
                 'currency': 'USD',
                 'delivery_time': '3-5 days',
-                'images': json.dumps(['img1.jpg'])
+                'images': 'img1.jpg'
             },
             {
                 'manufacturer_id': '456',
                 'name': 'Invalid Product',
                 'details': 'invalid json {',  # Invalid JSON
-                'images': json.dumps(['img1.jpg'])
+                'images': 'img1.jpg'
             }
         ]
 
@@ -135,7 +136,7 @@ class TestProductsJsonMapper(unittest.TestCase):
                 'name': 'Minimal Product',
                 # Missing many fields
                 'details': json.dumps({}),
-                'images': json.dumps([])
+                'images': ''
             }
         ]
 

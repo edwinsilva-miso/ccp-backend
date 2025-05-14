@@ -243,24 +243,30 @@ class TestWarehouseStockItemAdapter:
         """Test delete stock item"""
         # Arrange
         item_id = "wsi123"
-        mock_warehouse_stock_item_dao.delete.return_value = True
 
-        # Act
-        result = warehouse_stock_item_adapter.delete(item_id)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.delete') as patched_delete:
+            patched_delete.return_value = True
 
-        # Assert
-        mock_warehouse_stock_item_dao.delete.assert_called_once_with(item_id)
-        assert result is True
+            # Act
+            result = warehouse_stock_item_adapter.delete(item_id)
+
+            # Assert
+            patched_delete.assert_called_once_with(item_id)
+            assert result is True
 
     def test_delete_failure(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao):
         """Test delete stock item failure"""
         # Arrange
         item_id = "nonexistent"
-        mock_warehouse_stock_item_dao.delete.return_value = False
 
-        # Act
-        result = warehouse_stock_item_adapter.delete(item_id)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.delete') as patched_delete:
+            patched_delete.return_value = False
 
-        # Assert
-        mock_warehouse_stock_item_dao.delete.assert_called_once_with(item_id)
-        assert result is False
+            # Act
+            result = warehouse_stock_item_adapter.delete(item_id)
+
+            # Assert
+            patched_delete.assert_called_once_with(item_id)
+            assert result is False

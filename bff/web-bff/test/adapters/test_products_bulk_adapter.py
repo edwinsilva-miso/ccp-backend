@@ -2,7 +2,11 @@ import io
 import unittest
 from unittest.mock import patch, MagicMock
 
-# Fix import path - adjust this based on your project structure
+# Fix the import by using a relative import or adjusting your PYTHONPATH
+# Option 1: If src is at the same level as test
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.adapters.products_bulk_adapter import ProductsBulkAdapter
 
 
@@ -12,11 +16,13 @@ class TestProductsBulkAdapter(unittest.TestCase):
         self.adapter = ProductsBulkAdapter()
         self.csv_content = "name,price,description\nProduct1,10.99,Test description\nProduct2,20.99,Another description"
 
+    # Mock the RabbitMQ connection to prevent AMQPConnectionError
+    @patch('pika.BlockingConnection')
     @patch('src.adapters.products_bulk_adapter.ProductsBulkProducer')
-    def test_process_file_success(self, mock_producer_class):
+    def test_process_file_success(self, mock_producer_class, mock_connection):
         # Arrange
         mock_producer = MagicMock()
-        mock_producer_class.produce = mock_producer
+        mock_producer_class.return_value = mock_producer
 
         mock_file = MagicMock()
         mock_file.stream = io.BytesIO(self.csv_content.encode('utf-8'))
@@ -28,13 +34,12 @@ class TestProductsBulkAdapter(unittest.TestCase):
         self.assertEqual(result["message"], "File successfully uploaded and processed")
         self.assertEqual(result["productsToProcessed"], "2 products")
 
-
-
+    @patch('pika.BlockingConnection')
     @patch('src.adapters.products_bulk_adapter.ProductsBulkProducer')
-    def test_process_file_exceeds_max_size(self, mock_producer_class):
+    def test_process_file_exceeds_max_size(self, mock_producer_class, mock_connection):
         # Arrange
         mock_producer = MagicMock()
-        mock_producer_class.produce = mock_producer
+        mock_producer_class.return_value = mock_producer
 
         mock_file = MagicMock()
         mock_file.stream = MagicMock()
@@ -46,14 +51,15 @@ class TestProductsBulkAdapter(unittest.TestCase):
 
         # Assert
         self.assertEqual(result["msg"], "File size exceeds the maximum limit of 50MB")
-        mock_producer.assert_not_called()
+        mock_producer.produce.assert_not_called()
 
+    @patch('pika.BlockingConnection')
     @patch('src.adapters.products_bulk_adapter.ProductsBulkProducer')
     @patch('src.adapters.products_bulk_adapter.csv.DictReader')
-    def test_process_file_empty_csv(self, mock_dict_reader, mock_producer_class):
+    def test_process_file_empty_csv(self, mock_dict_reader, mock_producer_class, mock_connection):
         # Arrange
         mock_producer = MagicMock()
-        mock_producer_class.produce = mock_producer
+        mock_producer_class.return_value = mock_producer
 
         mock_file = MagicMock()
         mock_file.stream = io.BytesIO("name,price,description".encode('utf-8'))
@@ -67,14 +73,15 @@ class TestProductsBulkAdapter(unittest.TestCase):
         # Assert
         self.assertEqual(result["message"], "File successfully uploaded and processed")
         self.assertEqual(result["productsToProcessed"], "0 products")
-        mock_producer.assert_not_called()
+        mock_producer.produce.assert_not_called()
 
+    @patch('pika.BlockingConnection')
     @patch('src.adapters.products_bulk_adapter.ProductsBulkProducer')
     @patch('src.adapters.products_bulk_adapter.logger')
-    def test_process_file_logs_debug_messages(self, mock_logger, mock_producer_class):
+    def test_process_file_logs_debug_messages(self, mock_logger, mock_producer_class, mock_connection):
         # Arrange
         mock_producer = MagicMock()
-        mock_producer_class.produce = mock_producer
+        mock_producer_class.return_value = mock_producer
 
         mock_file = MagicMock()
         mock_file.stream = io.BytesIO(self.csv_content.encode('utf-8'))

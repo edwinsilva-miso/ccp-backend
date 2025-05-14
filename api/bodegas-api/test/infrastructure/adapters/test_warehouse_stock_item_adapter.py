@@ -17,16 +17,17 @@ class TestWarehouseStockItemAdapter:
         mock_stock_item = MagicMock()
 
         # Patch the DAO method to handle the UUID conversion
-        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_id') as patched_get_by_id:
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_id') as patched_get_by_id, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
             patched_get_by_id.return_value = mock_stock_item
-            mock_warehouse_stock_item_mapper.to_dto.return_value = warehouse_stock_item_dto
+            patched_to_dto.return_value = warehouse_stock_item_dto
 
             # Act
             result = warehouse_stock_item_adapter.get_by_id(item_id)
 
             # Assert
             patched_get_by_id.assert_called_once_with(item_id)
-            mock_warehouse_stock_item_mapper.to_dto.assert_called_once_with(mock_stock_item)
+            patched_to_dto.assert_called_once_with(mock_stock_item)
             assert result == warehouse_stock_item_dto
 
     def test_get_by_id_not_found(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
@@ -36,7 +37,8 @@ class TestWarehouseStockItemAdapter:
         item_id = "nonexistent"
 
         # Patch the DAO method to handle the UUID conversion
-        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_id') as patched_get_by_id:
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_id') as patched_get_by_id, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
             patched_get_by_id.return_value = None
 
             # Act
@@ -44,7 +46,7 @@ class TestWarehouseStockItemAdapter:
 
             # Assert
             patched_get_by_id.assert_called_once_with(item_id)
-            mock_warehouse_stock_item_mapper.to_dto.assert_not_called()
+            patched_to_dto.assert_not_called()
             assert result is None
 
     def test_get_all(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
@@ -54,16 +56,17 @@ class TestWarehouseStockItemAdapter:
         mock_stock_items = [MagicMock(), MagicMock()]
 
         # Patch the DAO method to handle the UUID conversion
-        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_all') as patched_get_all:
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_all') as patched_get_all, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto_list') as patched_to_dto_list:
             patched_get_all.return_value = mock_stock_items
-            mock_warehouse_stock_item_mapper.to_dto_list.return_value = warehouse_stock_item_dto_list
+            patched_to_dto_list.return_value = warehouse_stock_item_dto_list
 
             # Act
             result = warehouse_stock_item_adapter.get_all()
 
             # Assert
             patched_get_all.assert_called_once()
-            mock_warehouse_stock_item_mapper.to_dto_list.assert_called_once_with(mock_stock_items)
+            patched_to_dto_list.assert_called_once_with(mock_stock_items)
             assert result == warehouse_stock_item_dto_list
 
     def test_get_by_warehouse_id(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
@@ -72,16 +75,20 @@ class TestWarehouseStockItemAdapter:
         # Arrange
         warehouse_id = "w123"
         mock_stock_items = [MagicMock(), MagicMock()]
-        mock_warehouse_stock_item_dao.get_by_warehouse_id.return_value = mock_stock_items
-        mock_warehouse_stock_item_mapper.to_dto_list.return_value = warehouse_stock_item_dto_list
 
-        # Act
-        result = warehouse_stock_item_adapter.get_by_warehouse_id(warehouse_id)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_warehouse_id') as patched_get_by_warehouse_id, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto_list') as patched_to_dto_list:
+            patched_get_by_warehouse_id.return_value = mock_stock_items
+            patched_to_dto_list.return_value = warehouse_stock_item_dto_list
 
-        # Assert
-        mock_warehouse_stock_item_dao.get_by_warehouse_id.assert_called_once_with(warehouse_id)
-        mock_warehouse_stock_item_mapper.to_dto_list.assert_called_once_with(mock_stock_items)
-        assert result == warehouse_stock_item_dto_list
+            # Act
+            result = warehouse_stock_item_adapter.get_by_warehouse_id(warehouse_id)
+
+            # Assert
+            patched_get_by_warehouse_id.assert_called_once_with(warehouse_id)
+            patched_to_dto_list.assert_called_once_with(mock_stock_items)
+            assert result == warehouse_stock_item_dto_list
 
     def test_get_by_item_id(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
                             mock_warehouse_stock_item_mapper, warehouse_stock_item_dto_list):
@@ -89,16 +96,20 @@ class TestWarehouseStockItemAdapter:
         # Arrange
         item_id = "item123"
         mock_stock_items = [MagicMock(), MagicMock()]
-        mock_warehouse_stock_item_dao.get_by_item_id.return_value = mock_stock_items
-        mock_warehouse_stock_item_mapper.to_dto_list.return_value = warehouse_stock_item_dto_list
 
-        # Act
-        result = warehouse_stock_item_adapter.get_by_item_id(item_id)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_item_id') as patched_get_by_item_id, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto_list') as patched_to_dto_list:
+            patched_get_by_item_id.return_value = mock_stock_items
+            patched_to_dto_list.return_value = warehouse_stock_item_dto_list
 
-        # Assert
-        mock_warehouse_stock_item_dao.get_by_item_id.assert_called_once_with(item_id)
-        mock_warehouse_stock_item_mapper.to_dto_list.assert_called_once_with(mock_stock_items)
-        assert result == warehouse_stock_item_dto_list
+            # Act
+            result = warehouse_stock_item_adapter.get_by_item_id(item_id)
+
+            # Assert
+            patched_get_by_item_id.assert_called_once_with(item_id)
+            patched_to_dto_list.assert_called_once_with(mock_stock_items)
+            assert result == warehouse_stock_item_dto_list
 
     def test_get_by_barcode_found(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
                                 mock_warehouse_stock_item_mapper, warehouse_stock_item_dto):
@@ -106,31 +117,39 @@ class TestWarehouseStockItemAdapter:
         # Arrange
         barcode = "12345678"
         mock_stock_item = MagicMock()
-        mock_warehouse_stock_item_dao.get_by_barcode.return_value = mock_stock_item
-        mock_warehouse_stock_item_mapper.to_dto.return_value = warehouse_stock_item_dto
 
-        # Act
-        result = warehouse_stock_item_adapter.get_by_barcode(barcode)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_barcode') as patched_get_by_barcode, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
+            patched_get_by_barcode.return_value = mock_stock_item
+            patched_to_dto.return_value = warehouse_stock_item_dto
 
-        # Assert
-        mock_warehouse_stock_item_dao.get_by_barcode.assert_called_once_with(barcode)
-        mock_warehouse_stock_item_mapper.to_dto.assert_called_once_with(mock_stock_item)
-        assert result == warehouse_stock_item_dto
+            # Act
+            result = warehouse_stock_item_adapter.get_by_barcode(barcode)
+
+            # Assert
+            patched_get_by_barcode.assert_called_once_with(barcode)
+            patched_to_dto.assert_called_once_with(mock_stock_item)
+            assert result == warehouse_stock_item_dto
 
     def test_get_by_barcode_not_found(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
                                     mock_warehouse_stock_item_mapper):
         """Test get_by_barcode when stock item is not found"""
         # Arrange
         barcode = "nonexistent"
-        mock_warehouse_stock_item_dao.get_by_barcode.return_value = None
 
-        # Act
-        result = warehouse_stock_item_adapter.get_by_barcode(barcode)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_barcode') as patched_get_by_barcode, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
+            patched_get_by_barcode.return_value = None
 
-        # Assert
-        mock_warehouse_stock_item_dao.get_by_barcode.assert_called_once_with(barcode)
-        mock_warehouse_stock_item_mapper.to_dto.assert_not_called()
-        assert result is None
+            # Act
+            result = warehouse_stock_item_adapter.get_by_barcode(barcode)
+
+            # Assert
+            patched_get_by_barcode.assert_called_once_with(barcode)
+            patched_to_dto.assert_not_called()
+            assert result is None
 
     def test_get_by_identification_code_found(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
                                             mock_warehouse_stock_item_mapper, warehouse_stock_item_dto):
@@ -138,31 +157,39 @@ class TestWarehouseStockItemAdapter:
         # Arrange
         identification_code = "ID12345"
         mock_stock_item = MagicMock()
-        mock_warehouse_stock_item_dao.get_by_identification_code.return_value = mock_stock_item
-        mock_warehouse_stock_item_mapper.to_dto.return_value = warehouse_stock_item_dto
 
-        # Act
-        result = warehouse_stock_item_adapter.get_by_identification_code(identification_code)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_identification_code') as patched_get_by_code, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
+            patched_get_by_code.return_value = mock_stock_item
+            patched_to_dto.return_value = warehouse_stock_item_dto
 
-        # Assert
-        mock_warehouse_stock_item_dao.get_by_identification_code.assert_called_once_with(identification_code)
-        mock_warehouse_stock_item_mapper.to_dto.assert_called_once_with(mock_stock_item)
-        assert result == warehouse_stock_item_dto
+            # Act
+            result = warehouse_stock_item_adapter.get_by_identification_code(identification_code)
+
+            # Assert
+            patched_get_by_code.assert_called_once_with(identification_code)
+            patched_to_dto.assert_called_once_with(mock_stock_item)
+            assert result == warehouse_stock_item_dto
 
     def test_get_by_identification_code_not_found(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
                                                 mock_warehouse_stock_item_mapper):
         """Test get_by_identification_code when stock item is not found"""
         # Arrange
         identification_code = "nonexistent"
-        mock_warehouse_stock_item_dao.get_by_identification_code.return_value = None
 
-        # Act
-        result = warehouse_stock_item_adapter.get_by_identification_code(identification_code)
+        # Patch the DAO method to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.get_by_identification_code') as patched_get_by_code, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
+            patched_get_by_code.return_value = None
 
-        # Assert
-        mock_warehouse_stock_item_dao.get_by_identification_code.assert_called_once_with(identification_code)
-        mock_warehouse_stock_item_mapper.to_dto.assert_not_called()
-        assert result is None
+            # Act
+            result = warehouse_stock_item_adapter.get_by_identification_code(identification_code)
+
+            # Assert
+            patched_get_by_code.assert_called_once_with(identification_code)
+            patched_to_dto.assert_not_called()
+            assert result is None
 
     def test_add(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
                 mock_warehouse_stock_item_mapper, warehouse_stock_item_dto):
@@ -170,18 +197,23 @@ class TestWarehouseStockItemAdapter:
         # Arrange
         mock_stock_item = MagicMock()
         mock_stock_item_dao_result = MagicMock()
-        mock_warehouse_stock_item_mapper.to_model.return_value = mock_stock_item
-        mock_warehouse_stock_item_dao.save.return_value = mock_stock_item_dao_result
-        mock_warehouse_stock_item_mapper.to_dto.return_value = warehouse_stock_item_dto
 
-        # Act
-        result = warehouse_stock_item_adapter.add(warehouse_stock_item_dto)
+        # Patch the mapper and DAO methods to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_model') as patched_to_model, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.save') as patched_save, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
+            patched_to_model.return_value = mock_stock_item
+            patched_save.return_value = mock_stock_item_dao_result
+            patched_to_dto.return_value = warehouse_stock_item_dto
 
-        # Assert
-        mock_warehouse_stock_item_mapper.to_model.assert_called_once_with(warehouse_stock_item_dto)
-        mock_warehouse_stock_item_dao.save.assert_called_once_with(mock_stock_item)
-        mock_warehouse_stock_item_mapper.to_dto.assert_called_once_with(mock_stock_item_dao_result)
-        assert result == warehouse_stock_item_dto
+            # Act
+            result = warehouse_stock_item_adapter.add(warehouse_stock_item_dto)
+
+            # Assert
+            patched_to_model.assert_called_once_with(warehouse_stock_item_dto)
+            patched_save.assert_called_once_with(mock_stock_item)
+            patched_to_dto.assert_called_once_with(mock_stock_item_dao_result)
+            assert result == warehouse_stock_item_dto
 
     def test_update(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao, 
                     mock_warehouse_stock_item_mapper, warehouse_stock_item_dto):
@@ -189,18 +221,23 @@ class TestWarehouseStockItemAdapter:
         # Arrange
         mock_stock_item = MagicMock()
         mock_stock_item_dao_result = MagicMock()
-        mock_warehouse_stock_item_mapper.to_model.return_value = mock_stock_item
-        mock_warehouse_stock_item_dao.update.return_value = mock_stock_item_dao_result
-        mock_warehouse_stock_item_mapper.to_dto.return_value = warehouse_stock_item_dto
 
-        # Act
-        result = warehouse_stock_item_adapter.update(warehouse_stock_item_dto)
+        # Patch the mapper and DAO methods to handle the UUID conversion
+        with patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_model') as patched_to_model, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemDAO.update') as patched_update, \
+             patch('src.infrastructure.adapters.warehouse_stock_item_adapter.WarehouseStockItemMapper.to_dto') as patched_to_dto:
+            patched_to_model.return_value = mock_stock_item
+            patched_update.return_value = mock_stock_item_dao_result
+            patched_to_dto.return_value = warehouse_stock_item_dto
 
-        # Assert
-        mock_warehouse_stock_item_mapper.to_model.assert_called_once_with(warehouse_stock_item_dto)
-        mock_warehouse_stock_item_dao.update.assert_called_once_with(mock_stock_item)
-        mock_warehouse_stock_item_mapper.to_dto.assert_called_once_with(mock_stock_item_dao_result)
-        assert result == warehouse_stock_item_dto
+            # Act
+            result = warehouse_stock_item_adapter.update(warehouse_stock_item_dto)
+
+            # Assert
+            patched_to_model.assert_called_once_with(warehouse_stock_item_dto)
+            patched_update.assert_called_once_with(mock_stock_item)
+            patched_to_dto.assert_called_once_with(mock_stock_item_dao_result)
+            assert result == warehouse_stock_item_dto
 
     def test_delete(self, warehouse_stock_item_adapter, mock_warehouse_stock_item_dao):
         """Test delete stock item"""

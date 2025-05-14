@@ -16,16 +16,17 @@ class TestWarehouseAdapter:
         mock_warehouse = MagicMock()
 
         # Patch the DAO method to handle the UUID conversion
-        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_by_id') as patched_get_by_id:
+        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_by_id') as patched_get_by_id, \
+             patch('src.infrastructure.adapters.warehouse_adapter.WarehouseMapper.to_dto') as patched_to_dto:
             patched_get_by_id.return_value = mock_warehouse
-            mock_warehouse_mapper.to_dto.return_value = warehouse_dto
+            patched_to_dto.return_value = warehouse_dto
 
             # Act
             result = warehouse_adapter.get_by_id(warehouse_id)
 
             # Assert
             patched_get_by_id.assert_called_once_with(warehouse_id)
-            mock_warehouse_mapper.to_dto.assert_called_once_with(mock_warehouse)
+            patched_to_dto.assert_called_once_with(mock_warehouse)
             assert result == warehouse_dto
 
     def test_get_by_id_not_found(self, warehouse_adapter, mock_warehouse_dao, mock_warehouse_mapper):
@@ -34,7 +35,8 @@ class TestWarehouseAdapter:
         warehouse_id = "nonexistent"
 
         # Patch the DAO method to handle the UUID conversion
-        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_by_id') as patched_get_by_id:
+        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_by_id') as patched_get_by_id, \
+             patch('src.infrastructure.adapters.warehouse_adapter.WarehouseMapper.to_dto') as patched_to_dto:
             patched_get_by_id.return_value = None
 
             # Act
@@ -42,7 +44,7 @@ class TestWarehouseAdapter:
 
             # Assert
             patched_get_by_id.assert_called_once_with(warehouse_id)
-            mock_warehouse_mapper.to_dto.assert_not_called()
+            patched_to_dto.assert_not_called()
             assert result is None
 
     def test_get_all(self, warehouse_adapter, mock_warehouse_dao, mock_warehouse_mapper, warehouse_dto_list):
@@ -51,16 +53,17 @@ class TestWarehouseAdapter:
         mock_warehouses = [MagicMock(), MagicMock()]
 
         # Patch the DAO method to handle the UUID conversion
-        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_all') as patched_get_all:
+        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_all') as patched_get_all, \
+             patch('src.infrastructure.adapters.warehouse_adapter.WarehouseMapper.to_dto_list') as patched_to_dto_list:
             patched_get_all.return_value = mock_warehouses
-            mock_warehouse_mapper.to_dto_list.return_value = warehouse_dto_list
+            patched_to_dto_list.return_value = warehouse_dto_list
 
             # Act
             result = warehouse_adapter.get_all()
 
             # Assert
             patched_get_all.assert_called_once()
-            mock_warehouse_mapper.to_dto_list.assert_called_once_with(mock_warehouses)
+            patched_to_dto_list.assert_called_once_with(mock_warehouses)
             assert result == warehouse_dto_list
 
     def test_get_by_administrator_id(self, warehouse_adapter, mock_warehouse_dao, mock_warehouse_mapper, warehouse_dto_list):
@@ -70,16 +73,17 @@ class TestWarehouseAdapter:
         mock_warehouses = [MagicMock(), MagicMock()]
 
         # Patch the DAO method to handle the UUID conversion
-        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_by_administrator_id') as patched_get_by_admin_id:
+        with patch('src.infrastructure.adapters.warehouse_adapter.WarehouseDAO.get_by_administrator_id') as patched_get_by_admin_id, \
+             patch('src.infrastructure.adapters.warehouse_adapter.WarehouseMapper.to_dto_list') as patched_to_dto_list:
             patched_get_by_admin_id.return_value = mock_warehouses
-            mock_warehouse_mapper.to_dto_list.return_value = warehouse_dto_list
+            patched_to_dto_list.return_value = warehouse_dto_list
 
             # Act
             result = warehouse_adapter.get_by_administrator_id(admin_id)
 
             # Assert
             patched_get_by_admin_id.assert_called_once_with(admin_id)
-            mock_warehouse_mapper.to_dto_list.assert_called_once_with(mock_warehouses)
+            patched_to_dto_list.assert_called_once_with(mock_warehouses)
             assert result == warehouse_dto_list
 
     def test_add(self, warehouse_adapter, mock_warehouse_dao, mock_warehouse_mapper, warehouse_dto):

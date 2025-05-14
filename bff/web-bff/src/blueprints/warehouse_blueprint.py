@@ -40,9 +40,11 @@ def get_warehouse(warehouse_id, jwt):
 @validate_token
 def get_all_warehouses(jwt):
     """Get all warehouses."""
+    administrator_id = request.args.get('administrator_id')
+
     logger.debug("received request to get all warehouses")
     adapter = WarehouseAdapter()
-    return adapter.get_all_warehouses(jwt)
+    return adapter.get_all_warehouses(jwt, administrator_id)
 
 
 @warehouse_blueprint.route('/<warehouse_id>', methods=['PUT'])

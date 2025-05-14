@@ -44,7 +44,7 @@ class WarehouseStockItemDAO:
         :return: True if deleted successfully, False otherwise.
         """
         session = Session()
-        stock_item = session.query(WarehouseStockItemModel).filter(WarehouseStockItemModel.id == item_id).first()
+        stock_item = session.query(WarehouseStockItemModel).filter(WarehouseStockItemModel.warehouse_stock_item_id == item_id).first()
         if stock_item:
             session.delete(stock_item)
             session.commit()
@@ -61,7 +61,7 @@ class WarehouseStockItemDAO:
         :return: WarehouseStockItemModel if found, None otherwise.
         """
         session = Session()
-        stock_item = session.query(WarehouseStockItemModel).filter(WarehouseStockItemModel.id == item_id).first()
+        stock_item = session.query(WarehouseStockItemModel).filter(WarehouseStockItemModel.warehouse_stock_item_id == item_id).first()
         session.close()
         return stock_item
 
@@ -108,7 +108,7 @@ class WarehouseStockItemDAO:
         :return: WarehouseStockItemModel if found, None otherwise.
         """
         session = Session()
-        stock_item = session.query(WarehouseStockItemModel).filter(WarehouseStockItemModel.barcode == barcode).first()
+        stock_item = session.query(WarehouseStockItemModel).filter(WarehouseStockItemModel.bar_code == barcode).first()
         session.close()
         return stock_item
 

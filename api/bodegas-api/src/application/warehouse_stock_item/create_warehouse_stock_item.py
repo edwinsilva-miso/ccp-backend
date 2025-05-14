@@ -36,5 +36,5 @@ class CreateWarehouseStockItem:
         # Add the warehouse stock item using the repository
         created_warehouse_stock_item = self.warehouse_stock_item_repository.add(warehouse_stock_item_dto)
         
-        logger.debug(f"[CREATE_WAREHOUSE_STOCK_ITEM] Successfully created warehouse stock item with ID: {created_warehouse_stock_item.id}")
+        logger.debug(f"[CREATE_WAREHOUSE_STOCK_ITEM] Successfully created warehouse stock item with ID: {created_warehouse_stock_item.warehouse_stock_item_id}")
         return created_warehouse_stock_item

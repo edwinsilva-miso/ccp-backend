@@ -15,10 +15,10 @@ class WarehouseStockItemModel(Base):
 
     __tablename__ = 'warehouse_stock_item'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    warehouse_stock_item_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     warehouse_id = Column(UUID(as_uuid=True), ForeignKey('warehouse.id'), nullable=False)
     item_id = Column(UUID(as_uuid=True), nullable=False)
-    barcode = Column(String(255), nullable=True)
+    bar_code = Column(String(255), nullable=True)
     identification_code = Column(String(255), nullable=True)
     width = Column(Float, nullable=True)
     height = Column(Float, nullable=True)

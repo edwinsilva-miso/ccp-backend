@@ -33,16 +33,16 @@ class UpdateWarehouseStockItem:
         :return: Updated warehouse stock item DTO
         :raises ResourceNotFoundError: If the warehouse stock item doesn't exist
         """
-        logger.debug(f"[UPDATE_WAREHOUSE_STOCK_ITEM] Starting update of warehouse stock item with ID: {warehouse_stock_item_dto.id}")
+        logger.debug(f"[UPDATE_WAREHOUSE_STOCK_ITEM] Starting update of warehouse stock item with ID: {warehouse_stock_item_dto.warehouse_stock_item_id}")
         
         # Check if the warehouse stock item exists
-        existing_warehouse_stock_item = self.warehouse_stock_item_repository.get_by_id(warehouse_stock_item_dto.id)
+        existing_warehouse_stock_item = self.warehouse_stock_item_repository.get_by_id(warehouse_stock_item_dto.warehouse_stock_item_id)
         if not existing_warehouse_stock_item:
-            logger.error(f"[UPDATE_WAREHOUSE_STOCK_ITEM] Warehouse stock item with ID {warehouse_stock_item_dto.id} not found")
+            logger.error(f"[UPDATE_WAREHOUSE_STOCK_ITEM] Warehouse stock item with ID {warehouse_stock_item_dto.warehouse_stock_item_id} not found")
             raise ResourceNotFoundError
         
         # Update the warehouse stock item using the repository
         updated_warehouse_stock_item = self.warehouse_stock_item_repository.update(warehouse_stock_item_dto)
         
-        logger.debug(f"[UPDATE_WAREHOUSE_STOCK_ITEM] Successfully updated warehouse stock item with ID: {updated_warehouse_stock_item.id}")
+        logger.debug(f"[UPDATE_WAREHOUSE_STOCK_ITEM] Successfully updated warehouse stock item with ID: {updated_warehouse_stock_item.warehouse_stock_item_id}")
         return updated_warehouse_stock_item

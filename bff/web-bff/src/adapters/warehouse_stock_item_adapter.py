@@ -14,15 +14,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class WarehouseAdapter:
+class WarehouseStockItemAdapter:
     @staticmethod
-    def create_warehouse(jwt, warehouse_data):
-        logger.debug(f"creating a warehouse with data {warehouse_data}")
+    def create_warehouse_stock_item(jwt, warehouse_stock_item_data):
+        logger.debug(f"creating a warehouse stock item with data {warehouse_stock_item_data}")
 
         response = requests.post(
-            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouse-stock-items",
             headers={'Authorization': f'Bearer {jwt}'},
-            json=warehouse_data
+            json=warehouse_stock_item_data
         )
 
         logger.debug(f"response received from bodegas api: {response.json()}")
@@ -30,11 +30,11 @@ class WarehouseAdapter:
         return response.json(), response.status_code
 
     @staticmethod
-    def get_warehouse_by_id(jwt, warehouse_id):
-        logger.debug(f"getting warehouse with ID: {warehouse_id}")
+    def get_warehouse_stock_item_by_id(jwt, item_id):
+        logger.debug(f"getting warehouse stock item with ID: {item_id}")
 
         response = requests.get(
-            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses/{warehouse_id}",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouse-stock-items/{item_id}",
             headers={'Authorization': f'Bearer {jwt}'}
         )
 
@@ -43,17 +43,12 @@ class WarehouseAdapter:
         return response.json(), response.status_code
 
     @staticmethod
-    def get_all_warehouses(jwt, administrator_id: str = None):
-        logger.debug(f"getting all warehouses")
-
-        params = {}
-        if administrator_id:
-            params = {"administrator_id": administrator_id}
+    def get_warehouse_stock_items_by_warehouse(jwt, warehouse_id):
+        logger.debug(f"getting all warehouse stock items for warehouse ID: {warehouse_id}")
 
         response = requests.get(
-            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses",
-            headers={'Authorization': f'Bearer {jwt}'},
-            params=params
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouse-stock-items/warehouse/{warehouse_id}",
+            headers={'Authorization': f'Bearer {jwt}'}
         )
 
         logger.debug(f"response received from bodegas api: {response.json()}")
@@ -61,13 +56,13 @@ class WarehouseAdapter:
         return response.json(), response.status_code
 
     @staticmethod
-    def update_warehouse_by_id(jwt, warehouse_id, warehouse_data):
-        logger.debug(f"updating warehouse with ID: {warehouse_id} with data: {warehouse_data}")
+    def update_warehouse_stock_item_by_id(jwt, item_id, warehouse_stock_item_data):
+        logger.debug(f"updating warehouse stock item with ID: {item_id} with data: {warehouse_stock_item_data}")
 
         response = requests.put(
-            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses/{warehouse_id}",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouse-stock-items/{item_id}",
             headers={'Authorization': f'Bearer {jwt}'},
-            json=warehouse_data
+            json=warehouse_stock_item_data
         )
 
         logger.debug(f"response received from bodegas api: {response.json()}")
@@ -75,11 +70,11 @@ class WarehouseAdapter:
         return response.json(), response.status_code
 
     @staticmethod
-    def delete_warehouse_by_id(jwt, warehouse_id):
-        logger.debug(f"deleting warehouse with ID: {warehouse_id}")
+    def delete_warehouse_stock_item_by_id(jwt, item_id):
+        logger.debug(f"deleting warehouse stock item with ID: {item_id}")
 
         response = requests.delete(
-            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses/{warehouse_id}",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouse-stock-items/{item_id}",
             headers={'Authorization': f'Bearer {jwt}'}
         )
 
@@ -88,4 +83,4 @@ class WarehouseAdapter:
         if response.content:
             return response.json(), response.status_code
         else:
-            return {"msg": "warehouse deleted successfully."}, response.status_code
+            return {"msg": "warehouse stock item deleted successfully."}, response.status_code

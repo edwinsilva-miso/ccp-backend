@@ -43,5 +43,5 @@ class GetWarehouseStockItemById:
             logger.error(f"[GET_WAREHOUSE_STOCK_ITEM_BY_ID] Warehouse stock item with ID {item_id} not found")
             raise ResourceNotFoundError
         
-        logger.debug(f"[GET_WAREHOUSE_STOCK_ITEM_BY_ID] Successfully retrieved warehouse stock item with ID: {warehouse_stock_item.id}")
+        logger.debug(f"[GET_WAREHOUSE_STOCK_ITEM_BY_ID] Successfully retrieved warehouse stock item with ID: {warehouse_stock_item.warehouse_stock_item_id}")
         return warehouse_stock_item

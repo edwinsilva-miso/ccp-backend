@@ -19,10 +19,10 @@ class WarehouseStockItemMapper:
         """
         logger.debug(f"converting warehouse stock item model to dto: {model.__dict__}")
         dto = WarehouseStockItemDTO(
-            id=str(model.id),
+            warehouse_stock_item_id=str(model.warehouse_stock_item_id),
             warehouse_id=str(model.warehouse_id),
             item_id=str(model.item_id),
-            barcode=model.barcode,
+            bar_code=model.bar_code,
             identification_code=model.identification_code,
             width=model.width,
             height=model.height,
@@ -47,10 +47,10 @@ class WarehouseStockItemMapper:
         """
         logger.debug(f"converting warehouse stock item dto to model: {dto.__dict__}")
         model = WarehouseStockItemModel(
-            id=dto.id,
+            warehouse_stock_item_id=dto.warehouse_stock_item_id,
             warehouse_id=dto.warehouse_id,
             item_id=dto.item_id,
-            barcode=dto.barcode,
+            bar_code=dto.bar_code,
             identification_code=dto.identification_code,
             width=dto.width,
             height=dto.height,

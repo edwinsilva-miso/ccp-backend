@@ -69,7 +69,7 @@ class WarehouseStockItemAdapter(WarehouseStockItemRepository):
         stock_item = WarehouseStockItemDAO.get_by_barcode(barcode)
         if stock_item:
             logger.debug(
-                f"[GET_BY_BARCODE] Successfully retrieved stock item - ID: {stock_item.id} | Item ID: {stock_item.item_id} | Warehouse: {stock_item.warehouse_id}")
+                f"[GET_BY_BARCODE] Successfully retrieved stock item - ID: {stock_item.warehouse_stock_item_id} | Item ID: {stock_item.item_id} | Warehouse: {stock_item.warehouse_id}")
             return WarehouseStockItemMapper.to_dto(stock_item)
         logger.debug(f"[GET_BY_BARCODE] No warehouse stock item found in database with barcode: {barcode}")
         return None
@@ -82,7 +82,7 @@ class WarehouseStockItemAdapter(WarehouseStockItemRepository):
         stock_item = WarehouseStockItemDAO.get_by_identification_code(identification_code)
         if stock_item:
             logger.debug(
-                f"[GET_BY_CODE] Successfully retrieved stock item - ID: {stock_item.id} | Item ID: {stock_item.item_id} | Warehouse: {stock_item.warehouse_id}")
+                f"[GET_BY_CODE] Successfully retrieved stock item - ID: {stock_item.warehouse_stock_item_id} | Item ID: {stock_item.item_id} | Warehouse: {stock_item.warehouse_id}")
             return WarehouseStockItemMapper.to_dto(stock_item)
         logger.debug(f"[GET_BY_CODE] No warehouse stock item found in database with identification code: {identification_code}")
         return None
@@ -95,10 +95,10 @@ class WarehouseStockItemAdapter(WarehouseStockItemRepository):
             f"[ADD_STOCK_ITEM] Initiating creation of new stock item - Item ID: {stock_item_dto.item_id} | Warehouse: {stock_item_dto.warehouse_id}")
         stock_item = WarehouseStockItemMapper.to_model(stock_item_dto)
         logger.debug(
-            f"[ADD_STOCK_ITEM] Successfully mapped DTO to model - Barcode: {stock_item_dto.barcode} | Identification Code: {stock_item_dto.identification_code}")
+            f"[ADD_STOCK_ITEM] Successfully mapped DTO to model - Barcode: {stock_item_dto.bar_code} | Identification Code: {stock_item_dto.identification_code}")
         stock_item_dao = WarehouseStockItemDAO.save(stock_item)
         logger.debug(
-            f"[ADD_STOCK_ITEM] Stock item successfully persisted in database with ID: {stock_item_dao.id} | Status: {stock_item_dao.status}")
+            f"[ADD_STOCK_ITEM] Stock item successfully persisted in database with ID: {stock_item_dao.warehouse_stock_item_id} | Status: {stock_item_dao.status}")
         return WarehouseStockItemMapper.to_dto(stock_item_dao)
 
     def update(self, stock_item_dto: WarehouseStockItemDTO) -> WarehouseStockItemDTO:
@@ -106,13 +106,13 @@ class WarehouseStockItemAdapter(WarehouseStockItemRepository):
         Updates an existing Warehouse Stock Item.
         """
         logger.debug(
-            f"[UPDATE_STOCK_ITEM] Starting update process for stock item ID: {stock_item_dto.id} | Warehouse ID: {stock_item_dto.warehouse_id} | Item ID: {stock_item_dto.item_id}")
+            f"[UPDATE_STOCK_ITEM] Starting update process for stock item ID: {stock_item_dto.warehouse_stock_item_id} | Warehouse ID: {stock_item_dto.warehouse_id} | Item ID: {stock_item_dto.item_id}")
         stock_item = WarehouseStockItemMapper.to_model(stock_item_dto)
         logger.debug(
             f"[UPDATE_STOCK_ITEM] Successfully mapped DTO to model - Status: {stock_item_dto.status} | Sold: {stock_item_dto.sold}")
         stock_item_dao = WarehouseStockItemDAO.update(stock_item)
         logger.debug(
-            f"[UPDATE_STOCK_ITEM] Database update completed successfully for stock item ID: {stock_item_dto.id} | New Status: {stock_item_dao.status}")
+            f"[UPDATE_STOCK_ITEM] Database update completed successfully for stock item ID: {stock_item_dto.warehouse_stock_item_id} | New Status: {stock_item_dao.status}")
         return WarehouseStockItemMapper.to_dto(stock_item_dao)
 
     def delete(self, item_id: str) -> bool:

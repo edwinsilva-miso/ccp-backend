@@ -46,6 +46,11 @@ spec:
             secretKeyRef:
               name: common-secrets
               key: DB_PASSWORD
+        - name: USERS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: USERS_API_URL
         resources:
           requests:
             memory: "256Mi"

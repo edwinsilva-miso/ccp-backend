@@ -3,7 +3,7 @@ import os
 
 import requests
 
-BODEGAS_API_URL = os.environ.get('BODEGAS_API_URL', 'http://localhost:5000')
+WAREHOUSES_API_URL = os.environ.get('WAREHOUSES_API_URL', 'http://localhost:5069')
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
@@ -20,7 +20,7 @@ class WarehouseAdapter:
         logger.debug(f"creating a warehouse with data {warehouse_data}")
 
         response = requests.post(
-            url=f"{BODEGAS_API_URL}/api/v1/warehouses",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses",
             headers={'Authorization': f'Bearer {jwt}'},
             json=warehouse_data
         )
@@ -34,7 +34,7 @@ class WarehouseAdapter:
         logger.debug(f"getting warehouse with ID: {warehouse_id}")
 
         response = requests.get(
-            url=f"{BODEGAS_API_URL}/api/v1/warehouses/{warehouse_id}",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses/{warehouse_id}",
             headers={'Authorization': f'Bearer {jwt}'}
         )
 
@@ -47,7 +47,7 @@ class WarehouseAdapter:
         logger.debug(f"getting all warehouses")
 
         response = requests.get(
-            url=f"{BODEGAS_API_URL}/api/v1/warehouses",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses",
             headers={'Authorization': f'Bearer {jwt}'}
         )
 
@@ -60,7 +60,7 @@ class WarehouseAdapter:
         logger.debug(f"updating warehouse with ID: {warehouse_id} with data: {warehouse_data}")
 
         response = requests.put(
-            url=f"{BODEGAS_API_URL}/api/v1/warehouses/{warehouse_id}",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses/{warehouse_id}",
             headers={'Authorization': f'Bearer {jwt}'},
             json=warehouse_data
         )
@@ -74,7 +74,7 @@ class WarehouseAdapter:
         logger.debug(f"deleting warehouse with ID: {warehouse_id}")
 
         response = requests.delete(
-            url=f"{BODEGAS_API_URL}/api/v1/warehouses/{warehouse_id}",
+            url=f"{WAREHOUSES_API_URL}/api/v1/warehouses/{warehouse_id}",
             headers={'Authorization': f'Bearer {jwt}'}
         )
 

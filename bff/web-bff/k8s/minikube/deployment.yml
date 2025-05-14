@@ -46,6 +46,11 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: SALES_API_URL
+          - name: WAREHOUSES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: WAREHOUSES_API_URL
         resources:
           requests:
             memory: "256Mi"

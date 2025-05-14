@@ -1,16 +1,16 @@
 class ApiError(Exception):
     code = 400
-    description = "Hubo un error inesperado. Intente más tarde."
+    description = "unexpected error occurred. please try again later."
 
 
 class ValidationApiError(ApiError):
     code = 400
-    description = "Faltan campos requeridos."
+    description = "required fields are missing."
 
 
 class InvalidFormatError(ApiError):
     code = 400
-    description = "Formato de campo inválido."
+    description = "invalid field format."
 
 
 class InvalidTokenError(ApiError):
@@ -25,24 +25,24 @@ class ForbiddenError(ApiError):
 
 class ResourceNotFoundError(ApiError):
     code = 404
-    description = "El recurso solicitado no existe."
+    description = "requested resource does not exist."
 
 
 class WarehouseNotFoundError(ApiError):
     code = 404
-    description = "La bodega solicitada no existe en el sistema."
+    description = "requested warehouse does not exist in the system."
 
 
 class WarehouseStockItemNotFoundError(ApiError):
     code = 404
-    description = "El artículo de stock solicitado no existe en el sistema."
+    description = "requested stock item does not exist in the system."
 
 
 class DuplicateWarehouseError(ApiError):
     code = 412
-    description = "Ya existe una bodega con ese nombre. Por favor ingrese otro nombre."
+    description = "a warehouse with this name already exists. please enter another name."
 
 
 class DuplicateWarehouseStockItemError(ApiError):
     code = 412
-    description = "Ya existe un artículo de stock con ese código. Por favor ingrese otro código."
+    description = "a stock item with this code already exists. please enter another code."

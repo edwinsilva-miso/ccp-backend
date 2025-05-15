@@ -17,6 +17,7 @@ class TestClientsAdapter(unittest.TestCase):
         self.mock_jwt = "mock_jwt_token"
         self.mock_client_id = "client123"
         self.mock_order_id = "order456"
+        self.salesman_id = "salesman789"
         self.mock_order_data = {
             "clientId": self.mock_client_id,
             "orderDetails": [
@@ -58,7 +59,6 @@ class TestClientsAdapter(unittest.TestCase):
             self.assertEqual(status_code, 201)
             self.assertEqual(result["id"], self.mock_order_id)
             mock_post.assert_called_once()
-            # Don't need to assert on ProductsAdapter.get_product_by_id since we're mocking lower level
 
     def test_create_order_pending_payment(self):
         # Mock both the client adapter's post and the product adapter's get
@@ -191,3 +191,64 @@ class TestClientsAdapter(unittest.TestCase):
 
             # Verify the adapter method was called
             mock_product_get.assert_called_once()
+
+    def test_create_order_with_salesman_success(self):
+        # Mock both the client adapter's post and the product adapter's get
+        with patch('src.adapters.clients_adapter.requests.post') as mock_post, \
+                patch('src.adapters.products_adapter.requests.get') as mock_product_get:
+            # Set up client order response
+            mock_response = Mock()
+            mock_response.status_code = 201
+            mock_response.json.return_value = {
+                "id": self.mock_order_id,
+                "clientId": self.mock_client_id,
+                "salesmanId": self.salesman_id,
+                "orderDetails": [
+                    {"productId": "product789", "quantity": 2}
+                ]
+            }
+            mock_post.return_value = mock_response
+
+            # Set up product get response
+            mock_product_response = Mock()
+            mock_product_response.status_code = 200
+            mock_product_response.json.return_value = {
+                "id": "product789",
+                "name": "Test Product",
+                "brand": "Test Brand",
+                "deliveryTime": 3
+            }
+            mock_product_get.return_value = mock_product_response
+
+            # Call method
+            result, status_code = self.adapter.create_order(self.mock_jwt, self.mock_order_data, self.salesman_id)
+
+            # Assertions
+            self.assertEqual(status_code, 201)
+            self.assertEqual(result["id"], self.mock_order_id)
+            self.assertEqual(result["salesmanId"], self.salesman_id)
+            mock_post.assert_called_once()
+
+    def test_get_orders_by_salesman_id(self):
+        with patch('src.adapters.clients_adapter.requests.get') as mock_get:
+            # Setup mock response
+            mock_response = Mock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = [
+                {"id": "order1", "clientId": self.mock_client_id, "salesmanId": self.salesman_id},
+                {"id": "order2", "clientId": self.mock_client_id, "salesmanId": self.salesman_id}
+            ]
+            mock_get.return_value = mock_response
+
+            # Call method
+            result, status_code = self.adapter.get_orders_by_salesman_id(self.mock_jwt, self.salesman_id)
+
+            # Assertions
+            mock_get.assert_called_once_with(
+                f"http://localhost:5101/api/v1/clients/orders/salesman/{self.salesman_id}",
+                headers={'Authorization': f'Bearer {self.mock_jwt}'}
+            )
+            self.assertEqual(status_code, 200)
+            self.assertEqual(len(result), 2)
+            self.assertEqual(result[0]["salesmanId"], self.salesman_id)
+            self.assertEqual(result[1]["salesmanId"], self.salesman_id)

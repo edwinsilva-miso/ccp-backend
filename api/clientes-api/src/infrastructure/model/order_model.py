@@ -29,6 +29,7 @@ class OrderModel(Base):
     tax = Column(Float, nullable=False)
     total = Column(Float, nullable=False)
     currency = Column(String, nullable=False)
+    salesman_id = Column(String, nullable=True)
     status = Column(sqlalchemy.Enum(OrderStatusEnum), default=OrderStatusEnum.PENDIENTE)
     created_at = Column(DateTime, nullable=True, default=datetime.utcnow())
     updated_at = Column(DateTime, nullable=True)

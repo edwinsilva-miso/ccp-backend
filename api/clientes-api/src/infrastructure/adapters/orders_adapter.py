@@ -24,3 +24,6 @@ class OrdersAdapter(OrdersRepository):
     def update(self, order: OrderDTO) -> OrderDTO | None:
         updated = OrderDAO.update(OrderMapper.to_model(order))
         return OrderMapper.to_dto(updated) if updated else None
+
+    def get_orders_by_salesman(self, salesman_id: str) -> list[OrderDTO]:
+        return OrderMapper.to_dto_single_list(OrderDAO.find_by_salesman_id(salesman_id))

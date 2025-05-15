@@ -76,3 +76,15 @@ class OrderDAO:
                 .filter(OrderModel.id == order_id) \
                 .first()
             return order
+
+    @classmethod
+    def find_by_salesman_id(cls, salesman_id: str) -> list[OrderModel]:
+        """
+        Find all orders by salesman ID.
+        :param salesman_id: ID of the salesman to find orders for.
+        :return: List of OrderModel if found.
+        """
+        session = Session()
+        orders = session.query(OrderModel).filter(OrderModel.salesman_id == salesman_id).all()
+        session.close()
+        return orders

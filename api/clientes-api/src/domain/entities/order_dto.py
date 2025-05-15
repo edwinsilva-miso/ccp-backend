@@ -4,7 +4,7 @@ import datetime
 class OrderDTO:
 
     def __init__(self, id: str, client_id: str, quantity: int, subtotal: float, tax: float, total: float, currency: str,
-                 status: str, created_at: datetime, updated_at: datetime):
+                 salesman_id: str, status: str, created_at: datetime, updated_at: datetime):
         """
         Initialize an OrderDTO object with the given parameters.
         :param: id: The unique identifier of the order.
@@ -14,6 +14,7 @@ class OrderDTO:
         :param tax: The tax amount of the order.
         :param total: The total amount of the order.
         :param currency: The currency of the order (e.g., 'USD', 'EUR').
+        :param salesman_id: The unique identifier of the salesman associated with the order.
         :param status: The status of the order (e.g., 'PENDING', 'COMPLETED').
         :param created_at: The date and time when the order was created.
         :param created_at: The date and time when the order was created.
@@ -25,6 +26,7 @@ class OrderDTO:
         self.tax = tax
         self.total = total
         self.currency = currency
+        self.salesman_id = salesman_id
         self.status = status
         self.created_at = created_at
         self.updated_at = updated_at
@@ -46,6 +48,7 @@ class OrderDTO:
             "total": self.total,
             "currency": self.currency,
             "status": self.status,
+            "salesmanId": self.salesman_id,
             "createdAt": self.created_at,
             "updatedAt": self.updated_at,
             "clientInfo": self.client_info.to_dict() if self.client_info else None,

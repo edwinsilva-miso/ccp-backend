@@ -9,10 +9,10 @@ loaded = load_dotenv('.env.development')
 
 logging.basicConfig(level=logging.DEBUG)
 
-from src.models.models import db
-from src.routes.seller_routes import seller_bp
-from src.routes.customer_routes import customer_bp
-from src.config import config
+from .models.models import db
+from .blueprints.seller_blueprints import seller_bp
+from .blueprints.customer_blueprints import customer_blueprint
+from .config import config
 
 
 def create_app(config_name=None):
@@ -37,7 +37,7 @@ def create_app(config_name=None):
 
     # Register blueprints
     app.register_blueprint(seller_bp)
-    app.register_blueprint(customer_bp)
+    app.register_blueprint(customer_blueprint)
 
     # Error handler for API errors
     class ApiError(Exception):

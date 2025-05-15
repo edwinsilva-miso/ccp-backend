@@ -1,24 +1,49 @@
 import logging
+import os
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 
+# Load environment variables
 loaded = load_dotenv('.env.development')
-
-from .interface.blueprints.management_blueprint import management_blueprint
-from .application.errors.errors import ApiError
 
 logging.basicConfig(level=logging.DEBUG)
 
+from src.models.models import db
+from src.routes.seller_routes import seller_bp
+from src.routes.customer_routes import customer_bp
+from src.config import config
 
-def create_app():
+
+def create_app(config_name=None):
     """
     Create and configure the Flask application.
     """
-    logging.debug('fulfillment microservice started')
+    if config_name is None:
+        config_name = os.environ.get('FLASK_ENV', 'default')
+
+    logging.debug(f'deliveries microservice started in {config_name} mode')
     app = Flask(__name__)
 
-    app.register_blueprint(management_blueprint)
+    # Load configuration
+    app.config.from_object(config[config_name])
+
+    # Initialize extensions
+    db.init_app(app)
+
+    # Create database tables if they don't exist
+    with app.app_context():
+        db.create_all()
+
+    # Register blueprints
+    app.register_blueprint(seller_bp)
+    app.register_blueprint(customer_bp)
+
+    # Error handler for API errors
+    class ApiError(Exception):
+        def __init__(self, code, description):
+            self.code = code
+            self.description = description
 
     @app.errorhandler(ApiError)
     def handle_error(error):
@@ -30,6 +55,11 @@ def create_app():
             "msg": error.description
         }
         return jsonify(response), error.code
+
+    # Health check endpoint
+    @app.route('/health', methods=['GET'])
+    def health_check():
+        return jsonify({"status": "healthy"}), 200
 
     return app
 

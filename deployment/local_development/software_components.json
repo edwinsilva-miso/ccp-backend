@@ -7,7 +7,8 @@
     "usuarios-api",
     "rutas-api",
     "ventas-api",
-    "bodegas-api"
+    "bodegas-api",
+    "entregas-api"
   ],
   "backplane-components": [
   ]

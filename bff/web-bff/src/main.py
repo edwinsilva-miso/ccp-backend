@@ -13,6 +13,8 @@ from .blueprints.products_blueprint import products_blueprint
 from .blueprints.orders_blueprint import orders_blueprint
 from .blueprints.routes_blueprint import routes_blueprint
 from .blueprints.selling_plan_blueprint import selling_plan_blueprint
+from .blueprints.warehouse_blueprint import warehouse_blueprint
+from .blueprints.warehouse_stock_item_blueprint import warehouse_stock_item_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -32,6 +34,8 @@ def create_app():
     app.register_blueprint(orders_blueprint)
     app.register_blueprint(routes_blueprint)
     app.register_blueprint(selling_plan_blueprint)
+    app.register_blueprint(warehouse_blueprint)
+    app.register_blueprint(warehouse_stock_item_blueprint)
 
     CORS(app, resources={
         r"/bff/*": {

@@ -114,3 +114,35 @@ def add_status_update(delivery_id):
         return jsonify({'error': 'Delivery not found or unauthorized access'}), 404
 
     return jsonify(status_update.to_dict()), 201
+
+@seller_blueprint.route('/status/<uuid:status_update_id>', methods=['PUT'])
+def update_status_update(status_update_id):
+    """Update a status update."""
+    data = request.json
+
+    if 'seller_id' not in data:
+        return jsonify({'error': 'seller_id is required'}), 400
+
+    # Use service to update status update
+    status_update = SellerService.update_status_update(status_update_id, data)
+
+    if not status_update:
+        return jsonify({'error': 'Status update not found or unauthorized access'}), 404
+
+    return jsonify(status_update.to_dict()), 200
+
+@seller_blueprint.route('/status/<uuid:status_update_id>', methods=['DELETE'])
+def delete_status_update(status_update_id):
+    """Delete a status update."""
+    seller_id = request.args.get('seller_id')
+
+    if not seller_id:
+        return jsonify({'error': 'seller_id parameter is required'}), 400
+
+    # Use service to delete status update
+    success = SellerService.delete_status_update(status_update_id, seller_id)
+
+    if not success:
+        return jsonify({'error': 'Status update not found or unauthorized access'}), 404
+
+    return jsonify({'message': 'Status update deleted successfully'}), 200

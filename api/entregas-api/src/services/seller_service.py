@@ -200,3 +200,71 @@ class SellerService:
         db.session.commit()
 
         return status_update
+
+    @staticmethod
+    def delete_status_update(status_update_id: UUID, seller_id: UUID):
+        """
+        Delete a status update.
+
+        Args:
+            status_update_id (UUID): The status update ID.
+            seller_id (UUID): The seller ID.
+
+        Returns:
+            bool: True if deleted successfully, None otherwise.
+        """
+        logging.debug(f"deleting status_update_id: {status_update_id}")
+        status_update = StatusUpdate.query.get(status_update_id)
+
+        if not status_update:
+            logging.debug(f"status update not found: {status_update_id}")
+            return None
+
+        # Get the delivery to check seller authorization
+        delivery = Delivery.query.get(status_update.delivery_id)
+
+        if not delivery or str(delivery.seller_id) != seller_id:
+            logging.debug(f"unauthorized access for status_update_id: {status_update_id}")
+            return None
+
+        db.session.delete(status_update)
+        db.session.commit()
+        return True
+
+    @staticmethod
+    def update_status_update(status_update_id: UUID, data: dict):
+        """
+        Update a status update.
+
+        Args:
+            status_update_id (UUID): The status update ID.
+            data (dict): The updated status update data.
+
+        Returns:
+            StatusUpdate: The updated status update if authorized, None otherwise.
+        """
+        logging.debug(f"updating status_update_id: {status_update_id}")
+        status_update = StatusUpdate.query.get(status_update_id)
+
+        if not status_update:
+            logging.debug(f"status update not found: {status_update_id}")
+            return None
+
+        # Get the delivery to check seller authorization
+        delivery = Delivery.query.get(status_update.delivery_id)
+
+        if not delivery or str(delivery.seller_id) != data['seller_id']:
+            logging.debug(f"unauthorized access for status_update_id: {status_update_id}")
+            return None
+
+        # Update fields
+        if 'status' in data:
+            logging.debug(f"updating status from '{status_update.status}' to '{data['status']}'")
+            status_update.status = data['status']
+        if 'description' in data:
+            logging.debug(f"updating description from '{status_update.description}' to '{data['description']}'")
+            status_update.description = data['description']
+
+        db.session.commit()
+        logging.debug(f"successfully updated status update {status_update_id}")
+        return status_update

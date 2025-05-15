@@ -128,3 +128,34 @@ class DeliveriesAdapter:
         logger.debug(f"response received from entregas api: {response.json()}")
 
         return response.json(), response.status_code
+
+    @staticmethod
+    def update_status_update(jwt, status_update_id, status_data):
+        logger.debug(f"updating status update with ID: {status_update_id} with data: {status_data}")
+
+        response = requests.put(
+            url=f"{DELIVERIES_API_URL}/api/seller/status/{status_update_id}",
+            headers={'Authorization': f'Bearer {jwt}'},
+            json=status_data
+        )
+
+        logger.debug(f"response received from entregas api: {response.json()}")
+
+        return response.json(), response.status_code
+
+    @staticmethod
+    def delete_status_update(jwt, status_update_id, seller_id):
+        logger.debug(f"deleting status update with ID: {status_update_id} for seller: {seller_id}")
+
+        response = requests.delete(
+            url=f"{DELIVERIES_API_URL}/api/seller/status/{status_update_id}",
+            headers={'Authorization': f'Bearer {jwt}'},
+            params={'seller_id': seller_id}
+        )
+
+        logger.debug(f"response received from entregas api: status {response.status_code}")
+
+        if response.content:
+            return response.json(), response.status_code
+        else:
+            return {"msg": "status update deleted successfully."}, response.status_code

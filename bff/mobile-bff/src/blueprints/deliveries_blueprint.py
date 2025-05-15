@@ -89,3 +89,22 @@ def add_status_update(delivery_id, jwt):
     status_data = request.get_json()
     adapter = DeliveriesAdapter()
     return adapter.add_status_update(jwt, delivery_id, status_data)
+
+
+@deliveries_blueprint.route('/sellers/status/<uuid:status_update_id>', methods=['PUT'])
+@validate_token
+def update_status_update(status_update_id, jwt):
+    """Update a status update."""
+    logger.debug(f"received request to update status update with id: {status_update_id}")
+    status_data = request.get_json()
+    adapter = DeliveriesAdapter()
+    return adapter.update_status_update(jwt, status_update_id, status_data)
+
+
+@deliveries_blueprint.route('/sellers/<uuid:seller_id>/status/<uuid:status_update_id>', methods=['DELETE'])
+@validate_token
+def delete_status_update(seller_id, status_update_id, jwt):
+    """Delete a status update."""
+    logger.debug(f"received request to delete status update with id: {status_update_id} for seller: {seller_id}")
+    adapter = DeliveriesAdapter()
+    return adapter.delete_status_update(jwt, status_update_id, seller_id)

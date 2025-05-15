@@ -185,7 +185,7 @@ class SellerService:
         logging.debug(f"adding status update for delivery_id: {delivery_id}")
         delivery = Delivery.query.get(delivery_id)
 
-        if not delivery or delivery.seller_id != data['seller_id']:
+        if not delivery or str(delivery.seller_id) != data['seller_id']:
             logging.debug(f"delivery not found or unauthorized access for delivery_id: {delivery_id}")
             return None
 

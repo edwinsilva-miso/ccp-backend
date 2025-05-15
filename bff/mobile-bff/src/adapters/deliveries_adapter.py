@@ -3,7 +3,7 @@ import os
 
 import requests
 
-ENTREGAS_API_URL = os.environ.get('ENTREGAS_API_URL', 'http://localhost:5000')
+DELIVERIES_API_URL = os.environ.get('DELIVERIES_API_URL', 'http://localhost:5000')
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
@@ -20,7 +20,7 @@ class DeliveriesAdapter:
         logger.debug(f"getting deliveries for customer with ID: {customer_id}")
 
         response = requests.get(
-            url=f"{ENTREGAS_API_URL}/api/deliveries/customers/{customer_id}",
+            url=f"{DELIVERIES_API_URL}/api/deliveries/customers/{customer_id}",
             headers={'Authorization': f'Bearer {jwt}'}
         )
 
@@ -33,7 +33,7 @@ class DeliveriesAdapter:
         logger.debug(f"getting delivery with ID: {delivery_id} for customer: {customer_id}")
 
         response = requests.get(
-            url=f"{ENTREGAS_API_URL}/api/deliveries/{delivery_id}",
+            url=f"{DELIVERIES_API_URL}/api/deliveries/{delivery_id}",
             headers={'Authorization': f'Bearer {jwt}'},
             params={'customer_id': customer_id}
         )
@@ -47,7 +47,7 @@ class DeliveriesAdapter:
         logger.debug(f"creating a delivery with data {delivery_data}")
 
         response = requests.post(
-            url=f"{ENTREGAS_API_URL}/api/seller/deliveries",
+            url=f"{DELIVERIES_API_URL}/api/seller/deliveries",
             headers={'Authorization': f'Bearer {jwt}'},
             json=delivery_data
         )
@@ -61,7 +61,7 @@ class DeliveriesAdapter:
         logger.debug(f"getting deliveries for seller with ID: {seller_id}")
 
         response = requests.get(
-            url=f"{ENTREGAS_API_URL}/api/seller/deliveries",
+            url=f"{DELIVERIES_API_URL}/api/seller/deliveries",
             headers={'Authorization': f'Bearer {jwt}'},
             params={'seller_id': seller_id}
         )
@@ -75,7 +75,7 @@ class DeliveriesAdapter:
         logger.debug(f"getting delivery with ID: {delivery_id} for seller: {seller_id}")
 
         response = requests.get(
-            url=f"{ENTREGAS_API_URL}/api/seller/deliveries/{delivery_id}",
+            url=f"{DELIVERIES_API_URL}/api/seller/deliveries/{delivery_id}",
             headers={'Authorization': f'Bearer {jwt}'},
             params={'seller_id': seller_id}
         )
@@ -89,7 +89,7 @@ class DeliveriesAdapter:
         logger.debug(f"updating delivery with ID: {delivery_id} with data: {delivery_data}")
 
         response = requests.put(
-            url=f"{ENTREGAS_API_URL}/api/seller/deliveries/{delivery_id}",
+            url=f"{DELIVERIES_API_URL}/api/seller/deliveries/{delivery_id}",
             headers={'Authorization': f'Bearer {jwt}'},
             json=delivery_data
         )
@@ -103,7 +103,7 @@ class DeliveriesAdapter:
         logger.debug(f"deleting delivery with ID: {delivery_id} for seller: {seller_id}")
 
         response = requests.delete(
-            url=f"{ENTREGAS_API_URL}/api/seller/deliveries/{delivery_id}",
+            url=f"{DELIVERIES_API_URL}/api/seller/deliveries/{delivery_id}",
             headers={'Authorization': f'Bearer {jwt}'},
             params={'seller_id': seller_id}
         )
@@ -120,7 +120,7 @@ class DeliveriesAdapter:
         logger.debug(f"adding status update to delivery with ID: {delivery_id} with data: {status_data}")
 
         response = requests.post(
-            url=f"{ENTREGAS_API_URL}/api/seller/deliveries/{delivery_id}/status",
+            url=f"{DELIVERIES_API_URL}/api/seller/deliveries/{delivery_id}/status",
             headers={'Authorization': f'Bearer {jwt}'},
             json=status_data
         )

@@ -11,7 +11,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-deliveries_blueprint = Blueprint('deliveries', __name__, url_prefix='/bff/v1/web/deliveries')
+deliveries_blueprint = Blueprint('deliveries', __name__, url_prefix='/bff/v1/mobile/deliveries')
 
 
 # Customer endpoints

@@ -36,6 +36,16 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: PRODUCTS_API_URL
+          - name: ROUTES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: ROUTES_API_URL
+          - name: DELIVERIES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: DELIVERIES_API_URL
         resources:
           requests:
             memory: "256Mi"

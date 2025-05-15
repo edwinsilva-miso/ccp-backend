@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 from ..models.models import db, Delivery, StatusUpdate
 
 
@@ -8,13 +9,13 @@ class SellerService:
     """
 
     @staticmethod
-    def create_delivery(data):
+    def create_delivery(data: dict):
         """
         Create a new delivery.
-        
+
         Args:
             data (dict): The delivery data.
-            
+
         Returns:
             Delivery: The created delivery.
         """
@@ -24,7 +25,8 @@ class SellerService:
             customer_id=data['customer_id'],
             seller_id=data['seller_id'],
             description=data['description'],
-            estimated_delivery_date=data.get('estimated_delivery_date')
+            estimated_delivery_date=data.get('estimated_delivery_date'),
+            order_id=data.get('order_id')
         )
 
         # Add to database
@@ -44,13 +46,13 @@ class SellerService:
         return delivery
 
     @staticmethod
-    def get_seller_deliveries(seller_id):
+    def get_seller_deliveries(seller_id: UUID):
         """
         Get all deliveries for a seller.
-        
+
         Args:
-            seller_id (int): The seller ID.
-            
+            seller_id (UUID): The seller ID.
+
         Returns:
             list: The list of deliveries.
         """
@@ -58,86 +60,125 @@ class SellerService:
         return Delivery.query.filter_by(seller_id=seller_id).all()
 
     @staticmethod
-    def get_delivery(delivery_id, seller_id):
+    def get_delivery(delivery_id: UUID, seller_id: UUID):
         """
         Get a specific delivery for a seller.
-        
+
         Args:
-            delivery_id (int): The delivery ID.
-            seller_id (int): The seller ID.
-            
+            delivery_id (UUID): The delivery ID.
+            seller_id (UUID): The seller ID.
+
         Returns:
             Delivery: The delivery if found and authorized, None otherwise.
         """
         logging.debug(f"fetching delivery_id: {delivery_id} for seller_id: {seller_id}")
         delivery = Delivery.query.get(delivery_id)
 
-        if not delivery or delivery.seller_id != seller_id:
-            logging.debug(f"delivery not found or unauthorized access for delivery_id: {delivery_id}")
+        if not delivery:
+            logging.debug(f"delivery not found: {delivery_id}")
+            return None
+        if str(delivery.seller_id) != seller_id:
+            logging.debug(f"unauthorized access for delivery_id: {delivery_id}")
             return None
 
         return delivery
 
     @staticmethod
-    def update_delivery(delivery_id, data):
+    def get_delivery_by_order_id(order_id: UUID, seller_id: UUID):
+        """
+        Get a specific delivery for a seller by order_id.
+
+        Args:
+            order_id (UUID): The order ID.
+            seller_id (UUID): The seller ID.
+
+        Returns:
+            Delivery: The delivery if found and authorized, None otherwise.
+        """
+        logging.debug(f"fetching delivery with order_id: {order_id} for seller_id: {seller_id}")
+        delivery = Delivery.query.filter_by(order_id=order_id, seller_id=seller_id).first()
+
+        if not delivery:
+            logging.debug(f"delivery not found for order_id: {order_id}")
+            return None
+
+        return delivery
+
+    @staticmethod
+    def update_delivery(delivery_id: UUID, data: dict):
         """
         Update a delivery.
-        
+
         Args:
-            delivery_id (int): The delivery ID.
+            delivery_id (UUID): The delivery ID.
             data (dict): The updated delivery data.
-            
+
         Returns:
             Delivery: The updated delivery if found and authorized, None otherwise.
         """
         logging.debug(f"updating delivery_id: {delivery_id} for seller_id: {data['seller_id']}")
         delivery = Delivery.query.get(delivery_id)
 
-        if not delivery or delivery.seller_id != data['seller_id']:
-            logging.debug(f"delivery not found or unauthorized access for delivery_id: {delivery_id}")
+        logging.debug(f"found delivery object: {delivery is not None}")
+
+        if not delivery:
+            logging.debug(f"delivery not found: {delivery_id}")
+            return None
+        if str(delivery.seller_id) != data['seller_id']:
+            logging.debug(f"unauthorized access for delivery_id: {delivery_id}")
             return None
 
         # Update fields
         if 'description' in data:
+            logging.debug(f"updating description from '{delivery.description}' to '{data['description']}'")
             delivery.description = data['description']
         if 'estimated_delivery_date' in data:
+            logging.debug(
+                f"updating estimated_delivery_date from '{delivery.estimated_delivery_date}' to '{data['estimated_delivery_date']}'")
             delivery.estimated_delivery_date = data['estimated_delivery_date']
+        if 'order_id' in data:
+            logging.debug(f"updating order_id from '{delivery.order_id}' to '{data['order_id']}'")
+            delivery.order_id = data['order_id']
 
         db.session.commit()
+        logging.debug(f"successfully updated delivery {delivery_id}")
         return delivery
 
     @staticmethod
-    def delete_delivery(delivery_id, seller_id):
+    def delete_delivery(delivery_id: UUID, seller_id: UUID):
         """
         Delete a delivery.
-        
+
         Args:
-            delivery_id (int): The delivery ID.
-            seller_id (int): The seller ID.
-            
+            delivery_id (UUID): The delivery ID.
+            seller_id (UUID): The seller ID.
+
         Returns:
             bool: True if deleted successfully, False otherwise.
         """
         logging.debug(f"deleting delivery_id: {delivery_id} for seller_id: {seller_id}")
         delivery = Delivery.query.get(delivery_id)
 
-        if not delivery or delivery.seller_id != seller_id:
-            logging.debug(f"delivery not found or unauthorized access for delivery_id: {delivery_id}")
-            return False
+        if not delivery:
+            logging.debug(f"delivery not found: {delivery_id}")
+            return None
+        if str(delivery.seller_id) != seller_id:
+            logging.debug(f"unauthorized access for delivery_id: {delivery_id}")
+            return None
 
         db.session.delete(delivery)
         db.session.commit()
         return True
 
     @staticmethod
-    def add_status_update(delivery_id, data):
+    def add_status_update(delivery_id: UUID, data: dict):
         """
         Add a status update to a delivery.
-        
+
         Args:
-            delivery_id (int): The delivery ID.
+            delivery_id (UUID): The delivery ID.
             data (dict): The status update data.
-            
+
         Returns:
             StatusUpdate: The created status update if authorized, None otherwise.
         """

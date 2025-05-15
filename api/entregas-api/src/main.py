@@ -10,7 +10,7 @@ loaded = load_dotenv('.env.development')
 logging.basicConfig(level=logging.DEBUG)
 
 from .models.models import db
-from .blueprints.seller_blueprints import seller_bp
+from .blueprints.seller_blueprints import seller_blueprint
 from .blueprints.customer_blueprints import customer_blueprint
 from .config import config
 
@@ -36,7 +36,7 @@ def create_app(config_name=None):
         db.create_all()
 
     # Register blueprints
-    app.register_blueprint(seller_bp)
+    app.register_blueprint(seller_blueprint)
     app.register_blueprint(customer_blueprint)
 
     # Error handler for API errors
@@ -65,5 +65,5 @@ def create_app(config_name=None):
 
 
 if __name__ == '__main__':
-    app = create_app()
+    app = create_app('development')
     app.run(host='0.0.0.0', port=5000, debug=True)

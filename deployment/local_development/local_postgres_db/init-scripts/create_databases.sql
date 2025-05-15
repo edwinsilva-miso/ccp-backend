@@ -6,3 +6,4 @@ CREATE DATABASE misw_products;
 CREATE DATABASE misw_manufacturers;
 CREATE DATABASE misw_sales;
 CREATE DATABASE misw_warehouses;
+CREATE DATABASE misw_deliveries;

@@ -12,6 +12,7 @@ class Delivery(db.Model):
     __tablename__ = 'deliveries'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    order_id = db.Column(UUID(as_uuid=True), nullable=True, index=True)
     customer_id = db.Column(UUID(as_uuid=True), nullable=False, index=True)
     seller_id = db.Column(UUID(as_uuid=True), nullable=False, index=True)
     description = db.Column(db.String(255), nullable=False)
@@ -28,6 +29,7 @@ class Delivery(db.Model):
         """Convert delivery to dictionary."""
         return {
             'id': str(self.id) if self.id else None,
+            'order_id': str(self.order_id) if self.order_id else None,
             'customer_id': str(self.customer_id) if self.customer_id else None,
             'seller_id': str(self.seller_id) if self.seller_id else None,
             'description': self.description,

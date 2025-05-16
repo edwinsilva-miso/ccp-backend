@@ -7,6 +7,7 @@ loaded = load_dotenv('.env.development')
 
 from .interface.blueprints.management_blueprint import management_blueprint
 from .interface.blueprints.clients_blueprint import clients_blueprint
+from .interface.blueprints.order_reports_blueprint import reports_blueprint
 from .application.errors.errors import ApiError
 from .infrastructure.database.declarative_base import Base, engine
 
@@ -22,6 +23,7 @@ def create_app():
 
     app.register_blueprint(management_blueprint)
     app.register_blueprint(clients_blueprint)
+    app.register_blueprint(reports_blueprint)
 
     # Create schema
     logging.debug(">> Create schema")

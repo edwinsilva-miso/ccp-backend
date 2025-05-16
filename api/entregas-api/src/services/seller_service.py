@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from uuid import UUID
 from ..models.models import db, Delivery, StatusUpdate
 
@@ -25,7 +26,7 @@ class SellerService:
             customer_id = UUID(data['customer_id']) if isinstance(data['customer_id'], str) else data['customer_id']
             seller_id = UUID(data['seller_id']) if isinstance(data['seller_id'], str) else data['seller_id']
             order_id = UUID(data['order_id']) if isinstance(data.get('order_id'), str) else data.get('order_id')
-
+            
             logging.debug(f"creating new delivery for seller_id: {seller_id}")
             # Create new delivery
             delivery = Delivery(
@@ -66,8 +67,21 @@ class SellerService:
         Returns:
             list: The list of deliveries.
         """
-        logging.debug(f"fetching all deliveries for seller_id: {seller_id}")
+        seller_id = SellerService.convert_to_uuid(seller_id)
+
         return Delivery.query.filter_by(seller_id=seller_id).all()
+
+    @staticmethod
+    def convert_to_uuid(string):
+        try:
+            if isinstance(string, str):
+                seller_id = UUID(string)
+                logging.debug(f"converted string to UUID: {seller_id}")
+        except ValueError as e:
+            logging.error(f"Invalid UUID format for string: {str(e)}")
+            raise Exception(f"Invalid UUID format for string: {str(e)}")
+        logging.debug(f"fetching all deliveries for string: {string}")
+        return string
 
     @staticmethod
     def get_delivery(delivery_id: UUID, seller_id: UUID):
@@ -148,7 +162,7 @@ class SellerService:
             delivery.estimated_delivery_date = data['estimated_delivery_date']
         if 'order_id' in data:
             logging.debug(f"updating order_id from '{delivery.order_id}' to '{data['order_id']}'")
-            delivery.order_id = data['order_id']
+            delivery.order_id = SellerService.convert_to_uuid(data['order_id'])
 
         db.session.commit()
         logging.debug(f"successfully updated delivery {delivery_id}")

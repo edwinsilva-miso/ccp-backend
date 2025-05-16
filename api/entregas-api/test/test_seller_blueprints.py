@@ -59,11 +59,11 @@ class TestSellerBlueprints(unittest.TestCase):
     def test_create_delivery(self):
         delivery_data = self.get_delivery_data()
         request_data = {
-            'order_id': delivery_data['seller_id'],
-            'customer_id': delivery_data['order_id'],
-            'seller_id': delivery_data['customer_id'],
+            'order_id': delivery_data['order_id'],
+            'customer_id': delivery_data['customer_id'],
+            'seller_id': delivery_data['seller_id'],
             'description': delivery_data['description'],
-            'estimated_delivery_date': delivery_data['estimated_delivery_date'].isoformat()
+            'estimated_delivery_date': delivery_data['estimated_delivery_date']
         }
         response = self.client.post('/api/seller/deliveries', json=request_data)
         self.assertEqual(response.status_code, 201)
@@ -103,10 +103,10 @@ class TestSellerBlueprints(unittest.TestCase):
     def test_get_delivery(self):
         delivery = self.create_delivery_in_db()
         response = self.client.get(f'/api/seller/deliveries/{delivery.id}?seller_id={self.seller_id}')
-        # Based on the endpoints: should succeed. But original code expects 404
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertIn('error', data)
+        self.assertEqual(data['id'], str(delivery.id))
+        self.assertEqual(data['seller_id'], self.seller_id)
 
     def test_get_delivery_not_found(self):
         non_existent_id = str(uuid.uuid4())
@@ -127,12 +127,12 @@ class TestSellerBlueprints(unittest.TestCase):
         update_data = {
             'seller_id': self.seller_id,
             'description': 'Updated description',
-            'estimated_delivery_date': datetime.fromisoformat('2024-01-15T12:00:00').isoformat()
+            'estimated_delivery_date': datetime.fromisoformat('2024-01-15T12:00:00')
         }
         response = self.client.put(f'/api/seller/deliveries/{delivery.id}', json=update_data)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertIn('error', data)
+        self.assertEqual(data['description'], 'Updated description')
 
     def test_update_delivery_missing_seller_id(self):
         delivery = self.create_delivery_in_db()
@@ -146,9 +146,10 @@ class TestSellerBlueprints(unittest.TestCase):
     def test_delete_delivery(self):
         delivery = self.create_delivery_in_db()
         response = self.client.delete(f'/api/seller/deliveries/{delivery.id}?seller_id={self.seller_id}')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertIn('error', data)
+        self.assertIn('message', data)
+        self.assertEqual(data['message'], 'Delivery deleted successfully')
 
     def test_delete_delivery_not_found(self):
         non_existent_id = str(uuid.uuid4())
@@ -165,9 +166,10 @@ class TestSellerBlueprints(unittest.TestCase):
             'description': 'Package has been shipped'
         }
         response = self.client.post(f'/api/seller/deliveries/{delivery.id}/status', json=status_data)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
-        self.assertIn('error', data)
+        self.assertEqual(data['status'], 'SHIPPED')
+        self.assertEqual(data['description'], 'Package has been shipped')
 
     def test_add_status_update_missing_status(self):
         delivery = self.create_delivery_in_db()
@@ -198,9 +200,10 @@ class TestSellerBlueprints(unittest.TestCase):
             'description': 'Package has been shipped'
         }
         response = self.client.put(f'/api/seller/status/{status_update_id}', json=update_data)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertIn('error', data)
+        self.assertEqual(data['status'], 'SHIPPED')
+        self.assertEqual(data['description'], 'Package has been shipped')
 
     def test_delete_status_update(self):
         delivery = self.create_delivery_in_db()
@@ -214,9 +217,10 @@ class TestSellerBlueprints(unittest.TestCase):
         status_update_id = status_update.id
 
         response = self.client.delete(f'/api/seller/status/{status_update_id}?seller_id={self.seller_id}')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertIn('error', data)
+        self.assertIn('message', data)
+        self.assertEqual(data['message'], 'Status update deleted successfully')
 
 if __name__ == '__main__':
     unittest.main()

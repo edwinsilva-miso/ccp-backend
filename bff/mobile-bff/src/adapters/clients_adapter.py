@@ -21,15 +21,19 @@ class ClientsAdapter:
     def __init__(self):
         self.products_adapter = ProductsAdapter()
 
-    def create_order(self, jwt, order_data):
+    def create_order(self, jwt, order_data, salesman_id=None):
         """
         Create a new order.
         :param jwt: JWT token for authorization.
         :param order_data: The order data to create.
+        :param salesman_id: Optional salesman ID to associate with the order.
         :return: Tuple of (order_data, status_code)
         """
         logger.debug("Creating a new order")
         headers = {'Authorization': f'Bearer {jwt}'}
+
+        if salesman_id:
+            headers['salesman-id'] = salesman_id
 
         # Create the order
         response = requests.post(
@@ -95,6 +99,28 @@ class ClientsAdapter:
         logger.debug(f"Response received from API: {response_data}")
         return response_data, response.status_code
 
+    def get_orders_by_salesman_id(self, jwt, salesman_id):
+        """
+        Get orders by salesman ID.
+        :param jwt: JWT token for authorization
+        :param salesman_id: The ID of the salesman to retrieve
+        :return: Tuple of (orders_data, status_code)
+        """
+        logger.debug("Listing orders for salesman_id")
+        headers = {'Authorization': f'Bearer {jwt}'}
+
+
+        # List the orders
+        response = requests.get(
+            f"{CLIENTS_API_URL}/api/v1/clients/orders/salesman/{salesman_id}",
+            headers=headers
+        )
+
+        response_data = response.json()
+
+        logger.debug(f"Response received from API: {response_data}")
+        return response_data, response.status_code
+
     def _enrich_product_information(self, jwt, order_data, status_code):
         """
         Enrich product information with details from products API.
@@ -119,4 +145,3 @@ class ClientsAdapter:
                     delivery_date = datetime.now() + timedelta(days=product_data['deliveryTime'])
                     product['deliveryTime'] = f"{product_data.get('deliveryTime')} días"
                     product['deliveryDate'] = delivery_date.strftime('%Y-%m-%d')
-

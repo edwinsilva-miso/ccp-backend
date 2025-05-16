@@ -24,3 +24,8 @@ class OrdersRepository(ABC):
     def update(self, order: OrderDTO) -> OrderDTO | None:
         """Update an existing order"""
         pass
+
+    @abstractmethod
+    def get_orders_by_salesman(self, salesman_id: str) -> list[OrderDTO]:
+        """Get all orders given a salesman ID"""
+        pass

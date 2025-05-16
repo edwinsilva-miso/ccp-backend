@@ -25,7 +25,7 @@ class CreateOrder:
         self.payments_port = payments_port
         self.messaging_port = messaging_port
 
-    def execute(self, order_data):
+    def execute(self, order_data, salesman_id):
         logging.debug("Starting purchase creation process...")
         # Validate the purchase data
         validate(order_data)
@@ -45,6 +45,7 @@ class CreateOrder:
             tax=order_data['tax'],
             total=order_data['total'],
             currency=order_data['currency'],
+            salesman_id=salesman_id if salesman_id else None,
             status='PENDIENTE',
             created_at=None,
             updated_at=None

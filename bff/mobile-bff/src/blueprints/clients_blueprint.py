@@ -26,9 +26,10 @@ def create_order(jwt):
     """
     logging.debug("Received request to create a new order.")
     logging.debug("Creating order in BFF Mobile.")
+    salesman_id = request.headers.get('salesman-id')
     adapter = ClientsAdapter()
     order_data = request.get_json()
-    return adapter.create_order(jwt, order_data)
+    return adapter.create_order(jwt, order_data, salesman_id)
 
 @orders_blueprint.route('/', methods=['GET'])
 @token_required
@@ -57,3 +58,17 @@ def get_order(jwt, order_id):
     logging.debug("Getting order details in BFF Mobile.")
     adapter = ClientsAdapter()
     return adapter.get_order_by_id(jwt, order_id)
+
+@orders_blueprint.route('/salesman/<salesman_id>', methods=['GET'])
+@token_required
+def list_orders_by_salesman(jwt, salesman_id):
+    """
+    List orders for a specific salesman.
+    :param jwt: JWT token for authorization.
+    :param salesman_id: The ID of the salesman to list orders for.
+    :return: The list of orders
+    """
+    logging.debug("Received request to list orders by salesman.")
+    logging.debug("Listing orders by salesman in BFF Mobile.")
+    adapter = ClientsAdapter()
+    return adapter.get_orders_by_salesman_id(jwt, salesman_id)

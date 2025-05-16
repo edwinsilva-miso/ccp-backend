@@ -19,15 +19,25 @@ class SellerService:
         Returns:
             Delivery: The created delivery.
         """
-        logging.debug(f"creating new delivery for seller_id: {data['seller_id']}")
-        # Create new delivery
-        delivery = Delivery(
-            customer_id=data['customer_id'],
-            seller_id=data['seller_id'],
-            description=data['description'],
-            estimated_delivery_date=data.get('estimated_delivery_date'),
-            order_id=data.get('order_id')
-        )
+
+        try:
+            # Convert string IDs to UUID if they are strings
+            customer_id = UUID(data['customer_id']) if isinstance(data['customer_id'], str) else data['customer_id']
+            seller_id = UUID(data['seller_id']) if isinstance(data['seller_id'], str) else data['seller_id']
+            order_id = UUID(data['order_id']) if isinstance(data.get('order_id'), str) else data.get('order_id')
+
+            logging.debug(f"creating new delivery for seller_id: {seller_id}")
+            # Create new delivery
+            delivery = Delivery(
+                customer_id=customer_id,
+                seller_id=seller_id,
+                description=data['description'],
+                estimated_delivery_date=data.get('estimated_delivery_date'),
+                order_id=order_id
+            )
+        except Exception as e:
+            logging.error(f"Invalid UUID format: {str(e)}")
+            raise Exception(f"Invalid UUID format: {str(e)}")
 
         # Add to database
         db.session.add(delivery)

@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from uuid import UUID
 from ..services.customer_service import CustomerService
 
 customer_blueprint = Blueprint('customer', __name__, url_prefix='/api/deliveries')
@@ -36,6 +37,11 @@ def get_delivery_by_order_id(order_id):
 
     if not customer_id:
         return jsonify({'error': 'customer_id parameter is required'}), 400
+
+    try:
+        customer_id = UUID(customer_id)
+    except ValueError:
+        return jsonify({'error': 'Invalid customer_id format'}), 500
 
     # Use service to get delivery by order_id
     delivery = CustomerService.get_delivery_by_order_id(order_id, customer_id)

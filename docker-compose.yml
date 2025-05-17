@@ -183,6 +183,9 @@ services:
       PAYMENT_GATEWAY_URL: http://host.docker.internal:8000/api/v1/
       CLIENT_ID: client1
       CLIENT_SECRET: password1
+      GOOGLE_APPLICATION_CREDENTIALS: /app/credentials/key.json
+    volumes:
+      - ./files/key.json:/app/credentials/key.json:ro
     depends_on:
       clients_db:
         condition: service_healthy

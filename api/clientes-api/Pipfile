@@ -21,6 +21,9 @@ pytest-env = "*"
 sendgrid = "*"
 requests = "*"
 pika = "*"
+pandas = "*"
+xlsxwriter = "*"
+google-cloud-storage = "*"
 
 [dev-packages]
 

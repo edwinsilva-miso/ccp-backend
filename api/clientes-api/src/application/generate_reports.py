@@ -1,6 +1,8 @@
 import logging
+import uuid
 from datetime import datetime
 
+from .utils.create_report_file import CreateReportFile
 from ..domain.entities.reports.order_reports_dto import OrderReportsDTO
 
 logging.basicConfig(
@@ -16,24 +18,33 @@ class GenerateReports:
     Use case for generating reports.
     """
 
-    def __init__(self, order_reports_repository):
+    def __init__(self, order_reports_repository, report_queries_adapter):
         self.order_reports_repository = order_reports_repository
+        self.report_queries_adapter = report_queries_adapter
 
-    def execute(self, report_params: dict) -> dict:
+    def execute(self, data: dict) -> dict:
         """
         Generate reports based on the provided parameters.
-        :param report_params: Dictionary containing report parameters.
+        :param data: Dictionary containing report parameters.
         :return: Dictionary containing the generated report.
         """
-        logger.debug("Generating reports for user ID: %s", report_params.get('userId'))
+        logger.debug("Generating reports for user ID: %s", data.get('userId'))
 
         # Here you would implement the logic to generate the report based on the parameters
         # Generate report according to report type
         report_date = datetime.utcnow().isoformat()
-        report_name = report_params.get('type') + '_' + report_date.translate(str.maketrans('', '', ':-')) + '.xlsx'
+        report_name = 'CCP_' + data.get('type') + '_' + data.get('userId') + '_' + report_date.translate(
+            str.maketrans('', '', ':-')) + '.xlsx'
 
-        report_data = self._generate_report_data(report_params)
+        report_metadata = self._generate_report_data(data)
+        report_data = report_metadata.get('data', [])
+        report_headers = report_metadata.get('headers')
         logger.debug(f"Generated report data: {report_name}")
+
+        logger.debug("Creating report file...")
+        create_report_file = CreateReportFile(report_name, report_headers, report_data)
+        report_file_path = create_report_file.create_file()
+        logger.debug(f"Report file created at: {report_file_path}")
 
         # Store generated report on GCP Cloud Storage
         self._store_on_remote_directory(report_data, report_name)
@@ -41,8 +52,8 @@ class GenerateReports:
         # Create a record to save the report info in the database
         logger.debug("Creating record to save the report info in the database.")
         order_report = OrderReportsDTO(
-            report_id=None,
-            user_id=report_params.get('userId'),
+            report_id=str(uuid.uuid4()),
+            user_id=data.get('userId'),
             report_name=report_name,
             report_date=report_date,
             url='https://example.com/' + report_name,  # Replace with actual URL
@@ -61,28 +72,40 @@ class GenerateReports:
             'reportData': report_data
         }
 
-    def _generate_report_data(self, report_params: dict) -> list:
+    def _generate_report_data(self, data: dict) -> dict:
         """
         Generate the report data based on the provided parameters.
-        :param report_params: Dictionary containing report parameters.
+        :param data: Dictionary containing report parameters.
         :return: List of dictionaries containing the report data.
         """
         # Implement the logic to generate the report data based on the parameters
         # This is a placeholder implementation
-        report_type = report_params.get('type')
-        if report_type == 'sales':
-            return [
-                {'product': 'Product A', 'sales': 100},
-                {'product': 'Product B', 'sales': 200},
-            ]
-        elif report_type == 'inventory':
-            return [
-                {'product': 'Product A', 'stock': 50},
-                {'product': 'Product B', 'stock': 30},
-            ]
+        logger.debug("Generating report data...")
+        metadata = {}
+        report_type = data.get('type')
+        filters = data.get('filters', {})
+        logger.debug(f"Report type: {report_type}")
+        if report_type == 'VENTAS_POR_MES':
+            metadata = self.report_queries_adapter.get_monthly_sales(
+                start_date=filters.get('startDate'),
+                end_date=filters.get('endDate')
+            )
+        elif report_type == 'PRODUCTOS_MAS_VENDIDOS':
+            metadata = self.report_queries_adapter.get_monthly_product_sales(
+                start_date=filters.get('startDate'),
+                end_date=filters.get('endDate')
+            )
+        elif report_type == 'VENTAS_POR_VENDEDOR':
+            metadata = self.report_queries_adapter.get_monthly_sales_by_salesman(
+                start_date=filters.get('startDate'),
+                end_date=filters.get('endDate'),
+                salesman_id=filters.get('salesmanId')
+            )
         else:
             logger.warning("Unknown report type: %s", report_type)
-        return []
+
+        logger.debug("Report data generated successfully.")
+        return metadata
 
     def _store_on_remote_directory(self, report_data: list, report_name: str) -> None:
         """
@@ -92,4 +115,16 @@ class GenerateReports:
         :return: None
         """
         # Implement the logic to store the report data on a remote directory
+        pass
+
+    def _generate_file(self, report_name, report_data: dict):
+
+        """
+        Generate a file for the report data.
+        :param report_name: The name of the report file.
+        :param report_data: The report data to store.
+        :return: The path to the generated file.
+        """
+        # Implement the logic to generate a file for the report data
+
         pass

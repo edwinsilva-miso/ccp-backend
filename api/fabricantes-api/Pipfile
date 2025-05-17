@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "manufacturers-api"
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+psycopg2-binary = "*"
+wheel = "*"
+marshmallow = "*"
+python-abc = "*"
+python-dotenv = "*"
+pyjwt = "*"
+pytz = "*"
+bcrypt = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+pytest-env = "*"
+sendgrid = "*"
+requests = "*"
+pandas = "*"
+openpyxl = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
+python_full_version = "3.11.6"

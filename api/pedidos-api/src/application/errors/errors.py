@@ -8,26 +8,11 @@ class ValidationApiError(ApiError):
     description = "Faltan campos requeridos."
 
 
-class InvalidFormatError(ApiError):
-    code = 400
-    description = "Formato de campo inválido."
-
-
-class UserAlreadyExistsError(ApiError):
-    code = 412
-    description = "El registro ya existe."
-
-
-class UserNotExistsError(ApiError):
+class OrdersNotFoundError(ApiError):
     code = 404
-    description = "El usuario no existe."
+    description = "No se encontraron pedidos."
 
 
-class InvalidTokenError(ApiError):
-    code = 401
-    description = "Unauthorized."
-
-
-class ForbiddenError(ApiError):
-    code = 403
-    description = "Forbidden."
+class OrderNotExistsError(ApiError):
+    code = 404
+    description = "El pedido consultado no existe."

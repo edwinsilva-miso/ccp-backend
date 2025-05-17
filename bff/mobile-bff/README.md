@@ -108,6 +108,198 @@ curl -X POST http://localhost:5001/bff/v1/mobile/users/ \
 }
 ```
 
+### Products Endpoints
+
+#### Get All Products
+- **URL**: `/bff/v1/mobile/products/`
+- **Method**: GET
+- **Description**: Retrieve a list of all products.
+
+##### Request Headers
+- `Authorization`: Bearer token (required)
+
+##### Successful Response (200 OK)
+```json
+[
+  {
+    "id": "abc123",
+    "name": "Product 1",
+    "price": 99.99
+  },
+  {
+    "id": "def456",
+    "name": "Product 2",
+    "price": 149.99
+  }
+]
+```
+
+##### Error Responses
+- **401 Unauthorized**: Missing or invalid token
+```json
+{
+  "msg": "Unauthorized"
+}
+```
+
+---
+
+#### Get Product by ID
+- **URL**: `/bff/v1/mobile/products/<product_id>`
+- **Method**: GET
+- **Description**: Retrieve details of a specific product by its ID.
+
+##### Request Headers
+- `Authorization`: Bearer token (required)
+
+##### Successful Response (200 OK)
+```json
+{
+  "id": "abc123",
+  "name": "Test Product",
+  "brand": "Test Brand",
+  "manufacturerId": "manufacturer_test",
+  "description": "Test Description",
+  "price": 199.99
+}
+```
+
+##### Error Responses
+- **401 Unauthorized**: Missing or invalid token
+```json
+{
+  "msg": "Unauthorized"
+}
+```
+- **404 Not Found**: Product not found
+```json
+{
+  "msg": "Product not found"
+}
+```
+
+---
+
+#### Create Product
+- **URL**: `/bff/v1/mobile/products/`
+- **Method**: POST
+- **Description**: Create a new product.
+
+##### Request Headers
+- `Authorization`: Bearer token (required)
+- `Content-Type`: application/json
+
+##### Request Body
+```json
+{
+  "name": "Test Product",
+  "brand": "Test Brand",
+  "manufacturerId": "manufacturer_test",
+  "description": "Test Description",
+  "details": {"color": "gray", "size": "9.5"},
+  "storageConditions": "Clean site",
+  "price": 199.99,
+  "currency": "USD",
+  "deliveryTime": 5,
+  "images": ["image1.png", "image2.png"]
+}
+```
+
+##### Successful Response (201 Created)
+```json
+{
+  "id": "abc123",
+  "msg": "Product created successfully"
+}
+```
+
+##### Error Responses
+- **400 Bad Request**: Missing required fields
+```json
+{
+  "msg": "Missing required fields."
+}
+```
+- **401 Unauthorized**: Missing or invalid token
+```json
+{
+  "msg": "Unauthorized"
+}
+```
+
+---
+
+#### Update Product
+- **URL**: `/bff/v1/mobile/products/<product_id>`
+- **Method**: PUT
+- **Description**: Update an existing product.
+
+##### Request Headers
+- `Authorization`: Bearer token (required)
+- `Content-Type`: application/json
+
+##### Request Body
+Same as the **Create Product** request body.
+
+##### Successful Response (200 OK)
+```json
+{
+  "msg": "Product updated successfully"
+}
+```
+
+##### Error Responses
+- **400 Bad Request**: Missing required fields
+```json
+{
+  "msg": "Missing required fields."
+}
+```
+- **401 Unauthorized**: Missing or invalid token
+```json
+{
+  "msg": "Unauthorized"
+}
+```
+- **404 Not Found**: Product not found
+```json
+{
+  "msg": "Product not found"
+}
+```
+
+---
+
+#### Delete Product
+- **URL**: `/bff/v1/mobile/products/<product_id>`
+- **Method**: DELETE
+- **Description**: Delete a product by its ID.
+
+##### Request Headers
+- `Authorization`: Bearer token (required)
+
+##### Successful Response (200 OK)
+```json
+{
+  "msg": "Product deleted successfully"
+}
+```
+
+##### Error Responses
+- **401 Unauthorized**: Missing or invalid token
+```json
+{
+  "msg": "Unauthorized"
+}
+```
+- **404 Not Found**: Product not found
+```json
+{
+  "msg": "Product not found"
+}
+```
+
+
 ## Testing
 
 Run tests using pytest:
@@ -132,3 +324,4 @@ mobile-bff/
 
 - `FLASK_APP`: Application entry point (default: src/main.py)
 - `USERS_API_URL`: Users API service URL (default: http://users-api:5000)
+- `PRODUCTS_API_URL`: Products API service URL (default: http://products-api:5000)

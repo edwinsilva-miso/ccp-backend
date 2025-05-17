@@ -7,6 +7,12 @@ loaded = load_dotenv('.env.development')
 
 from .blueprints.management_blueprint import management_blueprint
 from .blueprints.users_blueprint import users_blueprint
+from .blueprints.products_blueprint import products_blueprint
+from .blueprints.clients_blueprint import orders_blueprint
+from .blueprints.routes_blueprint import routes_blueprint
+from .blueprints.salesman_blueprint import salesman_blueprint
+from .blueprints.client_visit_record_blueprint import client_visit_record_blueprint
+from .blueprints.deliveries_blueprint import deliveries_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -21,6 +27,12 @@ def create_app():
     # Register blueprints
     app.register_blueprint(management_blueprint)
     app.register_blueprint(users_blueprint)
+    app.register_blueprint(products_blueprint)
+    app.register_blueprint(orders_blueprint)
+    app.register_blueprint(routes_blueprint)
+    app.register_blueprint(salesman_blueprint)
+    app.register_blueprint(client_visit_record_blueprint)
+    app.register_blueprint(deliveries_blueprint)
 
     return app
 

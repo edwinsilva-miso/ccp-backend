@@ -1,12 +1,13 @@
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "usuarios-api"
+name = "warehouses-api"
 
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
 psycopg2-binary = "*"
+requests = "*"
 wheel = "*"
 marshmallow = "*"
 python-abc = "*"

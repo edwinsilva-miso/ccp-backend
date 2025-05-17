@@ -1,7 +1,8 @@
-from ...domain.entities.user_dto import UserDTO
-from ...domain.repositories.user_repository import UserDTORepository
 from ..dao.user_dao import UserDAO
 from ..mapper.user_mapper import UserMapper
+from ...domain.entities.user_dto import UserDTO
+from ...domain.repositories.user_repository import UserDTORepository
+
 
 class UserAdapter(UserDTORepository):
     """
@@ -30,4 +31,11 @@ class UserAdapter(UserDTORepository):
         user = UserDAO.find_by_email(email)
         return UserMapper.to_dto(user) if user else None
 
-
+    def find_by_role(self, role: str) -> list[UserDTO]:
+        """
+        Find users by role.
+        :param role: Role of the users to find.
+        :return: List of UserDTOs with the specified role.
+        """
+        users = UserDAO.find_by_role(role)
+        return [UserMapper.to_dto(user) for user in users]

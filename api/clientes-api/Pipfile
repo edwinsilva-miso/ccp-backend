@@ -1,7 +1,7 @@
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "usuarios-api"
+name = "clients-api"
 
 [packages]
 flask = "*"
@@ -19,6 +19,11 @@ pytest-cov = "*"
 pytest-mock = "*"
 pytest-env = "*"
 sendgrid = "*"
+requests = "*"
+pika = "*"
+pandas = "*"
+xlsxwriter = "*"
+google-cloud-storage = "*"
 
 [dev-packages]
 

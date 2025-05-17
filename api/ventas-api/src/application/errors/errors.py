@@ -13,14 +13,14 @@ class InvalidFormatError(ApiError):
     description = "Formato de campo inválido."
 
 
-class UserAlreadyExistsError(ApiError):
-    code = 412
-    description = "El registro ya existe."
-
-
-class UserNotExistsError(ApiError):
+class RecordNotExistsError(ApiError):
     code = 404
-    description = "El usuario no existe."
+    description = "El registro de visita de cliente no existe en el sistema."
+
+
+class ClientAlreadyAssociatedError(ApiError):
+    code = 412
+    description = "El cliente que intenta asociar ya existe. Por favor ingrese otro cliente."
 
 
 class InvalidTokenError(ApiError):
@@ -31,3 +31,8 @@ class InvalidTokenError(ApiError):
 class ForbiddenError(ApiError):
     code = 403
     description = "Forbidden."
+
+
+class ResourceNotFoundError(ApiError):
+    code = 404
+    description = "El recurso solicitado no existe."

@@ -37,9 +37,9 @@ class ReportQueriesDao:
             report_data = []
             for row in result:
                 report_data.append({
-                    "product_id": row[0],
-                    "total_quantity": row[1],
-                    "total_sales": row[2]
+                    "productId": row[0],
+                    "totalQuantity": row[1],
+                    "totalSales": row[2]
                 })
 
             # Create report metadata
@@ -85,8 +85,8 @@ class ReportQueriesDao:
             report_data = []
             for row in result:
                 report_data.append({
-                    "order_id": row[0],
-                    "created_at": row[1],
+                    "orderId": row[0],
+                    "createdAt": row[1],
                     "quantity": row[2],
                     "subtotal": row[3],
                     "tax": row[4],
@@ -139,8 +139,8 @@ class ReportQueriesDao:
             report_data = []
             for row in result:
                 report_data.append({
-                    "order_id": row[0],
-                    "created_at": row[1],
+                    "orderId": row[0],
+                    "createdAt": row[1],
                     "quantity": row[2],
                     "subtotal": row[3],
                     "tax": row[4],

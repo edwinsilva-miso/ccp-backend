@@ -2,7 +2,7 @@ import logging
 import uuid
 from datetime import datetime
 
-from .utils.create_report_file import CreateReportFile
+from .utils.upload_to_storage import UploadToStorage
 from ..domain.entities.reports.order_reports_dto import OrderReportsDTO
 
 logging.basicConfig(
@@ -41,13 +41,20 @@ class GenerateReports:
         report_headers = report_metadata.get('headers')
         logger.debug(f"Generated report data: {report_name}")
 
-        logger.debug("Creating report file...")
-        create_report_file = CreateReportFile(report_name, report_headers, report_data)
-        report_file_path = create_report_file.create_file()
-        logger.debug(f"Report file created at: {report_file_path}")
+        # logger.debug("Creating report file...")
+        # create_report_file = CreateReportFile(report_name, report_headers, report_data)
+        # report_file_path = create_report_file.create_file()
+        # logger.debug(f"Report file created at: {report_file_path}")
 
-        # Store generated report on GCP Cloud Storage
-        self._store_on_remote_directory(report_data, report_name)
+        # Store generated report on Cloud Storage
+        logger.debug("Storing report on remote directory...")
+        upload_to_storage = UploadToStorage()
+        report_url = upload_to_storage.upload_report(
+            file_name=report_name,
+            headers=report_headers,
+            data=report_data
+        )
+        logger.debug(f"Report uploaded to: {report_url}")
 
         # Create a record to save the report info in the database
         logger.debug("Creating record to save the report info in the database.")
@@ -56,7 +63,7 @@ class GenerateReports:
             user_id=data.get('userId'),
             report_name=report_name,
             report_date=report_date,
-            url='https://example.com/' + report_name,  # Replace with actual URL
+            url=report_url
         )
 
         # Save the report record in the database
@@ -107,24 +114,3 @@ class GenerateReports:
         logger.debug("Report data generated successfully.")
         return metadata
 
-    def _store_on_remote_directory(self, report_data: list, report_name: str) -> None:
-        """
-        Store the generated report on a remote directory (e.g., GCP Cloud Storage).
-        :param report_data: The report data to store.
-        :param report_name: The name of the report file.
-        :return: None
-        """
-        # Implement the logic to store the report data on a remote directory
-        pass
-
-    def _generate_file(self, report_name, report_data: dict):
-
-        """
-        Generate a file for the report data.
-        :param report_name: The name of the report file.
-        :param report_data: The report data to store.
-        :return: The path to the generated file.
-        """
-        # Implement the logic to generate a file for the report data
-
-        pass

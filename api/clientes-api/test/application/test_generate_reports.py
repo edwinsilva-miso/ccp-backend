@@ -51,7 +51,7 @@ class TestGenerateReports(unittest.TestCase):
 
     @patch('uuid.uuid4')
     @patch('datetime.datetime')
-    @patch('src.application.utils.upload_to_storage.UploadToStorage.upload_report')
+    @patch('src.application.generate_reports.UploadToStorage.upload_report')
     def test_execute_ventas_por_mes_report(self, mock_upload_report, mock_datetime, mock_uuid):
         """Test generating monthly sales report"""
         # Setup mocks
@@ -90,7 +90,7 @@ class TestGenerateReports(unittest.TestCase):
 
     @patch('uuid.uuid4')
     @patch('datetime.datetime')
-    @patch('src.application.utils.upload_to_storage.UploadToStorage.upload_report')
+    @patch('src.application.generate_reports.UploadToStorage.upload_report')
     def test_execute_productos_mas_vendidos_report(self, mock_upload_report, mock_datetime, mock_uuid):
         """Test generating top selling products report"""
         # Setup mocks
@@ -134,7 +134,7 @@ class TestGenerateReports(unittest.TestCase):
 
     @patch('uuid.uuid4')
     @patch('datetime.datetime')
-    @patch('src.application.utils.upload_to_storage.UploadToStorage.upload_report')
+    @patch('src.application.generate_reports.UploadToStorage.upload_report')
     def test_execute_ventas_por_vendedor_report(self, mock_upload_report, mock_datetime, mock_uuid):
         """Test generating sales by salesman report"""
         # Setup mocks
@@ -181,7 +181,7 @@ class TestGenerateReports(unittest.TestCase):
 
     @patch('uuid.uuid4')
     @patch('datetime.datetime')
-    @patch('src.application.utils.upload_to_storage.UploadToStorage.upload_report')
+    @patch('src.application.generate_reports.UploadToStorage.upload_report')
     def test_execute_unknown_report_type(self, mock_upload_report, mock_datetime, mock_uuid):
         """Test handling unknown report type"""
         # Setup mocks
@@ -216,7 +216,7 @@ class TestGenerateReports(unittest.TestCase):
     @patch('logging.Logger.debug')
     @patch('uuid.uuid4')
     @patch('datetime.datetime')
-    @patch('src.application.utils.upload_to_storage.UploadToStorage.upload_report')
+    @patch('src.application.generate_reports.UploadToStorage.upload_report')
     def test_execute_handles_upload_exception(self, mock_upload_report, mock_datetime, mock_uuid, mock_debug):
         """Test handling exceptions during file upload"""
         # Setup mocks

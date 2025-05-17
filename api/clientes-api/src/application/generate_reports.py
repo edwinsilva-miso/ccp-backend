@@ -41,11 +41,6 @@ class GenerateReports:
         report_headers = report_metadata.get('headers')
         logger.debug(f"Generated report data: {report_name}")
 
-        # logger.debug("Creating report file...")
-        # create_report_file = CreateReportFile(report_name, report_headers, report_data)
-        # report_file_path = create_report_file.create_file()
-        # logger.debug(f"Report file created at: {report_file_path}")
-
         # Store generated report on Cloud Storage
         logger.debug("Storing report on remote directory...")
         upload_to_storage = UploadToStorage()

@@ -11,6 +11,8 @@ data:
   SALES_API_URL: 'http://sales-api-service.default.svc.cluster.local'
   WAREHOUSES_API_URL: 'http://warehouses-api-service.default.svc.cluster.local'
   DELIVERIES_API_URL: 'http://deliveries-api-service.default.svc.cluster.local'
+  ORDERS_API_URL: 'http://orders-api-service.default.svc.cluster.local'
+  RECOMMENDATIONS_API_URL: 'http://recommendations-api-service.default.svc.cluster.local'
 
   RABBITMQ_HOST: 'rabbitmq-service.default.svc.cluster.local'
   RABBITMQ_PORT: '5672'

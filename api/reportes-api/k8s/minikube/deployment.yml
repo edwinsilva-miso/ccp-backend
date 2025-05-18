@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports-api
+  labels:
+    app: reports-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reports-api
+  template:
+    metadata:
+      labels:
+        app: reports-api
+    spec:
+      containers:
+      - name: reports-api
+        image: reports-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: common-secrets
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: common-secrets
+              key: DB_PORT
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: reports-api-secrets
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: common-secrets
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: common-secrets
+              key: DB_PASSWORD
+
+        - name: USERS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: USERS_API_URL
+        - name: MANUFACTURERS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: MANUFACTURERS_API_URL
+        - name: PRODUCTS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: PRODUCTS_API_URL
+        - name: ORDERS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: ORDERS_API_URL
+        - name: ROUTES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: ROUTES_API_URL
+        - name: WAREHOUSES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: WAREHOUSES_API_URL
+        - name: DELIVERIES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: DELIVERIES_API_URL
+        - name: RECOMMENDATIONS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: RECOMMENDATIONS_API_URL
+        - name: CLIENTS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: CLIENTS_API_URL
+        - name: SALES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: SALES_API_URL
+
+        - name: RABBITMQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secrets
+              key: RABBITMQ_DEFAULT_USER
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secrets
+              key: RABBITMQ_DEFAULT_PASS
+        - name: RABBITMQ_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: RABBITMQ_HOST
+        - name: RABBITMQ_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: RABBITMQ_PORT
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          failureThreshold: 6

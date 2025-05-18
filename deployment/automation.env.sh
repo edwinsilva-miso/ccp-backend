@@ -8,9 +8,9 @@ declare -A APIS=(
   ["fabricantes-api"]="manufacturers-api"
   ["reportes-api"]="reports-api"
   ["rutas-api"]="routes-api"
-  ["transportes-api"]="transport-api"
   ["usuarios-api"]="users-api"
   ["ventas-api"]="sales-api"
+  ["inteligencia-mercantil-api"]="market-intelligence-api"
 )
 
 

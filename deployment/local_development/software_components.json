@@ -4,12 +4,21 @@
     "web-bff"
   ],
   "apis": [
-    "usuarios-api",
-    "rutas-api",
-    "ventas-api",
     "bodegas-api",
-    "entregas-api"
+    "clientes-api",
+    "entregas-api",
+    "fabricantes-api",
+    "pedidos-api",
+    "productos-api",
+    "recomendaciones-api",
+    "reportes-api",
+    "rutas-api",
+    "usuarios-api",
+    "ventas-api",
+    "inteligencia-mercantil-api"
   ],
   "backplane-components": [
+  ],
+  "tmp": [
   ]
 }

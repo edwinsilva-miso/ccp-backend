@@ -1,4 +1,3 @@
-# Transports API
 # Video Processing Microservice
 
 This microservice handles video uploads, stores them in Google Cloud Storage, processes them with Vertex AI, and stores metadata in a PostgreSQL database.
@@ -23,4 +22,3 @@ This project follows the hexagonal architecture (also known as ports and adapter
 ## API Endpoints
 
 ### Upload a Video
-TODO

@@ -1,6 +1,6 @@
 class RecommendationResultDTO:
     def __init__(self, id: str, product_id: str, events: str, target_sales_amount: float,
-                 currency: str, recommendation: str, created_at: str):
+                 currency: str, recommendation: str, created_at: str = None):
         """
         Initialize the RecommendationResultDTO with the given parameters.
         :param id: Unique identifier for the recommendation result.

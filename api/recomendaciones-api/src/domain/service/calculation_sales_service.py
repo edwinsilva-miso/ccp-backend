@@ -13,12 +13,6 @@ logger = logging.getLogger(__name__)
 
 class CalculationSalesService:
 
-    def __init__(self):
-        """
-        Initialize the CalculationSalesService
-        """
-        pass
-
     def calculate_optimum_quantity(self, sales_data: dict) -> int:
         """
         Calculate the optimum quantity to order based on sales data
@@ -46,6 +40,10 @@ class CalculationSalesService:
                 # If the event is in the near future, consider an impact (very simplified)
                 if 0 <= days_to_event <= 30:
                     events_factor *= 1.1  # Increase demand by 10% for near future events
+                elif 30 < days_to_event <= 120:
+                    events_factor *= 1.05  # Slightly increase demand for medium future events
+                else:
+                    events_factor *= 0.9  # Decrease demand for far future events
 
             # Calculate the quantity to order
             adjust_demand = int(project_demand * events_factor)

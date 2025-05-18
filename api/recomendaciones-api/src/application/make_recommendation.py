@@ -2,6 +2,7 @@ import json
 import logging
 
 from ..domain.entities.recommentation_result_dto import RecommendationResultDTO
+from ..domain.service.calculation_sales_service import CalculationSalesService
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
@@ -16,14 +17,13 @@ class MakeRecommendation:
     Class to handle the recommendation process
     """
 
-    def __init__(self, recommendation_repository, calculation_sales_service):
+    def __init__(self, recommendation_repository):
         """
         Initialize the MakeRecommendation class
         :param recommendation_repository: The repository to handle recommendations
-        :param calculation_sales_service: The service to handle sales calculations
         """
         self.recommendation_repository = recommendation_repository
-        self.calculation_sales_service = calculation_sales_service
+        self.calculation_sales_service = CalculationSalesService()
 
     def execute(self, sales_data: dict) -> RecommendationResultDTO:
         """
@@ -41,7 +41,8 @@ class MakeRecommendation:
         product = sales_data.get('product')
         projection = sales_data.get('projection')
         events = json.dumps(sales_data.get('events', []))
-        recommendation_text = f"La cantidad óptima a comprar para {product.get('name')} es {quantity_to_order} unidades."
+        manufacturer = sales_data.get('manufacturer')
+        recommendation_text = f"La cantidad óptima a comprar para {product.get('name')} fabricado por {manufacturer.get('name')} es {quantity_to_order} unidades."
 
         # Create a recommendation result DTO
         recommendation_result_dto = RecommendationResultDTO(

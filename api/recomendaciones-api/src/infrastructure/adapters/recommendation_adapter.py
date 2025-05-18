@@ -1,13 +1,12 @@
-from ..model.recommendation_result_model import RecommendationResultModel
 from ..dao.recommendation_result_dao import RecommendationResultDAO
 from ..mapper.recommendation_result_mapper import RecommendationResultMapper
 from ...domain.entities.recommentation_result_dto import RecommendationResultDTO
 from ...domain.repositories.recommendation_repository import RecommendationRepository
 
-class RecommendationResultRepository(RecommendationRepository):
+
+class RecommendationAdapter(RecommendationRepository):
     """
-    Repository class for managing recommendation results.
-    This class provides methods to interact with the recommendation results in the database.
+    Adapter class to handle the interaction with the recommendation results in the database.
     """
 
     def __init__(self):

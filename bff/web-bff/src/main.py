@@ -16,6 +16,7 @@ from .blueprints.selling_plan_blueprint import selling_plan_blueprint
 from .blueprints.warehouse_blueprint import warehouse_blueprint
 from .blueprints.warehouse_stock_item_blueprint import warehouse_stock_item_blueprint
 from .blueprints.reports_blueprint import reports_blueprint
+from .blueprints.recommendation_blueprint import recommendation_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -38,6 +39,7 @@ def create_app():
     app.register_blueprint(warehouse_blueprint)
     app.register_blueprint(warehouse_stock_item_blueprint)
     app.register_blueprint(reports_blueprint)
+    app.register_blueprint(recommendation_blueprint)
 
     CORS(app, resources={
         r"/bff/*": {

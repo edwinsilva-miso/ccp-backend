@@ -16,6 +16,7 @@ services:
       ROUTES_API_URL: http://routes-api:5000
       WAREHOUSES_API_URL: http://warehouses-api:5000
       DELIVERIES_API_URL: http://deliveries-api:5000
+      RECOMMENDATIONS_API_URL: http://recommendations-api:5000
     networks:
       - web_bff_net
       - app_net
@@ -412,7 +413,47 @@ services:
     volumes:
       - deliveries_db_volume:/var/lib/postgresql/data
     networks:
+      - recommendations_api_net
       - app_net
+
+# ==============================
+# Recomendaciones API
+# ==============================
+  recommendations-api:
+    build: api/recomendaciones-api/
+    container_name: recommendations-api
+    ports:
+    - "5109:5000"
+    environment:
+      DB_HOST: recommendations_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: recommendations
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      recommendations_db:
+        condition: service_healthy
+    networks:
+    - app_net
+
+  recommendations_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: recommendations
+    ports:
+    - "5438:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+    - recommendations_db_volume:/var/lib/postgresql/data
+    networks:
+    - app_net
 
 # ==============================
 # Required Infra Components
@@ -445,6 +486,7 @@ volumes:
   sales_db_volume:
   deliveries_db_volume:
   warehouses_db_volume:
+  recommendations_db_volume:
   rabbitmq_data:
 
 networks:
@@ -471,4 +513,6 @@ networks:
   deliveries_api_net:
     driver: bridge
   warehouses_api_net:
+    driver: bridge
+  recommendations_api_net:
     driver: bridge

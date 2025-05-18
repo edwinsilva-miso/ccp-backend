@@ -3,6 +3,7 @@ from flask import request, jsonify, current_app
 from werkzeug.local import LocalProxy
 from ...infrastructure.config.container import DependencyContainer
 from ...domain.exceptions.authentication_error import AuthenticationError
+from ...domain.exceptions.recommendation_error import RecommendationError
 from ...application.errors.errors import ApiError
 
 # Create a proxy to access the dependency container
@@ -14,10 +15,10 @@ def token_required(authorized_roles=None):
     Decorator to validate JWT token for protected endpoints
 
     Args:
-        authorized_roles: List of roles that can access the endpoint. If None, only 'CLIENTE' is allowed.
+        authorized_roles: List of roles that can access the endpoint. If None, only 'DIRECTIVO' is allowed.
     """
     if authorized_roles is None:
-        authorized_roles = ['CLIENTE']
+        authorized_roles = ['DIRECTIVO']
 
     def decorator(f):
         @functools.wraps(f)
@@ -50,12 +51,16 @@ def token_required(authorized_roles=None):
                 return f(*args, **kwargs)
 
             except AuthenticationError as e:
+                current_app.logger.error(f"Authentication error: {str(e)}")
                 return jsonify({'error': str(e)}), 401
+            except RecommendationError as e:
+                current_app.logger.error(f"Recommendation error: {str(e)}")
+                return jsonify({'error': str(e)}), 400
             except ApiError as e:
                 current_app.logger.error(f"API error: {str(e.description)}")
                 return jsonify({"msg": e.description}), e.code
             except Exception as e:
-                current_app.logger.error(f"Authentication error: {str(e)}")
+                current_app.logger.error(f"Failed response: {str(e)}")
                 return jsonify({'error': 'Internal server error during authentication'}), 500
 
         return decorated_function

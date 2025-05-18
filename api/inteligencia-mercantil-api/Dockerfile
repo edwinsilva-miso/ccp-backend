@@ -14,7 +14,27 @@ RUN pip install --no-cache-dir pipenv
 
 # Copy dependency files
 COPY Pipfile ./
+FROM python:3.9-slim
 
+WORKDIR /app
+
+# Install pipenv
+RUN pip install pipenv
+
+# Copy Pipfile and Pipfile.lock
+COPY Pipfile* ./
+
+# Install dependencies
+RUN pipenv install --deploy --system
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 5000
+
+# Run the application
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.main:create_app()"]
 # Install dependencies
 RUN pipenv install --deploy --ignore-pipfile --dev
 

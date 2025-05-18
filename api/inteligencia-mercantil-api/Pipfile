@@ -1,26 +1,27 @@
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "usuarios-api"
+name = "pypi"
 
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
 psycopg2-binary = "*"
-wheel = "*"
-marshmallow = "*"
-python-abc = "*"
 python-dotenv = "*"
-pyjwt = "*"
-pytz = "*"
-bcrypt = "*"
+google-cloud-storage = "*"
+google-cloud-aiplatform = "*"
+sqlalchemy = "*"
+gunicorn = "*"
+pydantic = "*"
+uuid = "*"
+
+[dev-packages]
 pytest = "*"
 pytest-cov = "*"
 pytest-mock = "*"
 pytest-env = "*"
-sendgrid = "*"
-
-[dev-packages]
+black = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.11"

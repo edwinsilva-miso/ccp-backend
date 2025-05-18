@@ -30,7 +30,37 @@ def create_app():
             "msg": error.description
         }
         return jsonify(response), error.code
+import os
+from dotenv import load_dotenv
+from flask import Flask
+from src.interface.blueprints.video_blueprint import video_blueprint
+from src.infrastructure.database.models import db
 
+load_dotenv()
+
+def create_app():
+    app = Flask(__name__)
+    
+    # Configure database
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    
+    # Initialize extensions
+    db.init_app(app)
+    
+    # Register blueprints
+    app.register_blueprint(video_blueprint, url_prefix="/api/videos")
+    
+    # Create database tables if they don't exist
+    with app.app_context():
+        db.create_all()
+    
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
     return app
 
 

@@ -15,7 +15,7 @@ def create_app():
     """
     Create and configure the Flask application.
     """
-    logging.debug('inventory microservice started')
+    logging.debug('recommendations microservice started')
     app = Flask(__name__)
 
     app.register_blueprint(management_blueprint)
@@ -36,4 +36,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5109, debug=True)

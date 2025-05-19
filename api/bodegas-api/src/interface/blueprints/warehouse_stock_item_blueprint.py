@@ -24,7 +24,7 @@ warehouse_stock_item_blueprint = Blueprint('warehouse_stock_item', __name__, url
 
 
 @warehouse_stock_item_blueprint.route('', methods=['POST'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def create_warehouse_stock_item():
     """
     Endpoint to create a new warehouse stock item.
@@ -56,7 +56,7 @@ def create_warehouse_stock_item():
 
 
 @warehouse_stock_item_blueprint.route('/<item_id>', methods=['PUT'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def update_warehouse_stock_item(item_id):
     """
     Endpoint to update an existing warehouse stock item.
@@ -91,7 +91,7 @@ def update_warehouse_stock_item(item_id):
 
 
 @warehouse_stock_item_blueprint.route('/<item_id>', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_warehouse_stock_item(item_id):
     """
     Endpoint to get a warehouse stock item by its ID.
@@ -110,7 +110,7 @@ def get_warehouse_stock_item(item_id):
 
 
 @warehouse_stock_item_blueprint.route('/warehouse/<warehouse_id>', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_warehouse_stock_items_by_warehouse(warehouse_id):
     """
     Endpoint to get all warehouse stock items for a given warehouse.
@@ -126,7 +126,7 @@ def get_warehouse_stock_items_by_warehouse(warehouse_id):
 
 
 @warehouse_stock_item_blueprint.route('/<item_id>', methods=['DELETE'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def delete_warehouse_stock_item(item_id):
     """
     Endpoint to delete a warehouse stock item by its ID.

@@ -14,13 +14,24 @@ spec:
       labels:
         app: customers-api
     spec:
+      volumes:
+        - name: gcp-sa-key
+          secret:
+            secretName: gcp-sa-key
       containers:
       - name: customers-api
         image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/customers-api:latest
         imagePullPolicy: Always
+        volumeMounts:
+          - name: gcp-sa-key
+            mountPath: /var/secrets
+            readOnly: true
         ports:
         - containerPort: 5000
         env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/service-account.json
+
         - name: DB_HOST
           valueFrom:
             secretKeyRef:
@@ -73,6 +84,52 @@ spec:
             configMapKeyRef:
               name: common-configs
               key: USERS_API_URL
+        - name: MANUFACTURERS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: MANUFACTURERS_API_URL
+        - name: PRODUCTS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: PRODUCTS_API_URL
+        - name: ORDERS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: ORDERS_API_URL
+        - name: ROUTES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: ROUTES_API_URL
+        - name: WAREHOUSES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: WAREHOUSES_API_URL
+        - name: DELIVERIES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: DELIVERIES_API_URL
+        - name: RECOMMENDATIONS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: RECOMMENDATIONS_API_URL
+        - name: CLIENTS_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: CLIENTS_API_URL
+        - name: SALES_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-configs
+              key: SALES_API_URL
+
         - name: PAYMENT_GATEWAY_URL
           valueFrom:
             secretKeyRef:

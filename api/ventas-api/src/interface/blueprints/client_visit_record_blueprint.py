@@ -22,7 +22,7 @@ client_visit_record_blueprint = Blueprint('client_visit_record', __name__, url_p
 
 
 @client_visit_record_blueprint.route('<salesman_id>/visits', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_visits_by_salesman(salesman_id):
     """
     Endpoint to get all visits associated with a salesman.
@@ -38,7 +38,7 @@ def get_visits_by_salesman(salesman_id):
 
 
 @client_visit_record_blueprint.route('<salesman_id>/visits', methods=['POST'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def add_client_visit(salesman_id):
     """
     Endpoint to add a client visit record.
@@ -68,7 +68,7 @@ def add_client_visit(salesman_id):
 
 
 @client_visit_record_blueprint.route('<salesman_id>/visits/<record_id>', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_client_visit_record(salesman_id, record_id):
     """
     Endpoint to get a specific client visit record.

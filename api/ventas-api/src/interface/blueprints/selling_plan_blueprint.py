@@ -24,7 +24,7 @@ selling_plan_blueprint = Blueprint('selling_plan', __name__, url_prefix='/api/v1
 
 
 @selling_plan_blueprint.route('', methods=['POST'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def create_selling_plan():
     """
     Endpoint to create a new selling plan.
@@ -50,7 +50,7 @@ def create_selling_plan():
 
 
 @selling_plan_blueprint.route('/<plan_id>', methods=['PUT'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def update_selling_plan(plan_id):
     """
     Endpoint to update an existing selling plan.
@@ -79,7 +79,7 @@ def update_selling_plan(plan_id):
 
 
 @selling_plan_blueprint.route('/<plan_id>', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_selling_plan(plan_id):
     """
     Endpoint to get a selling plan by its ID.
@@ -98,7 +98,7 @@ def get_selling_plan(plan_id):
 
 
 @selling_plan_blueprint.route('/user/<user_id>', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_selling_plans_by_user(user_id):
     """
     Endpoint to get all selling plans for a given user.
@@ -114,7 +114,7 @@ def get_selling_plans_by_user(user_id):
 
 
 @selling_plan_blueprint.route('/<plan_id>', methods=['DELETE'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def delete_selling_plan(plan_id):
     """
     Endpoint to delete a selling plan by its ID.

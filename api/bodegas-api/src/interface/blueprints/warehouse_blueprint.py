@@ -25,7 +25,7 @@ warehouse_blueprint = Blueprint('warehouse', __name__, url_prefix='/api/v1/wareh
 
 
 @warehouse_blueprint.route('', methods=['POST'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def create_warehouse():
     """
     Endpoint to create a new warehouse.
@@ -49,7 +49,7 @@ def create_warehouse():
 
 
 @warehouse_blueprint.route('/<warehouse_id>', methods=['PUT'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def update_warehouse(warehouse_id):
     """
     Endpoint to update an existing warehouse.
@@ -76,7 +76,7 @@ def update_warehouse(warehouse_id):
 
 
 @warehouse_blueprint.route('/<warehouse_id>', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_warehouse(warehouse_id):
     """
     Endpoint to get a warehouse by its ID.
@@ -95,7 +95,7 @@ def get_warehouse(warehouse_id):
 
 
 @warehouse_blueprint.route('', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_all_warehouses():
     """
     Endpoint to get all warehouses.
@@ -115,7 +115,7 @@ def get_all_warehouses():
 
 
 @warehouse_blueprint.route('/<warehouse_id>', methods=['DELETE'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def delete_warehouse(warehouse_id):
     """
     Endpoint to delete a warehouse by its ID.

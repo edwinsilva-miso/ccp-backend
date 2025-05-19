@@ -21,7 +21,7 @@ client_salesman_blueprint = Blueprint('client_salesman', __name__, url_prefix='/
 
 
 @client_salesman_blueprint.route('<salesman_id>/clients', methods=['GET'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def get_clients_by_salesman(salesman_id):
     """
     Endpoint to get all clients associated with a salesman.
@@ -37,7 +37,7 @@ def get_clients_by_salesman(salesman_id):
 
 
 @client_salesman_blueprint.route('<salesman_id>/clients', methods=['POST'])
-@token_required(['VENDEDOR'])
+@token_required(['VENDEDOR', 'DIRECTIVO'])
 def associate_client(salesman_id):
     """
     Endpoint to associate a client with a salesman.

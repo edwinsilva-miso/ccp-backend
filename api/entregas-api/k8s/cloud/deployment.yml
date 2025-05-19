@@ -17,7 +17,7 @@ spec:
       containers:
       - name: deliveries-api
         image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/deliveries-api:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
@@ -58,15 +58,17 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 30
-          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /health
             port: 5000
           initialDelaySeconds: 30
-          periodSeconds: 30
+          periodSeconds: 10
+          failureThreshold: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 10

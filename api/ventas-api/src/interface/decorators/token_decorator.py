@@ -19,7 +19,7 @@ def token_required(authorized_roles=None):
         authorized_roles: List of roles that can access the endpoint. If None, only 'VENDEDOR' is allowed.
     """
     if authorized_roles is None:
-        authorized_roles = ['VENDEDOR']
+        authorized_roles = ['VENDEDOR', 'DIRECTIVO']
 
     def decorator(f):
         @functools.wraps(f)

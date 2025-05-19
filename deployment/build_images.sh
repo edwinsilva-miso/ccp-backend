@@ -103,7 +103,6 @@ then
 
       if [[ -n "$PUSH_ALL" ]]
       then
-        docker push "$DOCKER_PATH${APIS[$folder]}:latest" || exit 1
         docker push "$DOCKER_PATH${APIS[$folder]}:$VERSION-$UUID-$TIMESTAMP" || exit 1
       fi
     else
@@ -158,7 +157,7 @@ then
 
       if [[ -n "$PUSH_ALL" ]]
       then
-        docker push "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:latest" || exit 1
+        docker push "$DOCKER_PATH${BACKENDS_FOR_FRONTEDS[$folder]}:$VERSION-$UUID-$TIMESTAMP" || exit 1
       fi
     else
       echo "========================================================================"

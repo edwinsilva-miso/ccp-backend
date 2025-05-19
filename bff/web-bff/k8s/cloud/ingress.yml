@@ -11,7 +11,7 @@ spec:
   type: NodePort
 #
 #---
-#apiVersion: networking.rabbitmq.io/v1
+#apiVersion: networking.k8s.io/v1
 #kind: Ingress
 #metadata:
 #  name: web-bff-ingress
@@ -39,7 +39,7 @@ spec:
 #    - api.misw4502-ccp.com
 #
 #---
-#apiVersion: networking.rabbitmq.io/v1
+#apiVersion: networking.k8s.io/v1
 #kind: Ingress
 #metadata:
 #  name: bff-ingress

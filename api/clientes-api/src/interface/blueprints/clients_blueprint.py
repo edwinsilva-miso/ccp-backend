@@ -27,7 +27,7 @@ clients_blueprint = Blueprint('clients', __name__, url_prefix='/api/v1/clients')
 
 
 @clients_blueprint.route('/orders', methods=['POST'])
-@token_required(['CLIENTE', 'VENDEDOR'])
+@token_required(['CLIENTE', 'VENDEDOR', 'DIRECTIVO'])
 def create_order():
     """
     Endpoint to create a new order.

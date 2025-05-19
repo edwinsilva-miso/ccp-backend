@@ -1,9 +1,13 @@
 #!/bin/bash
+
 for arg in "$@"
 do
   case "$arg" in
     --force)
       FORCE=true
+      ;;
+    --prod)
+      PROD=prod
       ;;
     *)
       echo "unknown parameter: $arg"
@@ -12,10 +16,16 @@ do
   esac
 done
 
-if ! minikube status
+if [[ -z "$PROD" ]]
 then
-  minikube start
-  minikube addons enable ingress
+  if ! minikube status
+  then
+    minikube start
+    minikube addons enable ingress
+  fi
+else
+  source ../secrets/secrets.env.sh
+  DOCKER_PATH="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/"
 fi
 
 kubectl apply -f ../configurations.yml
@@ -26,12 +36,6 @@ function build_image() {
   SRC_PATH="$1"
   COMPONENT="$2"
   DEPLOYMENT="$3"
-
-  if ! kubectl get deployment "$DEPLOYMENT" -n default &> /dev/null
-  then
-    kubectl apply -f "$SRC_PATH/k8s/minikube"
-    sleep 5
-  fi
 
   SHA256="$(find "$SRC_PATH" \
     -type d -name '.idea' -prune -o \
@@ -57,21 +61,41 @@ function build_image() {
     UUID="$(find "$SRC_PATH" -type f -exec sha256sum {} + | sort | sha256sum | cut -c1-6)"
     VERSION="$(xargs < "$SRC_PATH/version.txt")"
 
-    docker build -t "$DEPLOYMENT:latest" -f "$SRC_PATH/Dockerfile" "$SRC_PATH"
-    docker tag "$DEPLOYMENT:latest" "$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    docker build -t "$DOCKER_PATH$DEPLOYMENT:latest" -f "$SRC_PATH/Dockerfile" "$SRC_PATH"
+    docker tag "$DOCKER_PATH$DEPLOYMENT:latest" "$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
 
-    minikube image load "$DEPLOYMENT:latest"
-    minikube image load "$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    if [[ -z "$PROD" ]]
+    then
+      minikube image load "$DEPLOYMENT:latest"
+      minikube image load "$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    else
+      docker push "$DOCKER_PATH$DEPLOYMENT:latest"
+      docker push "$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    fi
 
-    kubectl set image deployment/"$DEPLOYMENT" "$DEPLOYMENT=$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    sleep 2
+
+    if ! kubectl get deployment "$DEPLOYMENT" -n default &> /dev/null
+    then
+      if [[ -z "$PROD" ]]
+      then
+        kubectl apply -f "$SRC_PATH/k8s/minikube"
+      else
+        kubectl apply -f "$SRC_PATH/k8s/cloud"
+      fi
+      sleep 5
+    fi
+
+    kubectl set image deployment/"$DEPLOYMENT" "$DEPLOYMENT=$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+
   else
     echo "[INFO]: no changes in the folder \`$COMPONENT\` for $DEPLOYMENT"
   fi
 }
 
-echo "[INFO]: ✅ deleting all unused existing images"
-
 set -e
+
+echo "[INFO]: ✅ deleting all unused existing images"
 
 source ../automation.env.sh || exit 1
 

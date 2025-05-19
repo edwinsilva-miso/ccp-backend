@@ -16,7 +16,6 @@ services:
       ROUTES_API_URL: http://routes-api:5000
       WAREHOUSES_API_URL: http://warehouses-api:5000
       DELIVERIES_API_URL: http://deliveries-api:5000
-      RECOMMENDATIONS_API_URL: http://recommendations-api:5000
     networks:
       - web_bff_net
       - app_net
@@ -35,6 +34,7 @@ services:
       WAREHOUSES_API_URL: http://warehouses-api:5000
       DELIVERIES_API_URL: http://deliveries-api:5000
       VIDEOS_API_URL: http://inteligencia-mercantil-api:5000
+      RECOMMENDATIONS_API_URL: http://recommendations-api:5000
     networks:
       - mobile_bff_net
       - app_net

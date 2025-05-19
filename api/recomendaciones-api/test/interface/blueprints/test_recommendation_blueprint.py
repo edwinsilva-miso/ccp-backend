@@ -32,7 +32,7 @@ def client(app):
 
 class TestRecommendationBlueprint:
     def setup_method(self):
-        self.directivo_id = "456"
+        self.client_id = "456"
         self.valid_token = "valid_jwt_token"
         self.auth_header = {'Authorization': f'Bearer {self.valid_token}'}
 
@@ -74,10 +74,7 @@ class TestRecommendationBlueprint:
             },
             'events': [
                 {'date': '2023-05-30', 'name': 'Sale Event'}
-            ],
-            'manufacturer': {
-                'name': 'Test Manufacturer'
-            }
+            ]
         }
 
     @patch('src.interface.blueprints.recommendation_blueprint.GetAllRecommendations')
@@ -85,7 +82,7 @@ class TestRecommendationBlueprint:
     def test_get_all_recommendations(self, mock_container, mock_get_all_recommendations, client):
         # Mock token validaor
         mock_auth_service = Mock()
-        mock_auth_service.validate_token.return_value = {"role": "DIRECTIVO", "user_id": self.directivo_id}
+        mock_auth_service.validate_token.return_value = {"role": "CLIENTE", "user_id": self.client_id}
         mock_container.token_validator = mock_auth_service
 
         # Configure the use case mock
@@ -116,7 +113,7 @@ class TestRecommendationBlueprint:
         # Mock token verification
         # Mock token validaor
         mock_auth_service = Mock()
-        mock_auth_service.validate_token.return_value = {"role": "DIRECTIVO", "user_id": self.directivo_id}
+        mock_auth_service.validate_token.return_value = {"role": "CLIENTE", "user_id": self.client_id}
         mock_container.token_validator = mock_auth_service
 
         # Configure the use case mock
@@ -149,7 +146,7 @@ class TestRecommendationBlueprint:
         # Mock token verification
         # Mock token validaor
         mock_auth_service = Mock()
-        mock_auth_service.validate_token.return_value = {"role": "DIRECTIVO", "user_id": self.directivo_id}
+        mock_auth_service.validate_token.return_value = {"role": "CLIENTE", "user_id": self.client_id}
         mock_container.token_validator = mock_auth_service
 
         # Configure the use case mock to return empty list
@@ -190,7 +187,7 @@ class TestRecommendationBlueprint:
     def test_unauthorized_role(self, mock_container, client):
         # Mock token validaor
         mock_auth_service = Mock()
-        mock_auth_service.validate_token.return_value = {"role": "USER", "user_id": self.directivo_id}
+        mock_auth_service.validate_token.return_value = {"role": "USER", "user_id": self.client_id}
         mock_container.token_validator = mock_auth_service
 
         # Execute request
@@ -203,7 +200,7 @@ class TestRecommendationBlueprint:
     def test_make_recommendation_unauthorized(self, mock_container, client):
         # Mock token validaor
         mock_auth_service = Mock()
-        mock_auth_service.validate_token.return_value = {"role": "USER", "user_id": self.directivo_id}
+        mock_auth_service.validate_token.return_value = {"role": "USER", "user_id": self.client_id}
         mock_container.token_validator = mock_auth_service
 
         # Execute request

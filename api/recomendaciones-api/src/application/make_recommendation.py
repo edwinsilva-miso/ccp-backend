@@ -41,8 +41,7 @@ class MakeRecommendation:
         product = sales_data.get('product')
         projection = sales_data.get('projection')
         events = json.dumps(sales_data.get('events', []))
-        manufacturer = sales_data.get('manufacturer')
-        recommendation_text = f"La cantidad óptima a comprar para {product.get('name')} fabricado por {manufacturer.get('name')} es {quantity_to_order} unidades."
+        recommendation_text = f"La cantidad óptima a comprar para {product.get('name')} y obtener ${projection.get('salesTarget', '0')} {projection.get('currency')} es {quantity_to_order} unidades."
 
         # Create a recommendation result DTO
         recommendation_result_dto = RecommendationResultDTO(

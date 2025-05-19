@@ -50,7 +50,7 @@ class TestMakeRecommendation:
     @pytest.fixture
     def expected_recommendation_text(self):
         """Create the expected recommendation text"""
-        return "La cantidad óptima a comprar para Test Product fabricado por Test Manufacturer es 150 unidades."
+        return "La cantidad óptima a comprar para Test Product y obtener $200 USD es 150 unidades."
 
     def test_execute_creates_dto_correctly(self, make_recommendation_service, sample_sales_data, mock_repository):
         """Test that execute creates the DTO with correct values"""
@@ -64,7 +64,7 @@ class TestMakeRecommendation:
             events=json.dumps(sample_sales_data['events']),
             target_sales_amount=sample_sales_data['projection']['salesTarget'],
             currency=sample_sales_data['projection']['currency'],
-            recommendation="La cantidad óptima a comprar para Test Product fabricado por Test Manufacturer es 150 unidades.",
+            recommendation="La cantidad óptima a comprar para Test Product y obtener $200 USD es 150 unidades.",
             created_at="2023-05-15T10:30:00"
         )
         mock_repository.add.return_value = saved_dto
@@ -77,7 +77,7 @@ class TestMakeRecommendation:
         assert result.product_id == sample_sales_data['product']['id']
         assert result.target_sales_amount == sample_sales_data['projection']['salesTarget']
         assert result.currency == sample_sales_data['projection']['currency']
-        assert "La cantidad óptima a comprar para Test Product fabricado por Test Manufacturer es 150 unidades." in result.recommendation
+        assert "La cantidad óptima a comprar para Test Product y obtener $200 USD es 150 unidades." in result.recommendation
 
     def test_execute_calls_calculation_service(self, make_recommendation_service, sample_sales_data, mock_repository):
         """Test that the calculation service is called with the correct data"""
@@ -145,7 +145,7 @@ class TestMakeRecommendation:
         # Verify that default values are used
         dto_arg = mock_repository.add.call_args[0][0]
         assert dto_arg.target_sales_amount == 0
-        assert "La cantidad óptima a comprar para Test Product fabricado por Test Manufacturer es 0 unidades." in dto_arg.recommendation
+        assert "La cantidad óptima a comprar para Test Product y obtener $0 None es 0 unidades." in dto_arg.recommendation
 
     def test_execute_returns_saved_recommendation(self, make_recommendation_service, sample_sales_data,
                                                   mock_repository):
@@ -160,7 +160,7 @@ class TestMakeRecommendation:
             events=json.dumps(sample_sales_data['events']),
             target_sales_amount=sample_sales_data['projection']['salesTarget'],
             currency=sample_sales_data['projection']['currency'],
-            recommendation="La cantidad óptima a comprar para Test Product fabricado por Test Manufacturer es 150 unidades.",
+            recommendation="'La cantidad óptima a comprar para Test Product y obtener $200 USD es 150 unidades.",
             created_at="2023-05-15T10:30:00"
         )
         mock_repository.add.return_value = saved_dto

@@ -13,7 +13,7 @@ recommendations_adapter = RecommendationAdapter()
 
 
 @recommendations_blueprint.route('/', methods=['POST'])
-@token_required(['DIRECTIVO'])
+@token_required(['CLIENTE'])
 def make_recommendation():
     """
     Endpoint to make a recommendation.
@@ -28,7 +28,7 @@ def make_recommendation():
 
 
 @recommendations_blueprint.route('/', methods=['GET'])
-@token_required(['DIRECTIVO'])
+@token_required(['CLIENTE'])
 def get_all_recommendations():
     """
     Endpoint to get all recommendations.

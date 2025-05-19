@@ -14,6 +14,7 @@ from .blueprints.salesman_blueprint import salesman_blueprint
 from .blueprints.client_visit_record_blueprint import client_visit_record_blueprint
 from .blueprints.deliveries_blueprint import deliveries_blueprint
 from .blueprints.videos_blueprint import videos_blueprint
+from .blueprints.recommendation_blueprint import recommendation_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -35,6 +36,7 @@ def create_app():
     app.register_blueprint(client_visit_record_blueprint)
     app.register_blueprint(deliveries_blueprint)
     app.register_blueprint(videos_blueprint)
+    app.register_blueprint(recommendation_blueprint)
 
     return app
 

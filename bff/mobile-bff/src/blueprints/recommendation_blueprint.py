@@ -12,7 +12,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-recommendation_blueprint = Blueprint('recommendations', __name__, url_prefix='/bff/v1/web/recommendations')
+recommendation_blueprint = Blueprint('recommendations', __name__, url_prefix='/bff/v1/mobile/recommendations')
 
 def token_required(f):
     @functools.wraps(f)

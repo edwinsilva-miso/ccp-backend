@@ -74,7 +74,7 @@ class TestRecommendationBlueprint(unittest.TestCase):
 
         # Act
         response = self.client.get(
-            '/bff/v1/web/recommendations',
+            '/bff/v1/mobile/recommendations',
             headers={'Authorization': f'Bearer {self.test_jwt}'}
         )
 
@@ -95,7 +95,7 @@ class TestRecommendationBlueprint(unittest.TestCase):
 
         # Act
         response = self.client.get(
-            '/bff/v1/web/recommendations',
+            '/bff/v1/mobile/recommendations',
             headers={'Authorization': f'Bearer {self.test_jwt}'}
         )
 
@@ -114,7 +114,7 @@ class TestRecommendationBlueprint(unittest.TestCase):
 
         # Act
         response = self.client.get(
-            '/bff/v1/web/recommendations',
+            '/bff/v1/mobile/recommendations',
             headers={'Authorization': f'Bearer {self.test_jwt}'}
         )
 
@@ -132,7 +132,7 @@ class TestRecommendationBlueprint(unittest.TestCase):
 
         # Act
         response = self.client.post(
-            '/bff/v1/web/recommendations',
+            '/bff/v1/mobile/recommendations',
             headers={'Authorization': f'Bearer {self.test_jwt}'},
             json=self.recommendation_request_data
         )
@@ -156,7 +156,7 @@ class TestRecommendationBlueprint(unittest.TestCase):
 
         # Act
         response = self.client.post(
-            '/bff/v1/web/recommendations',
+            '/bff/v1/mobile/recommendations',
             headers={'Authorization': f'Bearer {self.test_jwt}'},
             json=self.recommendation_request_data
         )
@@ -168,7 +168,7 @@ class TestRecommendationBlueprint(unittest.TestCase):
 
     def test_missing_auth_token_get(self):
         # Act
-        response = self.client.get('/bff/v1/web/recommendations')
+        response = self.client.get('/bff/v1/mobile/recommendations')
 
         # Assert
         self.assertEqual(response.status_code, 401)
@@ -178,7 +178,7 @@ class TestRecommendationBlueprint(unittest.TestCase):
     def test_missing_auth_token_post(self):
         # Act
         response = self.client.post(
-            '/bff/v1/web/recommendations',
+            '/bff/v1/mobile/recommendations',
             json=self.recommendation_request_data
         )
 

@@ -15,6 +15,12 @@ vertexai = "*"
 gunicorn = "*"
 pydantic = "*"
 uuid = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+pytest-env = "*"
+sendgrid = "*"
+requests = "*"
 
 [dev-packages]
 pytest = "*"

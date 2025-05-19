@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -xe
-
 for arg in "$@"
 do
   case "$arg" in
@@ -39,61 +37,63 @@ function build_image() {
   COMPONENT="$2"
   DEPLOYMENT="$3"
 
-#  SHA256="$(find "$SRC_PATH" \
-#    -type d -name '.idea' -prune -o \
-#    -type f ! -name 'checksum.txt' -print \
-#    -type f ! -name 'Pipfile.lock' -print \
-#    | sort \
-#    | xargs sha256sum \
-#    | sort \
-#    | sha256sum \
-#    | awk '{print $1}'
-#  )"
-#  EXISTING_SHA256="$( [ -f "$SRC_PATH/checksum.txt" ] && xargs < "$SRC_PATH/checksum.txt" || echo "" )"
-#
-#  echo "computed_checksum::\`$SHA256\` --- existing_checksum::\`$EXISTING_SHA256\`"
-#
-#  if [[ "$SHA256" != "$EXISTING_SHA256" ]] || [[ -n "$FORCE" ]]
-#  then
-#    echo "[INFO]: there are new changes detected inside the folder \`$COMPONENT\` for $DEPLOYMENT"
-#
-#    echo "$SHA256" > "$SRC_PATH/checksum.txt"
-#
-#    TIMESTAMP="$(date +%Y%m%d%H%M%S)"
-#    UUID="$(find "$SRC_PATH" -type f -exec sha256sum {} + | sort | sha256sum | cut -c1-6)"
-#    VERSION="$(xargs < "$SRC_PATH/version.txt")"
-#
-#    docker build -t "$DOCKER_PATH$DEPLOYMENT:latest" -f "$SRC_PATH/Dockerfile" "$SRC_PATH"
-#    docker tag "$DOCKER_PATH$DEPLOYMENT:latest" "$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
-#
-#    if [[ -z "$PROD" ]]
-#    then
-#      minikube image load "$DEPLOYMENT:latest"
-#      minikube image load "$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
-#    else
-#      docker push "$DOCKER_PATH$DEPLOYMENT:latest"
-#      docker push "$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
-#    fi
-#
-#    sleep 2
+  SHA256="$(find "$SRC_PATH" \
+    -type d -name '.idea' -prune -o \
+    -type f ! -name 'checksum.txt' -print \
+    -type f ! -name 'Pipfile.lock' -print \
+    | sort \
+    | xargs sha256sum \
+    | sort \
+    | sha256sum \
+    | awk '{print $1}'
+  )"
+  EXISTING_SHA256="$( [ -f "$SRC_PATH/checksum.txt" ] && xargs < "$SRC_PATH/checksum.txt" || echo "" )"
 
-#    if ! kubectl get deployment "$DEPLOYMENT" -n default &> /dev/null
-#    then
+  echo "computed_checksum::\`$SHA256\` --- existing_checksum::\`$EXISTING_SHA256\`"
+
+  if [[ "$SHA256" != "$EXISTING_SHA256" ]] || [[ -n "$FORCE" ]]
+  then
+    echo "[INFO]: there are new changes detected inside the folder \`$COMPONENT\` for $DEPLOYMENT"
+
+    echo "$SHA256" > "$SRC_PATH/checksum.txt"
+
+    TIMESTAMP="$(date +%Y%m%d%H%M%S)"
+    UUID="$(find "$SRC_PATH" -type f -exec sha256sum {} + | sort | sha256sum | cut -c1-6)"
+    VERSION="$(xargs < "$SRC_PATH/version.txt")"
+
+    docker build -t "$DOCKER_PATH$DEPLOYMENT:latest" -f "$SRC_PATH/Dockerfile" "$SRC_PATH"
+    docker tag "$DOCKER_PATH$DEPLOYMENT:latest" "$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+
+    if [[ -z "$PROD" ]]
+    then
+      minikube image load "$DEPLOYMENT:latest"
+      minikube image load "$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    else
+      docker push "$DOCKER_PATH$DEPLOYMENT:latest"
+      docker push "$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    fi
+
+    sleep 2
+
+    if ! kubectl get deployment "$DEPLOYMENT" -n default &> /dev/null
+    then
       if [[ -z "$PROD" ]]
       then
         kubectl apply -f "$SRC_PATH/k8s/minikube"
       else
         kubectl apply -f "$SRC_PATH/k8s/cloud"
       fi
-#      sleep 5
-#    fi
+      sleep 5
+    fi
 
-#    kubectl set image deployment/"$DEPLOYMENT" "$DEPLOYMENT=$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
+    kubectl set image deployment/"$DEPLOYMENT" "$DEPLOYMENT=$DOCKER_PATH$DEPLOYMENT:$VERSION-$UUID-$TIMESTAMP"
 
-#  else
-#    echo "[INFO]: no changes in the folder \`$COMPONENT\` for $DEPLOYMENT"
-#  fi
+  else
+    echo "[INFO]: no changes in the folder \`$COMPONENT\` for $DEPLOYMENT"
+  fi
 }
+
+set -e
 
 echo "[INFO]: ✅ deleting all unused existing images"
 

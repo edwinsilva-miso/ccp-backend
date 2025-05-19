@@ -78,6 +78,16 @@ spec:
             secretKeyRef:
               name: common-secrets
               key: PAYMENT_GATEWAY_URL
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: customers-api-secrets
+              key: CLIENT_ID
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: customers-api-secrets
+              key: CLIENT_SECRET
 
         resources:
           requests:

@@ -38,14 +38,14 @@ class VertexAIAnalyzerService(VideoAnalyzerService):
             vertexai.init(project=self.project_id, location=self.location)
 
             # Load the Gemini Pro Vision model
-            multimodal_model = GenerativeModel("gemini-pro-vision")
+            multimodal_model = GenerativeModel("gemini-2.5-pro-preview-05-06")
 
             # Create a prompt for the model
             prompt = (
-                "Analyze this video that shows a place. "
-                "Assess how many products could be placed in this location, "
-                "and suggest other products that might be relevant for this space. "
-                "Provide your analysis as informative text."
+                "Analiza este video que muestra un lugar. "
+                "Evalúa cuántos productos podrían colocarse en esta ubicación, "
+                "y sugiere otros productos que podrían ser relevantes para este espacio. "
+                "Proporciona tu análisis como un texto informativo."
             )
 
             # Create a video part from the GCS URI

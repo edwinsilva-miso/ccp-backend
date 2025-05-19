@@ -14,13 +14,25 @@ spec:
       labels:
         app: market-intelligence-api
     spec:
+      serviceAccountName: default
+      volumes:
+        - name: gcp-sa-key
+          secret:
+            secretName: gcp-sa-key
       containers:
       - name: market-intelligence-api
         image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/market-intelligence-api:latest
         imagePullPolicy: Always
+        volumeMounts:
+          - name: gcp-sa-key
+            mountPath: /var/secrets
+            readOnly: true
         ports:
         - containerPort: 5000
         env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/service-account.json
+
         - name: DB_HOST
           valueFrom:
             secretKeyRef:
@@ -46,6 +58,22 @@ spec:
             secretKeyRef:
               name: common-secrets
               key: DB_PASSWORD
+
+        - name: GCS_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: market-intelligence-api-secrets
+              key: GCS_BUCKET_NAME
+        - name: VERTEX_AI_LOCATION
+          valueFrom:
+            secretKeyRef:
+              name: market-intelligence-api-secrets
+              key: VERTEX_AI_LOCATION
+        - name: GCS_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: market-intelligence-api-secrets
+              key: GCS_PROJECT_ID
 
         - name: USERS_API_URL
           valueFrom:
@@ -82,11 +110,11 @@ spec:
             configMapKeyRef:
               name: common-configs
               key: DELIVERIES_API_URL
-        - name: market-intelligence_API_URL
+        - name: RECOMMENDATIONS_API_URL
           valueFrom:
             configMapKeyRef:
               name: common-configs
-              key: market-intelligence_API_URL
+              key: RECOMMENDATIONS_API_URL
         - name: CLIENTS_API_URL
           valueFrom:
             configMapKeyRef:
@@ -118,6 +146,7 @@ spec:
             configMapKeyRef:
               name: common-configs
               key: RABBITMQ_PORT
+
         resources:
           limits:
             cpu: "500m"

@@ -1,9 +1,14 @@
 {
   "bffs": [
-    "mobile-bff",
-    "web-bff"
+    "mobile-bff"
   ],
   "apis": [
+    "inteligencia-mercantil-api"
+  ],
+  "backplane-components": [
+  ],
+  "tmp": [
+    "web-bff",
     "bodegas-api",
     "clientes-api",
     "entregas-api",
@@ -11,14 +16,7 @@
     "pedidos-api",
     "productos-api",
     "recomendaciones-api",
-    "reportes-api",
     "rutas-api",
     "usuarios-api",
-    "ventas-api",
-    "inteligencia-mercantil-api"
-  ],
-  "backplane-components": [
-  ],
-  "tmp": [
-  ]
+    "ventas-api"  ]
 }

@@ -1,3 +1,5 @@
+import logging
+
 from flask import Blueprint, request, jsonify
 from src.application.use_cases.video_processor import VideoProcessor
 from src.infrastructure.adapters.sqlalchemy_video_repository import SQLAlchemyVideoRepository
@@ -22,6 +24,26 @@ def upload_video():
     Returns:
         A JSON response with the video ID and status
     """
+    from google.cloud import storage
+
+    # Verify GCS connection
+    try:
+        client = storage.Client()
+        bucket_name = 'market_intelligence_bucket'  # Replace with correct name if different
+
+        logging.info(f"Attempting to access bucket: {bucket_name}")
+        try:
+            bucket = client.get_bucket(bucket_name)
+            logging.info(f"✅ Bucket access confirmed: {bucket.name}")
+        except Exception as e:
+            logging.info(f"❌ Error accessing bucket: {e}")
+
+        # Continue with original logic...
+    except Exception as e:
+        logging.info(f"General GCS error: {e}")
+        # You can decide whether to propagate or handle the error
+        raise
+
     if "video" not in request.files:
         return jsonify({"error": "No video file in request"}), 400
     

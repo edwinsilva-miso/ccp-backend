@@ -46,6 +46,37 @@ spec:
               configMapKeyRef:
                 name: common-configs
                 key: DELIVERIES_API_URL
+          - name: MARKET_INTELLIGENCE_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: MARKET_INTELLIGENCE_API_URL
+          - name: MANUFACTURERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: MANUFACTURERS_API_URL
+          - name: ORDERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: ORDERS_API_URL
+          - name: WAREHOUSES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: WAREHOUSES_API_URL
+          - name: RECOMMENDATIONS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: RECOMMENDATIONS_API_URL
+          - name: SALES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: SALES_API_URL
+
         resources:
           requests:
             memory: "256Mi"

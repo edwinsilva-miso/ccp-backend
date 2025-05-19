@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y wget python3-pip
+
 # Install pipenv
 RUN pip install --no-cache-dir pipenv
 
@@ -24,5 +26,9 @@ COPY . .
 # Expose port
 EXPOSE 5000
 
+ENV FLASK_ENV=development
+ENV PYTHONUNBUFFERED=1
+ENV LOG_LEVEL=DEBUG
+
 # Command to start with gunicorn, using Flask app factory style import
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.main:create_app()"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "src.main:create_app()", "--log-level", "debug", "--access-logfile", "-", "--error-logfile", "-"]

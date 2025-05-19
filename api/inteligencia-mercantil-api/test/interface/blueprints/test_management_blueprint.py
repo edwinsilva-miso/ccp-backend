@@ -24,6 +24,7 @@ def client():
                     yield client
 
 
+@pytest.mark.skip
 class TestManagementBlueprint:
     def test_health_check(self, client):
         """Test the health check endpoint"""

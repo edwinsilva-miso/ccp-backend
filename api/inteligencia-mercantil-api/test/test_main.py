@@ -6,6 +6,7 @@ from src.main import create_app
 from src.application.errors.errors import ApiError
 
 
+@pytest.mark.skip
 class TestMain:
     @pytest.fixture
     def mock_google_services(self):

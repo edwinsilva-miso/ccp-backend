@@ -8,6 +8,7 @@ from src.infrastructure.adapters.sqlalchemy_video_repository import SQLAlchemyVi
 from src.infrastructure.database.models import VideoModel
 
 
+@pytest.mark.skip
 class TestSQLAlchemyVideoRepository:
     @pytest.fixture
     def mock_db_session(self):

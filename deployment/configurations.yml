@@ -3,4 +3,17 @@ kind: ConfigMap
 metadata:
   name: common-configs
 data:
-  USERS_API_URL: 'http://users-api-service.default.svc.cluster.local'
+  USERS_API_URL: 'http://users-api-service.default.svc.cluster.local/api/v1/users'
+  ROUTES_API_URL: 'http://routes-api-service.default.svc.cluster.local'
+  MANUFACTURERS_API_URL: 'http://manufacturers-api-service.default.svc.cluster.local'
+  PRODUCTS_API_URL: 'http://products-api-service.default.svc.cluster.local'
+  CLIENTS_API_URL: 'http://customers-api-service.default.svc.cluster.local'
+  SALES_API_URL: 'http://sales-api-service.default.svc.cluster.local'
+  WAREHOUSES_API_URL: 'http://warehouses-api-service.default.svc.cluster.local'
+  DELIVERIES_API_URL: 'http://deliveries-api-service.default.svc.cluster.local'
+  ORDERS_API_URL: 'http://orders-api-service.default.svc.cluster.local'
+  RECOMMENDATIONS_API_URL: 'http://recommendations-api-service.default.svc.cluster.local'
+  MARKET_INTELLIGENCE_API_URL: 'http://market-intelligence-api-service.default.svc.cluster.local'
+
+  RABBITMQ_HOST: 'rabbitmq-service.default.svc.cluster.local'
+  RABBITMQ_PORT: '5672'

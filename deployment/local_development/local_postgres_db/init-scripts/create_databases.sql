@@ -1,0 +1,12 @@
+CREATE DATABASE misw_users;
+CREATE DATABASE misw_routes;
+CREATE DATABASE misw_customers;
+CREATE DATABASE misw_orders;
+CREATE DATABASE misw_products;
+CREATE DATABASE misw_manufacturers;
+CREATE DATABASE misw_sales;
+CREATE DATABASE misw_warehouses;
+CREATE DATABASE misw_deliveries;
+CREATE DATABASE misw_market_intelligence;
+CREATE DATABASE misw_recommendations;
+CREATE DATABASE misw_reports;

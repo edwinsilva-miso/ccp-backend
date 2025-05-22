@@ -3,7 +3,7 @@ import os
 
 import requests
 
-USERS_API_URL = os.environ.get('USERS_API_URL', 'http://localhost:5100')
+USERS_API_URL = os.environ.get('USERS_API_URL', 'http://localhost:5100/api/v1/users')
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set logging level to DEBUG (captures everything)
@@ -23,7 +23,7 @@ class UsersAdapter:
         :return: The created user object.
         """
         logger.debug(f"Creating user with data: {user_data['name']}, {user_data['email']}, {user_data['role']}")
-        response = requests.post(f"{USERS_API_URL}/api/v1/users", json=user_data)
+        response = requests.post(f"{USERS_API_URL}", json=user_data)
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code
 
@@ -35,7 +35,7 @@ class UsersAdapter:
         :return: The user's token and expiration date.
         """
         logger.debug(f"Authorizing user with email: {email}")
-        response = requests.post(f"{USERS_API_URL}/api/v1/users/auth", json={"email": email, "password": password})
+        response = requests.post(f"{USERS_API_URL}/auth", json={"email": email, "password": password})
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code
 
@@ -47,6 +47,6 @@ class UsersAdapter:
         """
         logger.debug(f"Getting user info with token: {token}")
         headers = {'Authorization':  token}
-        response = requests.get(f"{USERS_API_URL}/api/v1/users/me", headers=headers)
+        response = requests.get(f"{USERS_API_URL}/me", headers=headers)
         logger.debug(f"Response received from API: {response.json()}")
         return response.json(), response.status_code

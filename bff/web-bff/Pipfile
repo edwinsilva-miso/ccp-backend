@@ -5,6 +5,7 @@ name = "web-bff"
 
 [packages]
 flask = "*"
+flask-cors = "*"
 requests = "*"
 pytest = "*"
 pytest-cov = "*"
@@ -12,6 +13,7 @@ pytest-mock = "*"
 pytest-env = "*"
 sendgrid = "*"
 python-dotenv = "*"
+pika = "*"
 
 [dev-packages]
 

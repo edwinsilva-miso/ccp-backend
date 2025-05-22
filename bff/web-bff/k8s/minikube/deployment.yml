@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-bff
+  labels:
+    app: web-bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-bff
+  template:
+    metadata:
+      labels:
+        app: web-bff
+    spec:
+      containers:
+      - name: web-bff
+        image: web-bff:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+          - name: USERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: USERS_API_URL
+          - name: MANUFACTURERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: MANUFACTURERS_API_URL
+          - name: PRODUCTS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: PRODUCTS_API_URL
+          - name: ROUTES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: ROUTES_API_URL
+          - name: SALES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: SALES_API_URL
+          - name: WAREHOUSES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: WAREHOUSES_API_URL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          failureThreshold: 6

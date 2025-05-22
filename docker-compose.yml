@@ -1,15 +1,22 @@
-# Put the services in the same network
-version: '3.8'
-
 services:
-  # BFF
   web-bff:
     build: bff/web-bff
     container_name: web-bff
     ports:
       - "5000:5000"
     environment:
-      USERS_API_URL: http://users-api:5000
+      RABBITMQ_USER: admin
+      RABBITMQ_PASSWORD: admin
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      USERS_API_URL: http://users-api:5000/api/v1/users
+      MANUFACTURERS_API_URL: http://manufacturers-api:5000
+      PRODUCTS_API_URL: http://products-api:5000
+      ORDERS_API_URL: http://orders-api:5000
+      ROUTES_API_URL: http://routes-api:5000
+      WAREHOUSES_API_URL: http://warehouses-api:5000
+      DELIVERIES_API_URL: http://deliveries-api:5000
+      RECOMMENDATIONS_API_URL: http://recommendations-api:5000
     networks:
       - web_bff_net
       - app_net
@@ -20,12 +27,21 @@ services:
     ports:
       - "5001:5000"
     environment:
-      USERS_API_URL: http://users-api:5000
+      USERS_API_URL: http://users-api:5000/api/v1/users
+      PRODUCTS_API_URL: http://products-api:5000
+      CLIENTS_API_URL: http://clients-api:5000
+      SALES_API_URL: http://sales-api:5000
+      ROUTES_API_URL: http://routes-api:5000
+      WAREHOUSES_API_URL: http://warehouses-api:5000
+      DELIVERIES_API_URL: http://deliveries-api:5000
+      VIDEOS_API_URL: http://inteligencia-mercantil-api:5000
     networks:
       - mobile_bff_net
       - app_net
 
-  # Users API
+# ==============================
+# Users API
+# ==============================
   users-api:
     build: api/usuarios-api/
     container_name: users-api
@@ -61,9 +77,388 @@ services:
     networks:
       - users_api_net
 
-  # [DELETE] Put here below the services you want to add with the database (if applies)
+# ==============================
+# Fabricantes API
+# ==============================
+  manufacturers-api:
+    build: api/fabricantes-api/
+    container_name: manufacturers-api
+    ports:
+      - "5102:5000"
+    environment:
+      DB_HOST: manufacturers_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: manufacturers
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      manufacturers_db:
+        condition: service_healthy
+    networks:
+      - manufacturers_api_net
+      - app_net
 
-  # Additional Infrastructure
+  manufacturers_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: manufacturers
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - manufacturers_db_volume:/var/lib/postgresql/data
+    networks:
+      - manufacturers_api_net
+
+# ==============================
+# Productos API
+# ==============================
+  products-api:
+    build: api/productos-api/
+    container_name: products-api
+    ports:
+      - "5103:5000"
+    environment:
+      DB_HOST: products_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: products
+      RABBITMQ_USER: admin
+      RABBITMQ_PASSWORD: admin
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      products_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - products_api_net
+      - app_net
+
+  products_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: products
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - products_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+# ==============================
+# Clientes API
+# ==============================
+  clients-api:
+    build: api/clientes-api/
+    container_name: clients-api
+    ports:
+      - "5104:5000"
+    environment:
+      DB_HOST: clients_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: clients
+      RABBITMQ_USER: admin
+      RABBITMQ_PASSWORD: admin
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      USERS_API_URL: http://users-api:5000/api/v1/users
+      PAYMENT_GATEWAY_URL: http://host.docker.internal:8000/api/v1/
+      CLIENT_ID: client1
+      CLIENT_SECRET: password1
+      GOOGLE_APPLICATION_CREDENTIALS: /app/credentials/key.json
+    volumes:
+      - ./files/key.json:/app/credentials/key.json:ro
+    depends_on:
+      clients_db:
+        condition: service_healthy
+    networks:
+      - clients_api_net
+      - app_net
+
+  clients_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: clients
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - clients_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+# ==============================
+# Pedidos API
+# ==============================
+  orders-api:
+    build: api/pedidos-api/
+    container_name: orders-api
+    ports:
+      - "5105:5000"
+    environment:
+      DB_HOST: orders_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: orders
+      RABBITMQ_USER: admin
+      RABBITMQ_PASSWORD: admin
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      orders_db:
+        condition: service_healthy
+    networks:
+      - orders_api_net
+      - app_net
+
+  orders_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orders
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - orders_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+# ==============================
+# Ventas API
+# ==============================
+  sales-api:
+      build: api/ventas-api/
+      container_name: sales-api
+      ports:
+      - "5196:5000"
+      environment:
+        DB_HOST: sales_db
+        DB_PORT: 5432
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        DB_NAME: sales
+        USERS_API_URL: http://users-api:5000/api/v1/users
+      depends_on:
+        sales_db:
+          condition: service_healthy
+      networks:
+      - app_net
+
+  sales_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sales
+    ports:
+    - "5437:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+    - sales_db_volume:/var/lib/postgresql/data
+    networks:
+    - app_net
+
+# ==============================
+# Rutas API
+# ==============================
+  routes-api:
+    build: api/rutas-api/
+    container_name: routes-api
+    ports:
+      - "5106:5000"
+    environment:
+      DB_HOST: routes_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: routes
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      routes_db:
+        condition: service_healthy
+    networks:
+      - routes_api_net
+      - app_net
+
+  routes_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: routes
+    ports:
+      - "5438:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - routes_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+# ==============================
+# Bodegas API
+# ==============================
+  warehouses-api:
+    build: api/bodegas-api/
+    container_name: warehouses-api
+    ports:
+      - "5107:5000"
+    environment:
+      DB_HOST: warehouses_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: warehouses
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      warehouses_db:
+        condition: service_healthy
+    networks:
+      - warehouses_api_net
+      - app_net
+
+  warehouses_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: warehouses
+    ports:
+      - "5439:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - warehouses_db_volume:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+# ==============================
+# Entregas API
+# ==============================
+  deliveries-api:
+    build: api/entregas-api/
+    container_name: deliveries-api
+    ports:
+      - "5108:5000"
+    environment:
+      DB_HOST: deliveries_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: deliveries
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      deliveries_db:
+        condition: service_healthy
+    networks:
+      - deliveries_api_net
+      - app_net
+
+  deliveries_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: deliveries
+    ports:
+      - "5440:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - deliveries_db_volume:/var/lib/postgresql/data
+    networks:
+      - recommendations_api_net
+      - app_net
+
+# ==============================
+# Recomendaciones API
+# ==============================
+  recommendations-api:
+    build: api/recomendaciones-api/
+    container_name: recommendations-api
+    ports:
+    - "5109:5000"
+    environment:
+      DB_HOST: recommendations_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: recommendations
+      USERS_API_URL: http://users-api:5000/api/v1/users
+    depends_on:
+      recommendations_db:
+        condition: service_healthy
+    networks:
+    - app_net
+
+  recommendations_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: recommendations
+    ports:
+    - "5438:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+    - recommendations_db_volume:/var/lib/postgresql/data
+    networks:
+    - app_net
+
+# ==============================
+# Required Infra Components
+# ==============================
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -79,9 +474,20 @@ services:
       retries: 5
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app_net
 
 volumes:
   users_db_volume:
+  manufacturers_db_volume:
+  products_db_volume:
+  clients_db_volume:
+  orders_db_volume:
+  routes_db_volume:
+  sales_db_volume:
+  deliveries_db_volume:
+  warehouses_db_volume:
+  recommendations_db_volume:
   rabbitmq_data:
 
 networks:
@@ -92,4 +498,22 @@ networks:
   mobile_bff_net:
     driver: bridge
   users_api_net:
+    driver: bridge
+  manufacturers_api_net:
+    driver: bridge
+  products_api_net:
+    driver: bridge
+  clients_api_net:
+    driver: bridge
+  orders_api_net:
+    driver: bridge
+  routes_api_net:
+    driver: bridge
+  sales_api_net:
+    driver: bridge
+  deliveries_api_net:
+    driver: bridge
+  warehouses_api_net:
+    driver: bridge
+  recommendations_api_net:
     driver: bridge

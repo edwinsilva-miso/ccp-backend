@@ -5,6 +5,7 @@ from ...application.errors.errors import ValidationApiError
 from ...application.create_user import CreateUser
 from ...application.login_user import LoginUser
 from ...application.user_token import UserToken
+from ...application.find_user_by_role import FindUserByRole
 from ...domain.entities.user_dto import UserDTO
 from ...infrastructure.adapters.user_adapter import UserAdapter
 
@@ -58,4 +59,10 @@ def get_user_info():
     headers = request.headers
     use_case = UserToken(user_adapter)
     response = use_case.execute(headers)
+    return jsonify(response), 200
+
+@user_blueprint.route('/role/<string:role>', methods=['GET'])
+def get_users_by_role(role):
+    use_case = FindUserByRole(user_adapter)
+    response = use_case.execute(role)
     return jsonify(response), 200

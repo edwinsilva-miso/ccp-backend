@@ -12,11 +12,11 @@ RUN apt-get update && apt-get install -y \
 # Install pipenv
 RUN pip install --no-cache-dir pipenv
 
-# Copy dependency files
+# Copy dependency files first for better caching
 COPY Pipfile ./
 
 # Install dependencies
-RUN pipenv install --deploy --ignore-pipfile --dev
+RUN pipenv install --deploy --ignore-pipfile
 
 # Copy application code
 COPY . .

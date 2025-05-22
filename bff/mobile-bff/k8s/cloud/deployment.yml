@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobile-bff
+  labels:
+    app: mobile-bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mobile-bff
+  template:
+    metadata:
+      labels:
+        app: mobile-bff
+    spec:
+      containers:
+      - name: mobile-bff
+        image: us-central1-docker.pkg.dev/proyecto-final-2-455301/apis-images/mobile-bff:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+          - name: USERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: USERS_API_URL
+          - name: CLIENTS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: CLIENTS_API_URL
+          - name: PRODUCTS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: PRODUCTS_API_URL
+          - name: ROUTES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: ROUTES_API_URL
+          - name: DELIVERIES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: DELIVERIES_API_URL
+          - name: MARKET_INTELLIGENCE_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: MARKET_INTELLIGENCE_API_URL
+          - name: MANUFACTURERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: MANUFACTURERS_API_URL
+          - name: ORDERS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: ORDERS_API_URL
+          - name: WAREHOUSES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: WAREHOUSES_API_URL
+          - name: RECOMMENDATIONS_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: RECOMMENDATIONS_API_URL
+          - name: SALES_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: common-configs
+                key: SALES_API_URL
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 10

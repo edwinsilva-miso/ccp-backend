@@ -47,3 +47,20 @@ def get_user_info():
     logging.debug("Sending information to get user info from BFF Web.")
     adapter = UsersAdapter()
     return adapter.get_user_info(token)
+
+@users_blueprint.route('/role/<string:role>', methods=['GET'])
+def get_users_by_role(role):
+    logging.debug(f"Received request to get users by role: {role}.")
+
+    token = request.headers.get('Authorization')
+    if not token:
+        logging.error("Missing Authorization header.")
+        return jsonify({'msg': 'Unauthorized'}), 401
+
+    if not role:
+        logging.error("Missing role in request.")
+        return jsonify({'msg': 'Role is required.'}), 400
+
+    logging.debug("Sending information to get users by role from BFF Web.")
+    adapter = UsersAdapter()
+    return adapter.get_users_by_role(role)

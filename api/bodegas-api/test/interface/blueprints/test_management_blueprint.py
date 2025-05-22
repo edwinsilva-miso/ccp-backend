@@ -16,4 +16,4 @@ class TestManagementBlueprint:
         data = response.get_json()
 
         assert response.status_code == 200
-        assert data['status'] == 'UP'
+        assert data['status'] == 'healthy'
